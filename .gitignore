@@ -11,5 +11,5 @@
 *.bin
 *.toc
 *.lot
-*.log
+*.lof
 *.brf
