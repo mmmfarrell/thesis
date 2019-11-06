@@ -4,7 +4,7 @@
 \label{chp:introduction}
 
 \section{Problem Statement}
-As multirotor unmanned aerial vehicles (UAVs) have become extremely popular
+As multirotor unmanned aerial vehicles (UAVs) have become popular
 platforms for commercial and consumer products over the past decade, a variety
 of new use cases have emerged that require operation from moving vehicles.
 Such use cases include
@@ -18,14 +18,14 @@ in challenging conditions.
   \centering
   \includegraphics[width=5.5in]{figures/drone_convoy_support.png}
   \caption[UAV Convoy Support]{An example of multirotor UAVs used to increase
-  situational awareness of a convoy of
+  situational awareness for a convoy of
 vehicles~\cite{ground_vehicle_based_drones}.}
 %
   \label{fig:drone_convoy_support}
 \end{figure}
 
-State-of-the-art autonomous vehicle systems require robust solutions to the
-three problems of state estimation, motion planning and control. In this thesis,
+State-of-the-art autonomous vehicle systems require robust solutions to three
+problems: state estimation, motion planning and control. In this thesis,
 we propose solutions to two of those three problems, state estimation and
 control, for a multirotor UAV landing on a moving vehicle. We leave the problem
 of motion planning as future work, providing some suggested direction
@@ -52,5 +52,33 @@ landing marker is not detected for significant periods of time.
 \end{figure}
 
 \section{Contributions}
+The research described in this thesis makes two significant contributions:
+\begin{itemize}
+\item A method of state estimation is developed that maintains accurate and
+  consistent estimates of the state of a landing vehicle even when a fiducial landing
+  marker is not detected for significant periods of time by a multirotor UAV.
+\item An optimal control scheme for a multirotor UAV is derived in an error-state, linear
+  quadratic regulator (LQR) formulation. This provides an optimal control scheme
+  for a multirotor to follow any dynamically feasible, time-dependent
+  trajectory.
+\end{itemize}
+
+These contributions were demonstrated in both simulation and hardware
+results found in Chapters~\ref{chp:estimation_paper}
+and~\ref{chp:control_paper}. These results give us reason to believe that a
+complete and robust landing solution could be created by combining the proposed
+state estimation and control schemes with a competent motion planner.
 
 \section{Outline}
+
+The remainder of this thesis is organized as follows.
+Chapter~\ref{chp:experimental_apparatus} details the hardware and software
+systems used
+in the experiments. Chapter~\ref{chp:estimation_paper} describes the state
+estimation algorithm that maintains accurate and consistent estimates even when
+a fiducial landing marker is not detected for significant periods of time.
+Chapter~\ref{chp:control_paper} derives an error-state LQR controller for a
+multirotor UAV following a dynamically feasible, time-dependent trajectory.
+Chapter~\ref{chp:conclusion} provides some concluding remarks including
+suggestions for future work that can build upon the work described in this
+thesis.
