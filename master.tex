@@ -29,7 +29,7 @@
     %notableofcontents = true,  % Don't show the Table of Contents
     %nolistoffigures = true,    % Don't show the List of Figures
    % nolistoftables = true,     % Don't show the List of Tables
-    %nonomenclature = true,     % Don't show the Nomenclature section - note that this section is optional
+    nonomenclature = true,     % Don't show the Nomenclature section - note that this section is optional
     %notocandlists = true,      % Don't show the Table of Contents, List of Figures, or the List of Tables
     %noheaderatall = true,      % Don't show any of the BYU Thesis header pages
     keywords = {state estimation, linear quadratic control, UAV, precision
@@ -54,6 +54,15 @@
 \usepackage{textcomp}
 \usepackage{float}											%	improves the interface for defining floating objects
 \usepackage{rotating}
+
+\usepackage{import}                     % subimport
+\usepackage{xcolor}
+\usepackage{amsbsy,amsfonts}
+\usepackage{accents}
+\usepackage{tabularx}
+\usepackage{nicefrac}
+\usepackage{upgreek}
+\usepackage[]{footmisc}
 %\usepackage[figuresright]{rotfloat}
 %\usepackage{multirow}
 %These next two lines are for the citing with the IEEE style (leave commented for ASME)
@@ -105,17 +114,19 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Define macros here - You may use these, or delete them, as you see fit.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\def\proof{\noindent{\it Proof: }}
-\def\QED{\mbox{\rule[0pt]{1.5ex}{1.5ex}}}
-\def\endproof{\hspace*{\fill}~\QED\par\endtrivlist\unskip}
-\newcommand{\norm}[1]{\left\|#1\right\|}
-\newcommand{\abs}[1]{\left|#1\right|}
-\newcommand{\defeq}{\stackrel{\triangle}{=}}
-\newcommand{\re}{\mathbb{R}} 																			% real numbers
-\newcommand{\OMIT}[1]{{}} 																				% omit sections of text
-\newcommand{\pd}[2]{\ensuremath{\frac{\partial #1}{\partial #2}}} % partial derivative
-\newcommand{\superscript}[1]{\ensuremath{^\textrm{#1}}}
-\newcommand{\subscript}[1]{\ensuremath{_\textrm{#1}}}
+% \def\proof{\noindent{\it Proof: }}
+% \def\QED{\mbox{\rule[0pt]{1.5ex}{1.5ex}}}
+% \def\endproof{\hspace*{\fill}~\QED\par\endtrivlist\unskip}
+% \newcommand{\norm}[1]{\left\|#1\right\|}
+% \newcommand{\abs}[1]{\left|#1\right|}
+% \newcommand{\defeq}{\stackrel{\triangle}{=}}
+% \newcommand{\re}{\mathbb{R}} 																			% real numbers
+% \newcommand{\OMIT}[1]{{}} 																				% omit sections of text
+% \newcommand{\pd}[2]{\ensuremath{\frac{\partial #1}{\partial #2}}} % partial derivative
+% \newcommand{\superscript}[1]{\ensuremath{^\textrm{#1}}}
+% \newcommand{\subscript}[1]{\ensuremath{_\textrm{#1}}}
+
+\input{macros}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % To only print a few chapters without changing the reference numbers, 
 %		uncomment the chapters you want
@@ -152,18 +163,22 @@
 
 % Include chapters of the thesis here: (Note that you should open the files chapter1.tex and chapter2.tex to
 % see some of the important notes about how to do your thesis!)
-\include{chapter1}
-\include{chapter2}
+\include{chapters/intro}
+\include{chapters/experimental_apparatus}
+\include{chapters/estimation_paper}
+\include{chapters/control_paper}
+\include{chapters/conclusion}
 
 %%%%%%%%%%%%% begin Bibliography %%%%%%%%%%%%%%%%%
 \cleardoublepage
 % \bibliographystyle{asmems4}%Change this to use a different bibliography style, such as ieeetran.
 \bibliographystyle{IEEEtran}%Change this to use a different bibliography style, such as ieeetran.
-\bibliography{refs}% Change this to use a different bibliography database file.
+% \bibliography{refs}% Change this to use a different bibliography database file.
+\bibliography{abbrev,library}
 
 % Include appendix sections here: (or comment these lines out to have no appendices)
-\appendix
-\include{appendixa}
-\include{appendixb}
+% \appendix
+% \include{appendixa}
+% \include{appendixb}
 
 \end{document}

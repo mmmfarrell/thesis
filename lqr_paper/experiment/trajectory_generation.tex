@@ -1,0 +1,131 @@
+% !TEX root=../root.tex
+
+To test the proposed error-state LQR controller, we designed two experiments to be
+performed in simulation and hardware: (i) tracking step inputs to the desired
+position of the UAV and (ii) tracking time-dependent full-state trajectories. We
+first explain how we generate these time-dependent trajectories for the
+experiments and then detail the experimental setup for both simulation and
+hardware.
+
+%dynamically feasible trajectories. For simplicity in trajectory tracking, we use the temporal
+%tracking scheme, where the desired state of the multirotor varies with time as
+%opposed to the spatial tracking scheme where the multirotor must simply follow a
+%trajectory in space~\cite{foehn2018onboard}.
+
+\subsection{Trajectory Generation}
+\label{subsec:trajectory_gen}
+
+One important consideration in high-performance control of quadrotors is the
+generation of smooth, feasible trajectories.  The quadrotor has the benefit of
+being \emph{differentially flat} which means that the required inputs to the
+quadrotor can be fully defined using derivatives of the outputs of the system,
+the desired position and
+heading~\cite{mellinger2011minimum}. If we are given some smooth, differentiable trajectory of our desired
+position and heading then we can compute the full state and required inputs as
+a function of time
+\begin{equation}
+	\begin{pmatrix} \des{\vect{p}}_{b/I}^I \left( t \right) \\
+	                \des{\q}_I^b \left( t \right) \\
+	                \des{\vect{v}}_{b/I}^I \left( t \right) \\
+	                \des{s} \left( t \right) \\
+	                \des{\vect{\omega}}_{b/I}^I \left( t \right)
+	\end{pmatrix} = 
+	\des{f} \begin{pmatrix} 
+					\des{\vect{p}}_{b/I}^I\left(t\right) \\ 
+					\dot{\des{\vect{p}}}_{b/I}^I\left(t\right) \\ 
+					\ddot{\des{\vect{p}}}_{b/I}^I\left(t\right) \\ 
+					\des{\psi}_{b/I}^I\left(t\right)
+					%\dot{\des{\psi}}_{b/I}^I\left(t\right)
+	\end{pmatrix}.
+\end{equation}
+We derive the general case where the desired yaw angle of the multirotor UAV is
+a function of time. However, since it is well known that the yaw angle of a multirotor UAV is
+easily controllable independent of the other states~\cite{mellinger2011minimum}, we simply command a constant zero yaw in our experiments. 
+
+We now derive the differentially
+flat outputs.  First, desired position is given to us directly
+\begin{equation}
+	\des{\vect{p}}_{b/I}^I = \des{\vect{p}}_{b/I}^I. 
+\end{equation}
+To derive desired attitude and throttle signal we start 
+by applying Newton's second law, and consider the rotation from the heading-rotated, body-level
+coordinate frame, $\ell$, to
+the body frame, $b$. Note that to avoid the need for an iterative solution, we neglect the forces due to drag
+that are accounted for in the quadrotor dynamics in \eqref{eq:dynamics}.
+Newton's second law is given by
+%force balance is given by
+\begin{align}
+	\sum F^I &= m\ddot{\des{\vect{p}}}_{b/I}^I\\
+    -T \left(\des{R}_\ell^b\right)^\transpose + mg\e_3 &= m\ddot{\des{\vect{p}}}_{b/I}^I\\
+    \frac{T}{m}\left(\des{R}_\ell^b\right)^\transpose\e_3 &= g\e_3 -
+    \ddot{\des{\vect{p}}}_{b/I}^I.
+\end{align}
+If we then define $\des{\vect{a}} = g\e_3 - \ddot{\des{\vect{p}}}_{b/I}^I$,
+then we get the following expression
+\begin{equation}
+	\frac{T}{m}\left(\des{R}_\ell^b\right)^\transpose\e_3 = \des{\vect{a}}
+\end{equation}
+where $T$ and $\des{R}_\ell^b$ must satisfy the following conditions:
+\begin{align}
+	\frac{T}{m} &= \norm{\des{\vect{a}}} \\
+	\quad \des{R}_\ell^I\e_3 &= \frac{\des{\vect{a}}}{\norm{\des{\vect{a}}}}. \label{eq:rot_diff_flat}
+\end{align}
+Because $T=\tfrac{s}{s_e}gm$, then
+\begin{equation}
+	\des{s} = \frac{s_e}{g}\norm{\des{\vect{a}}}
+\end{equation}
+and \eqref{eq:rot_diff_flat} can be solved with
+\begin{equation}
+	%\des{R}_\ell^b = \exp \left( \skewmat{\theta \vect{\delta}} \right) 
+  \des{\q}_\ell^b = \exp_{\q} \left( \theta \vect{\delta} \right)
+\end{equation}
+where
+\begin{align}
+  \theta &= \mathrm{cos}^{-1}\left(\vect{e}_3^\transpose\frac{\des{\vect{a}}}{\norm{\des{\vect{a}}}}\right) \\
+	\vect{\delta} &= \skewmat{\vect{e}_3}\frac{\des{\vect{a}}}{\norm{\des{\vect{a}}}}.
+\end{align}
+The heading portion of attitude can now be applied to give us our full desired
+attitude
+\begin{equation}
+	%\des{R}_I^b = \des{R}_\ell^b \exp \left( \skewmat{\des{\psi} \e_3} \right).
+  \des{\q}_I^b = \exp_{\q} \left( \des{\psi} \e_3 \right) \otimes \des{\q}_\ell^b.
+\end{equation}
+Desired velocity can be found using the desired attitude
+\begin{equation}
+	\des{\vect{v}}_{b/I}^b = \des{R}_I^b \dot{\des{\vect{p}}}_{b/I}^I,
+\end{equation}
+and the required angular rate is found by taking the time derivative of our desired attitude
+\begin{equation}
+	\des{\vect{\omega}}_{b/I}^b = \frac{d}{dt} \des{\q}_I^b.
+\end{equation}
+In our implementation, we do this numerically with central differencing on the manifold.
+
+In summary, the differentially flat output of a quadrotor is given as
+follows:
+\begin{align}
+        \label{eq:traj_p}
+	\des{\vect{p}}_{b/I}^I &= \des{\vect{p}}_{b/I}^I \\
+	%\des{R}_I^b &= \des{R}_\ell^b \exp \left( \skewmat{\des{\psi} \e_3} \right) \\
+	\des{\q}_I^b &= \exp_{\q} \left( \des{\psi} \e_3 \right) \otimes
+        \des{\q}_\ell^b \\
+	\des{\vect{v}}_{b/I}^b &= \des{R}_I^b \dot{\des{\vect{p}}}_{b/I}^I \\
+	\des{s} &= \frac{s_e}{g}\norm{g\e_3 - \ddot{\des{\vect{p}}}_{b/I}^I} \\
+	%\des{\vect{\omega}}_{b/I}^b &= \frac{d}{dt} \des{R}_I^b.
+	\des{\vect{\omega}}_{b/I}^b &= \frac{d}{dt} \des{\q}_I^b.
+        \label{eq:traj_omega}
+\end{align}
+
+
+The examples in this work all reference the same figure-eight trajectory defined by 
+\begin{align}
+	\des{\vect{p}}_{b/I}^I\left(t\right) &= \vect{p}_{b/I}^I\left(t_0\right)
+        + \begin{bmatrix}\delta_x \sin\left(\tfrac{T}{2\pi} t\right) \\[4pt]
+        \delta_y \sin\left(\tfrac{T}{\pi} t\right) \\[4pt] \delta_z \sin\left(\tfrac{T}{2\pi} t\right)\end{bmatrix} \\
+	\des{\psi}_{b/I}^I\left(t\right) &= 0
+	%\des{\psi}_{b/I}^I\left(t\right) &= \psi_{b/I}^I\left(t\right) + \delta_\psi \sin\left(\tfrac{T}{2\pi} t\right)
+\end{align}
+where the $\delta_{\left(\cdot\right)}$ parameters define the dimensions of the
+trajectory, and $T$ defines the period.  While a trajectory defined by periodic
+functions is useful for simple demonstrations such as what we perform in this
+work, we direct the reader to more sophisticated methods of differentiable
+trajectory generation such as~\cite{mellinger2011minimum} for practical application.

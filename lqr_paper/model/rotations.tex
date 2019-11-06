@@ -1,0 +1,53 @@
+% !TEX root=../root.tex
+
+\subsection{Rotations}
+\MF{If we use quaternions throughout (because thats part of the point) maybe we
+don't need this. But we can take the first talk about passive rotations}
+
+We use passive rotation matrices, meaning that the rotation matrix $R_a^b$ acts on a vector $\vect{r}^a$, expressed in frame $a$, to express it in frame $b$ as
+\begin{equation}
+\vect{r}^b = R_a^b \vect{r}^a .
+\end{equation}
+By representing orientation states directly as rotation matrices, as opposed to other representations such as Euler angles or axis-angle, the group structure of the rotation is preserved.
+While unit-quaternions also preserve the group structure in a more concise representation, we choose rotation matrices for clarity of presentation in the following derivations.
+However, the companion software library implements techniques described in this paper using quaternions, and the mapping between the rotation-matrix and quaternion representations is described in \appxref{appx:quaternions}.
+
+Rotation matrices are elements of the special orthogonal group $\SO(3)$, where the group operator is matrix multiplication.
+Incremental changes or perturbations happen in the tangent space.
+The tangent space at the identity element $R=I$ is the Lie algebra $\so(3)$.
+The exponential and logarithmic mappings map between the group and the algebra:
+\begin{align}
+\exp &: \so(3) \to \SO(3) \\
+\log &: \SO(3) \to \so(3)
+\end{align}
+For $\SO(3)$ these mappings are the matrix exponential and matrix logarithm.
+
+The Lie algebra is a vector space, and so is isomorphic to $\mathbb{R}^3$.
+The hat $^\wedge$ and vee $^\vee$ operators describe this invertible mapping:
+\begin{align}
+^\wedge &: \mathbb{R}^3 \to \so(3) \\
+^\vee &: \so(3) \to \mathbb{R}^3 .
+\end{align}
+For $\so(3)$ the $^\wedge$ operator is the skew-symmetric operator:
+\begin{equation}
+^\wedge : \vect{v} \mapsto \skewmat{\vect{v}} ,
+\end{equation}
+and the $^\vee$ operator is simply the inverse operation.
+
+For convenience in writing differential quantities as vectors in $\mathbb{R}^3$, we define the capitalized exponential and logarithmic mappings as
+\begin{align}
+\Exp &: \mathbb{R}^3 \to \SO(3) \\
+\Exp &: \vect{\omega} \mapsto \exp(\vect{\omega}^\wedge) ,
+\end{align}
+and
+\begin{align}
+\Log &: \SO(3) \to \mathbb{R}^3 \\
+\Log &: R \mapsto \log(R)^\vee .
+\end{align}
+For $\SO(3)$, a closed-form solution for the $\Exp$ mapping is given by the Rodriques formula.
+These operators are related to the $\boxplus$/$\boxminus$ notation originally described in~\cite{hertzberg2013integrating} as
+\begin{align}
+R \boxplus \vect{\omega} &\triangleq R \Exp(\vect{\omega}) , \\
+R_2 \boxminus R_1 &\triangleq \Log({R_1}^\transpose R_2) .
+\end{align}
+\DK{Do we want a symbol for the group operator? (e.g. $R_1 \circ R_2$ or $R_1 \cdot R_2$ vs $R_1 R_2$)}

@@ -1,0 +1,23 @@
+% !TEX root=../root.tex
+
+\subsection{Hardware}
+
+A custom multirotor UAV built on a DJI 450 Flamewheel
+frame with an STM32F1 microcontroller running the
+ROSflight~\cite{jackson2016rosflight} flight control firmware was flown for the
+hardware experiments. The algorithm was
+implemented and run in real time onboard on an NVIDIA Jetson
+TX2. Though the TX2 has a GPU, all computation is done using only the
+ARM CPU, showing that this algorithm can also run at full rate on a variety
+of popular onboard computers. The multirotor UAV was flown in a small motion capture room
+with feedback from an OptiTrack\footnote{OptiTrack:
+\href{www.optitrack.com}{www.optitrack.com}} motion tracking system. The global position and attitude
+measurements from the motion capture system are fused in real time with the
+onboard IMU of the UAV using an extended Kalman filter (EKF) to produce
+full state estimates. 
+
+For added safety, the computed control inputs are saturated before being sent to
+the flight controller. The throttle signal, $s$, was saturated to a maximum
+value of 0.85 and the angular rate commands, $\vect{\omega}_{b/I}^b$, were
+saturated such that each component $\abs{\omega} \leq 2\,
+\nicefrac{\mathrm{rad}}{\mathrm{s}}$.

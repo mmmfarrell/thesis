@@ -1,0 +1,56 @@
+% !TEX root=../root.tex
+
+\subsection{Traditional LQR}
+
+A linear-quadratic regulator provides the optimal state space controller gains
+for an LTI  system given by
+\begin{equation}
+\dot{{\bf x}}=A{\bf x}+B{\bf u},
+\end{equation}
+assuming full-state feedback. We define the cost-to-go for the infinite-time solution as
+\begin{equation}
+  J(\vect{x},\vect{u})=\int_{0}^{\infty}\left(\vect{x}^{\top}Q\vect{x}+\vect{u}R\vect{u}\right)dt
+\label{eq:lqr_cost}
+\end{equation}
+with $Q$ and $R$ being positive definite matrices that
+define the costs associated with the state and the input. The cost function
+given in~\eqref{eq:lqr_cost} is minimized by the control input
+\begin{equation}
+  \vect{u} = -K\vect{x},
+\end{equation}
+where $K$ is given by
+\begin{equation}
+  K = R^{-1}B^{\top}P,
+\end{equation}
+and $P$ is the solution to the Continuous-time Algebraic Riccati Equation (CARE),
+\begin{equation}
+  A^{\top}P + PA -PBR^{-1}B^{\top}P + Q = 0.
+\end{equation}
+
+It should be noted that in its basic form, an LQR controller is simply a
+regulator and the control input $\vect{u}$ will only attempt to drive the state
+to zero in an optimal way. If the desire is for the system to reach a desired
+state, $\des{\vect{x}}$, one can start by defining the error-state as
+\begin{equation}
+  \tilde{\vect{x}}=\vect{x}-\des{\vect{x}}
+  \label{eq:vector_error_state}
+\end{equation}
+and redefining the control input as
+\begin{equation}
+  \tilde{\vect{u}} = -K\tilde{\vect{x}}.
+\end{equation}
+This technique, however, will generally result in steady-state error between the
+state $\vect{x}$ and the reference trajectory $\des{\vect{x}}$. The steady-state error can be removed by augmenting the state with an integrator or by applying a model-based feed-forward control input,
+\begin{equation}
+  \vect{u} = \tilde{\vect{u}} + \des{\vect{u}} = -K\tilde{\vect{x}} + \des{\vect{u}}.
+\end{equation}
+
+%In the following sections, we apply an error state LQR controller to
+%control the position, velocity, and attitude of a multirotor vehicle. However, a
+A direct application of~\eqref{eq:vector_error_state} in our case is not defined
+because the multirotor state is not a vector quantity.
+%In other words, any attempt
+%to directly add or subtract an attitude representation will leave the manifold
+To compensate for this, we propose to compute control based
+on the error-state dynamics of the system, where the error-state is purely a vector
+quantity.

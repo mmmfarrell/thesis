@@ -1,0 +1,54 @@
+% !TEX root=../master.tex
+
+% \chapter{Control Paper}
+\chapter{Error-State LQR Control of a Multirotor UAV}
+\label{chp:control_paper}
+
+\graphicspath{{lqr_paper/}}
+
+\section{Introduction}
+\input{lqr_paper/introduction/background}
+% - UAV control
+% - Lie Algebra in estimation Geometric Control
+% - Duality to ESKF
+\input{lqr_paper/introduction/related_work}
+\input{lqr_paper/introduction/paper_layout}
+
+\section{Model} \label{sec:model}
+\input{lqr_paper/model/notation}
+\input{lqr_paper/model/quaternions}
+%\input{lqr_paper/model/rotations}
+\input{lqr_paper/model/quadrotor_dynamics}
+% Dynamics of sim
+
+\section{LQR Control} \label{sec:lqr_control}
+\input{lqr_paper/lqr/traditional}
+% Brysons rule
+\input{lqr_paper/lqr/error_state}
+% Error state dynamics
+% assume that we reach commanded omega instant
+% Brysons rule
+%\input{lqr_paper/lqr/schur_solver}
+
+\section{Experiment} \label{sec:experiment}
+\input{lqr_paper/experiment/trajectory_generation}
+% flew waypoints and figure8
+\input{lqr_paper/experiment/simulation}
+% SIL simulation with Gazebo, ROS
+\input{lqr_paper/experiment/hardware}
+% Roslfight, TX2
+
+\section{Results} \label{sec:results}
+\input{lqr_paper/results/simulation}
+\input{lqr_paper/results/hardware}
+% TX2
+% 274.6 us mean, 43.84 us std
+
+% Conclusion
+\section{Conclusion} \label{sec:conclusion}
+\input{lqr_paper/conclusion/conclusion}
+
+% % What to do about this appendix
+% % \appendix
+% % \label{app:error_state_der}
+% % \input{appendix/error_state_dynamics_derivation}

@@ -9,3 +9,7 @@
 *.aux
 *.pdf
 *.bin
+*.toc
+*.lot
+*.log
+*.brf

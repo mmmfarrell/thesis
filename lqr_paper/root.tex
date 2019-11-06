@@ -1,0 +1,104 @@
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}
+
+\IEEEoverridecommandlockouts
+
+\overrideIEEEmargins
+
+\usepackage[hidelinks]{hyperref}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{amsmath,amssymb,amsbsy,amsfonts}
+\usepackage{accents}
+\usepackage{nicefrac}
+\usepackage{upgreek}
+\usepackage[]{footmisc}
+
+\input{macros}
+
+\title{\LARGE \bf
+  Error-State LQR Control of a Multirotor UAV
+}
+
+\author{Michael Farrell$^{12}$, James Jackson$^{2}$, Jerel Nielsen$^{3}$, Craig Bidstrup$^{3}$, and Tim McLain$^{2}$% <-this % stops a space
+% TODO put this stuff back in later with Planck's NSF award number too!
+%\thanks{This research was supported through the Center for Unmanned Aircraft Systems (C-UAS), a National Science Foundation-sponsored industry/university
+%cooperative research center (I/UCRC) under NSF Award No. IIP-1650547
+%along with significant contributions from C-UAS industry members.}% <-this % stops a space
+\thanks{The research was supported by the National Science Foundation STTR Phase II: Autonomous Landing of Small Unmanned Aircraft Systems onto Moving Platforms, Award No. IIP-1758678 in partnership with Planck Aerosystems.}
+\thanks{$^{1}$The corresponding author can be contacted at
+      \tt{michaeldavidfarrell at gmail.com}.}%
+\thanks{$^{2}$Author is with the Department of Mechanical Engineering,
+        Brigham Young University, Provo, UT, 84602, USA.}%
+\thanks{$^{3}$Author is with the Department of Electrical and Computer Engineering,
+        Brigham Young University, Provo, UT, 84602, USA.}%
+}
+
+
+\begin{document}
+
+
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{abstract}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+\input{introduction/background}
+% - UAV control
+% - Lie Algebra in estimation Geometric Control
+% - Duality to ESKF
+\input{introduction/related_work}
+\input{introduction/paper_layout}
+
+\section{Model} \label{sec:model}
+\input{model/notation}
+\input{model/quaternions}
+%\input{model/rotations}
+\input{model/quadrotor_dynamics}
+% Dynamics of sim
+
+\section{LQR Control} \label{sec:lqr_control}
+\input{lqr/traditional}
+% Brysons rule
+\input{lqr/error_state}
+% Error state dynamics
+% assume that we reach commanded omega instant
+% Brysons rule
+%\input{lqr/schur_solver}
+
+\section{Experiment} \label{sec:experiment}
+\input{experiment/trajectory_generation}
+% flew waypoints and figure8
+\input{experiment/simulation}
+% SIL simulation with Gazebo, ROS
+\input{experiment/hardware}
+% Roslfight, TX2
+
+\section{Results} \label{sec:results}
+\input{results/simulation}
+\input{results/hardware}
+% TX2
+% 274.6 us mean, 43.84 us std
+
+% Conclusion
+\section{Conclusion} \label{sec:conclusion}
+\input{conclusion/conclusion}
+
+%\appendices
+
+%\section{First App
+\appendix
+\label{app:error_state_der}
+\input{appendix/error_state_dynamics_derivation}
+
+\bibliographystyle{IEEEtran}
+\bibliography{abbrev,library}
+\end{document}

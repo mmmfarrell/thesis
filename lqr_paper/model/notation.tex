@@ -1,0 +1,42 @@
+% !TEX root=../root.tex
+
+\subsection{Notation}
+
+We define some common notation used throughout the paper, first noting that
+vectors are represented with a bold letter (e.g., $\bf v$) and matrices with a
+capital letter (e.g., $A$).
+\begin{center}
+\begin{tabularx}{\columnwidth}{lX}
+$R_a^b$ & Rotation matrix from reference frame $a$ to $b$ \\
+$\vect{v}_{a/b}^c$ & Vector state $\vect{v}$ of frame $a$ w.r.t.~frame $b$, expressed in frame $c$ \\
+% $\hat{a}$ & Estimate of true variable $a$ \\
+% $\bar{a}$ & Measurement of $a$ \\
+$\des{a}$ & Desired value of $a$ \\
+$\dot{a}$ & Time derivative of $a$ \\
+$\tilde{a}$ & Error of variable $a$, i.e., $\tilde{a} \triangleq a - \des{a}$
+\end{tabularx}
+\end{center}
+%
+We also define the following coordinate frames:
+\begin{center}
+\begin{tabularx}{\columnwidth}{lX}
+$I$ & The inertial coordinate frame in north-east-down\\
+$\ell$ & The aircraft's vehicle-1 (body-level) coordinate frame \\
+$b$ & The aircraft's body-fixed coordinate frame
+\end{tabularx}
+\end{center}
+
+We make frequent use of the skew-symmetric matrix operator defined by
+\begin{equation}
+  \skewmat{\vect{v}} \triangleq
+  \begin{bmatrix}
+  0 & -v_{3} & v_{2}\\
+  v_{3} & 0 & -v_{1}\\
+  -v_{2} & v_{1} & 0
+  \end{bmatrix},
+\end{equation}
+which is related to the cross-product between two vectors as
+\begin{equation}
+  \vect{v}\times\vect{w}=\skewmat{\vect{v}}\vect{w}.
+\end{equation}
+We also use the standard basis vectors $\vect{e}_1, \vect{e}_2, \ldots, \vect{e}_N$, where $\vect{e}_1 = \begin{bmatrix} 1 & 0 & \cdots & 0 \end{bmatrix}^\transpose$ and so forth.

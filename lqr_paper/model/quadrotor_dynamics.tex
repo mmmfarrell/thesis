@@ -1,0 +1,243 @@
+% !TEX root=../root.tex
+
+\subsection{Quadrotor Dynamics}
+
+If we define the state of a quadrotor as the tuple of position, velocity, and
+attitude
+\begin{equation*}
+	%\vect{x} = \begin{pmatrix}\vect{p}_{b/i}^{i}, R_{i}^{b},
+        %\vect{v}_{b/i}^{b} \end{pmatrix} \in \mathbb{R}^3 \times \mathbb{R}^3
+        %\times S^3
+  \vect{x} = \begin{pmatrix}\vect{p}_{b/I}^{I}, \vect{v}_{b/I}^b, \vect{q}_I^{b}
+        \end{pmatrix} \in \mathbb{R}^3 \times \mathbb{R}^3
+        \times S^3
+\end{equation*}
+and the input to our system as the tuple of the throttle signal, $s$, and angular
+velocity, $\vect{\omega}_{b/I}^b$,
+\begin{equation*}
+	\vect{u} = \begin{pmatrix}s, \vect{\omega}_{b/i}^b \end{pmatrix} \in
+        \mathbb{R}^1 \times \mathbb{R}^3,
+\end{equation*}
+then the rigid body dynamics of a multirotor UAV are as follows~\cite{leishman2014accel}:
+\small
+\begin{align}
+	% \dot{\vect{x}} &= f\left(\vect{x}, \vect{u}\right) \nonumber \\
+	% \begin{pmatrix} 
+		\dot{\vect{p}}_{b/I}^{I} &= \left(R_{I}^{b}\right)^\transpose \vect{v}_{b/I}^{b} \nonumber \\
+		\dot{\vect{v}}_{b/I}^{b} &= gR_I^b \vect{e}_3 - g\frac{s}{s_e}\vect{e}_3 -
+                \drag \left( I - \vect{e}_3 \vect{e}_3^\top \right)
+                \vect{v}_{b/I}^b - \nonumber \\
+                \label{eq:dynamics}
+                & \qquad \skewmat{\vect{\omega}_{b/I}^b}\vect{v}_{b/I}^b \\
+                \dot{\vect{q}}_{I}^{b} 
+	% \end{pmatrix}
+	&= 	
+	% \begin{pmatrix} 
+		% \left(R_{I}^{b}\right)^\transpose \vect{v}_{b/I}^{b} \\
+		% gR_I^b \vect{e}_3 - g\frac{s}{s_e}\vect{e}_3 -
+  %               \drag \left( I - \vect{e}_3 \vect{e}_3^\top \right) \vect{v}_{b/I}^b -
+  %               \skewmat{\vect{\omega}_{b/I}^b}\vect{v}_{b/I}^b\\
+		%-\skewmat{\vect{\omega}_{b/I}^b} R_{I}^{b}
+                \q_I^b \otimes \begin{pmatrix} 0 \\ \frac{1}{2}
+                \omega_{b/I}^b\end{pmatrix} \nonumber,
+	% \end{pmatrix},
+\end{align}
+\normalsize
+where $\drag$ is a linear drag constant, $s_e$ is the throttle command required to hover, and $g$ is the magnitude of gravity.  This model assumes a linear relationship between throttle signal and thrust, which is not always the case.  Although we use this simple model, more sophisticated approaches, such as~\cite{small2018mpc} estimate this relationship online and compensate for it in real time.
+
+%While the differential equation given in~\eqref{eq:dynamics} can be solved in a number of ways, it is important to properly account for
+%the manifold nature of the quaternion attitude representation, otherwise the
+%integrated attitude will depart from $S^3$.
+%and an expensive re-orthonormalization step will be required to ensure the rotation matrix remains member of $\SO(3)$.  A basic zero-order hold integration scheme is given in Appx.~\ref{appx:manifold_integration} where the attitude is integrated on the manifold and a more accurate fourth-order Runga-Kutta method on the manifold is used in the accompanying software library.
+
+\subsection{Error-State Dynamics} \label{subsec:error_state_dyn}
+
+It is useful to consider what is known as the \emph{error-state} of the
+quadrotor.  This concept has a long history in state estimation and is used in
+the error-state Kalman
+filter~\cite{sola2017quaternion,Markley2004MultiplicativeVA}.  The error-state
+is used in state estimation as a principled way to represent the covariance
+about attitude in terms of a vector space, as opposed to some local
+approximation.  This relationship is also useful in control for the same reason.
+Performing control in the vector space of error-state provides a principled way
+to leverage well-understood and efficient linear algebra machinery to solve
+control problems over non-vector quantities, such as attitude.  
+
+We define the error-state of some quantity $\vect{y}$ as
+\begin{equation}
+  \tilde{\vect{y}}=\vect{y} \boxminus \des{\vect{y}},
+  \label{eq:error}
+\end{equation}
+where $\boxminus$ is an appropriate difference operator, as described
+by~\cite{hertzberg2013integrating}.  For instance, if $\vect{y}$, 
+$\des{\vect{y}}$ $\in \mathbb{R}^{n}$, the $\boxminus$ operator may be
+defined as the vector subtraction operator. However, due to the attitude component of our
+state, the vector subtraction operator is not defined between $\x$ and
+$\des{\x}$. We instead define the
+error-state piecewise for
+each component of the state and combine these into an error-state vector
+\begin{equation}
+  \tilde{\vect{x}}=\begin{bmatrix}{\tilde{\vect{p}}}_{b/I}^{I} &
+  \tilde{\vect{v}}_{b/I}^{b} &
+\tilde{\vect{r}}_{I}^{b}\end{bmatrix}^{\top}\in\mathbb{R}^{9\times1},
+  \label{eq:error_state}
+\end{equation}
+where $\tilde{\vect{p}}_{b/I}^{I}$ is the error-state associated with
+position, $\tilde{\vect{v}}_{b/I}^{b}$ is the error-state associated with
+velocity, and $\tilde{\vect{r}}_{I}^{b}$ is the error-state associated
+with attitude.
+%While the state itself is a not a vector quantity due to the attitude
+%representation, the error state \emph{is} a vector
+%quantity, allowing us to use many common techniques to perform control.
+
+In our case, the error-states associated with
+position and velocity are simply defined using vector subtraction
+\begin{align}
+  \label{eq:pos_err}
+  \tilde{\vect{p}}_{b/I}^{I} &= \vect{p}_{b/I}^{I} - \des{\vect{p}}_{b/I}^{I} \\
+  \tilde{\vect{v}}_{b/I}^{b} &= \vect{v}_{b/I}^{b} - \des{\vect{v}}_{b/I}^{b},
+  \label{eq:vel_err}
+\end{align}
+however, the error-state associated with attitude is more complicated.
+%In simplest terms, the subtraction operator is
+%not a sensible operation for a unit quaternion, therefore we must turn to other
+%methods to define the error state.
+
+It is commonly understood that any representation of attitude has three
+underlying degrees of freedom.  A unit quaternion has four parameters, but its
+error can be described in terms of three degrees of freedom that we wish
+to represent as a vector quantity.   In a neighborhood sufficiently close to the
+identity,
+these behave similarly to the Euler angle representation of roll, pitch,
+and yaw. However, Euler angles are not a vector because the sequential rotation
+method used to define Euler angles nonlinearly couples the three degrees of
+freedom. Therefore, we define the vector
+\begin{equation}
+  \label{eq:r_def}
+  \vect{r}_I^b\left(t\right)=\vect{r}_I^b\left(t_0\right)+\int_{t_{0}}^{t}\vect{\omega}_{b/I}^{b}\left(\tau\right)d\tau,
+\end{equation}
+such that $\vect{r}_I^b\left(t_0\right) = 0$ and $\dot{\vect{r}}_I^b = \vect{\omega}_{b/I}^{b}$.
+With this definition, we can use~\eqref{eqn:exponential_map}
+and~\eqref{eqn:log_map} to express
+\begin{align}
+  \label{eq:q_des}
+  \q_{I}^{b} &= \des{\q}_{I}^{b} \otimes \exp_{\q} \left(\tilde{\vect{r}}\right) \\
+  \tilde{\vect{r}} &= \log_{\q} \left(\left(\des{\q}_{I}^{b}\right)^{-1} \otimes
+    \q_{I}^{b}\right),
+\end{align}
+as described by~\cite{hertzberg2013integrating}.
+
+Even though $\vect{r}_I^b$ is a vector, we cannot simply compute the error-state
+as $\tilde{\vect{r}}_I^b=\vect{r}_I^b-\des{\vect{r}}_I^b$ because $\vect{r}_I^b$
+is a minimal representation of $\vect{q}_I^b$, which is a double cover of the
+Lie group $\SO\mathopen{}\mathclose\bgroup\left(3\aftergroup\egroup\right)$. %$SO\left(3\right)$.
+Vector subtraction of members in this group is not valid.
+However, the derivative of $\vect{r}_I^b$ exists in the tangent space of $\SO\mathopen{}\mathclose\bgroup\left(3\aftergroup\egroup\right)$, so we can perform
+\begin{equation}
+\label{eq:rdot_diff}
+\dot{\tilde{\vect{r}}}_I^b=\dot{\vect{r}}_I^b-R_I^b\left(\des{R}_I^b\right)^{\top}\dot{\des{\vect{r}}}_I^b,
+\end{equation}
+where $R_I^b\left(\des{R}_I^b\right)^{\top}$ moves the desired vector
+derivative, $\dot{\des{\vect{r}}}_I^b$, from its own tangent space to the tangent space of $\dot{\vect{r}}_I^b$.
+With both vectors in the same tangent space, the vector subtraction in~\eqref{eq:rdot_diff} is valid.
+
+For use in control, we similarly define an error-state for the control input
+with the error-state being the difference between the current control input and
+some reference input.
+Using the same definition as in~\eqref{eq:error}, we can see that
+\begin{align}
+  \tilde{s} &= s - \des{s} \\
+  \tilde{\vect{\omega}}_{b/I}^{b} &= \vect{\omega}_{b/I}^{b} - \des{\vect{\omega}}_{b/I}^{b}
+  \label{eq:input_error_state}
+\end{align}
+where $\des{s}$ and $\des{\vect{\omega}}_{b/I}^{b}$ are respectively the reference throttle
+signal and reference angular velocity. Note that we do not model the dynamic
+response to these inputs. Instead, our model assumes that the multirotor
+instantaneously reaches any commanded throttle and angular velocity.
+
+Using the error-state definitions above, we can derive the error-state dynamics
+of the quadrotor as
+%\begin{equation}
+	%\begin{pmatrix} 
+                %\dot{\tilde{\vect{p}}}_{b/I}^{I}\\ 
+                %\dot{\tilde{\vect{v}}}_{b/I}^{b}\\
+                %\dot{\tilde{\vect{q}}}_{I}^{b} 
+	%\end{pmatrix}
+	%= 	
+        %\begin{pmatrix} \left(R_{I}^{b}\right)^\transpose
+          %\tilde{\vect{v}}_{b/I}^{b} - \left(R_{I}^{b}\right)^\transpose
+          %\skewmat{\vect{v}_{b/I}^{b}} \tilde{\vect{r}}_I^b \\
+          %g\skewmat{R_I^b
+          %\vect{e}_3} \tilde{\vect{r}}_I^b -g\frac{\tilde{s}}{s_e}\vect{e}_3
+          %-\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right)
+          %\tilde{\vect{v}}_{b/I}^b - \skewmat{\vect{\omega}_{b/I}^b}
+          %\tilde{\vect{v}}_{b/I}^b + \skewmat{\vect{v}_{b/I}^b}
+          %\tilde{\vect{\omega}}_{b/I}^b \\
+          %\tilde{\vect{\omega}}_{b/I}^{b} -
+        %\skewmat{\vect{\omega}_{b/I}^{b} } \tilde{\vect{r}}_I^b \end{pmatrix}.
+	%\label{eq:error_state_dynamics}
+%\end{equation}
+\begin{align}
+        \dot{\tilde{\vect{p}}}_{b/I}^{I} &= \left(R_{I}^{b}\right)^\transpose
+          \tilde{\vect{v}}_{b/I}^{b} - \left(R_{I}^{b}\right)^\transpose
+          \skewmat{\vect{v}_{b/I}^{b}} \tilde{\vect{r}}_I^b \nonumber\\
+        \dot{\tilde{\vect{v}}}_{b/I}^{b} &= g\skewmat{R_I^b
+          \vect{e}_3} \tilde{\vect{r}}_I^b -g\frac{\tilde{s}}{s_e}\vect{e}_3
+          -\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right)
+          \tilde{\vect{v}}_{b/I}^b \nonumber \\
+                                         & \qquad - \skewmat{\vect{\omega}_{b/I}^b}
+          \tilde{\vect{v}}_{b/I}^b + \skewmat{\vect{v}_{b/I}^b}
+          \tilde{\vect{\omega}}_{b/I}^b \nonumber \\
+          \dot{\tilde{\vect{r}}}_{I}^{b} &= \tilde{\vect{\omega}}_{b/I}^{b} -
+        \skewmat{\vect{\omega}_{b/I}^{b} } \tilde{\vect{r}}_I^b,
+	\label{eq:error_state_dynamics}
+\end{align}
+or succinctly,
+\begin{equation}
+  \dot{\tilde{\x}} = f\left(\x, \tilde{\x}, \vect{u}, \tilde{\vect{u}}\right).
+\end{equation}
+The derivation of these error-state dynamics can be found in the Appendix.
+
+
+%Therefore, to derive the attitude error state vector
+%we begin with the time derivative of a unit quaternion, given by
+%\MF{Quaternions not rotation matrix}
+%\begin{equation}
+  %\dot{R}_I^b = -\skewmat{\boldsymbol{\omega}_{b/I}^b}R_I^b,
+%\end{equation}
+%which has the well known solution
+%\begin{equation}
+  %R_I^b\left(t\right) = \exp\left(-\int_{t_0}^t\skewmat{\boldsymbol{\omega}_{b/I}^b\left(\tau\right)d\tau}\right)R_I^b\left(t_0\right).
+  %\label{eq:rot_mat_sol}
+%\end{equation}
+%If we define an \emph{attitude vector} as the three independent degrees of freedom $\vect{r}_I^b\left(t\right)=\vect{r}_I^b\left(t_0\right)+\int_{t_0}^t\boldsymbol{\omega}_{b/I}^b\left(\tau\right)d\tau$ with $\vect{r}_I^b\left(t_0\right)=0$, then we can re-write \eqref{eq:rot_mat_sol} as
+%\begin{equation}
+  %R_I^b\left(t\right) = \exp\left(-\skewmat{\vect{r}_I^b\left(t\right)}\right)R_I^b\left(t_0\right).
+  %\label{eq:att_vector}
+%\end{equation}
+%and the time derivative of the attitude vector is given by
+%\begin{equation}
+  %\dot{\vect{r}}_I^b = \boldsymbol{\omega}_{b/I}^b.
+%\end{equation}
+
+
+%We can now define the error state as: \JN{Start directly with the derivative. Attitude is correctly represented on a manifold, so differencing 'attitude vectors' doesn't really make sense.}
+%\begin{align}
+        %\tilde{\vect{r}}_I^{b} 
+                %&= \vect{r}_I^b - \hat{\vect{r}}_I^{\hat{b}}  \nonumber \\
+                %&= \vect{r}_I^b - R_{\hat{b}}^b \hat{\vect{r}}_I^{\hat{b}}  \nonumber \\
+                %&= \vect{r}_I^b - R_I^{b} \left(R_{I}^{\hat{b}}\right)^\transpose \hat{\vect{r}}_I^{\hat{b}},
+        %\label{eq:att_err}
+%\end{align}
+%and the associated time derivative
+%\begin{equation}
+  %\dot{\tilde{\vect{r}}}_I^b = \dot{\vect{r}}_I^b - R_{I}^b \left(R_{I}^{\hat{b}}\right)^\transpose \dot{\hat{\vect{r}}}_I^{\hat{b}}.
+  %\label{eq:att_err_deriv}
+%\end{equation}
+%If we define $\tilde{R}_{\hat{b}}^b = R_{I}^b \left(R_{I}^{\hat{b}}\right)^\transpose$, then \eqref{eq:att_err_deriv} becomes
+%\begin{equation}
+%\dot{\tilde{\vect{r}}}_I^b = \dot{\vect{r}}_I^b -\tilde{R}_{\hat{b}}^b \dot{\hat{\vect{r}}}_I^{\hat{b}}.
+%\end{equation}
+%The coordinate frame transform in \eqref{eq:att_err} and \eqref{eq:att_err_deriv} arises because the two attitude vectors are expressed in different tangent spaces.  We desire to express our error state in the actual body frame, so we simply move the estimate into that tangent space.
+
+

@@ -1,0 +1,88 @@
+% !TEX root=../root.tex
+
+\subsection{Error-State LQR}
+
+We can apply the same LQR approach to the error-state dynamics from
+\eqref{eq:error_state_dynamics}. Since LQR control is a regulator, it will drive
+the error-state to zero, or our current state to our desired state. Since LQR is
+only defined for an LTI system, we can approximate the error-state system as an
+LTI system by linearizing about the current state at each time step. This gives
+us the system
+%Heres the code that implements these
+  %A_.setZero();
+  %A_.block<3, 3>(dxPOS, dxVEL) = R_I_b.transpose();
+  %A_.block<3, 3>(dxPOS, dxATT) = -R_I_b.transpose() * skew_vel;
+
+  %A_.block<3, 3>(dxVEL, dxVEL) = -M - skew_omega;
+  %A_.block<3, 3>(dxVEL, dxATT) = skew(R_I_b * grav_vec);
+
+  %A_.block<3, 3>(dxATT, dxATT) = -skew_omega;
+
+  %B_.setZero();
+  %B_.block<3, 1>(dxVEL, uTHROTTLE) = -(grav_val_ / hover_throttle_) * e3;
+  %B_.block<3, 3>(dxVEL, uOMEGA) = skew_vel;
+
+  %B_.block<3, 3>(dxATT, uOMEGA) = Eigen::Matrix3d::Identity();
+
+\begin{equation}
+\dot{\tilde{{\bf x}}}=A\tilde{{\bf x}}+B\tilde{{\bf u}}
+\end{equation}
+with the matrices $A$ and $B$ given by
+\begin{align}
+A({\bf x},{\bf u}) & =\frac{\partial}{\partial\tilde{{\bf x}}}f({\bf x},\tilde{{\bf x}},{\bf u},\tilde{{\bf u}})\\
+B({\bf x},{\bf u}) & =\frac{\partial}{\partial\tilde{{\bf u}}}f({\bf x},\tilde{{\bf x}},{\bf u},\tilde{{\bf u}}).
+\end{align}
+Using the error-state dynamics in \eqref{eq:error_state_dynamics} and dropping
+the subscripts and superscripts for compactness it can
+be seen that
+\begin{align}
+A({\bf x},{\bf u}) & =\frac{\partial}{\partial\tilde{{\bf x}}}f({\bf x},\tilde{{\bf x}},{\bf u},\tilde{{\bf u}})\\
+ & =\begin{bmatrix}{\bf 0} & \frac{\partial\dot{\tilde{{\bf
+   p}}}}{\partial\tilde{{\bf v}}} & \frac{\partial\dot{\tilde{{\bf
+   p}}}}{\partial\tilde{\vect{r}}} \\[4pt]
+{\bf 0} & \frac{\partial\dot{\tilde{{\bf v}}}}{\partial\tilde{{\bf v}}} &
+\frac{\partial\dot{\tilde{{\bf v}}}}{\partial\tilde{\vect{r}}} \\[4pt]
+{\bf 0} & {\bf 0} & \frac{\partial\dot{\tilde{\vect{r}}}}{\partial\tilde{\vect{r}}}
+\end{bmatrix}
+\end{align}
+with the individual components given by
+\begin{align}
+  \frac{\partial\dot{\tilde{\vect{p}}}}{\partial\tilde{\vect{v}}} &
+  =\left(R_{I}^{b}\right)^\transpose \\
+  \frac{\partial\dot{\tilde{\vect{p}}}}{\partial\tilde{\vect{r}}} &
+  =-\left(R_{I}^{b}\right)^\transpose \skewmat{\vect{v}_{b/I}^{b}} \\
+  \frac{\partial\dot{\tilde{\vect{v}}}}{\partial\tilde{\vect{v}}} & =
+-\drag\left(I - \e_3\e_3^\transpose\right) - \skewmat{\vect{\omega}_{b/I}^{b}} \\
+  \frac{\partial\dot{\tilde{\vect{v}}}}{\partial\tilde{\vect{r}}} & =
+  \skewmat{gR_{I}^{b}\e_3} \\
+  \frac{\partial\dot{\tilde{\vect{r}}}}{\partial\tilde{\vect{r}}} & =
+  -\skewmat{\vect{\omega}_{b/I}^{b}}.
+\end{align}
+It can similarly be seen that
+\begin{align}
+B({\bf x},{\bf u}) & =\frac{\partial}{\partial\tilde{{\bf u}}}f({\bf x},\tilde{{\bf x}},{\bf u},\tilde{{\bf u}})\\
+                   & =\begin{bmatrix}{\bf 0} & {\bf 0}\\[4pt]
+\frac{\partial\dot{\tilde{{\bf v}}}}{\partial\tilde{s}} & {\bf
+\frac{\partial\dot{\tilde{{\bf v}}}}{\partial\tilde{\omega}}}\\[4pt]
+{\bf 0} & \frac{\partial\dot{\tilde{\vect{r}}}}{\partial\tilde{\omega}}
+\end{bmatrix}
+\end{align}
+with the individual components given by
+\begin{align}
+  \frac{\partial\dot{\tilde{\vect{v}}}}{\partial\tilde{s}} & =-\frac{g}{s_e}\e_{3}\\
+  \frac{\partial\dot{\tilde{\vect{v}}}}{\partial\tilde{\vect{\omega}}} &
+  =\skewmat{{\bf v}_{b/I}^{b}} \\
+  \frac{\partial\dot{\tilde{\vect{r}}}}{\partial\tilde{\vect{\omega}}} & =I_{3\times3}.
+\end{align}
+
+By linearizing at every time step, the CARE
+must be solved at each time step with the current $A$ and $B$ matrices. We use the
+closed form, Schur decomposition method described in~\cite{laub1979schur}. This
+method allows us to relinearize and recompute the optimal control at full rate
+in our experiments.
+
+Although we relinearize and solve the CARE at each time step, the $Q$ and $R$
+gain matrices are fixed. We choose these gains based on Bryson's
+rule~\cite{hespanha2018linear}. In addition, we have found that better results
+are achieved by saturating the error-state in accordance with the maximum error
+terms used to choose the gains with Bryson's rule.
