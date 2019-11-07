@@ -29,18 +29,25 @@ problems: state estimation, motion planning and control. In this thesis,
 we propose solutions to two of those three problems, state estimation and
 control, for a multirotor UAV landing on a moving vehicle. We leave the problem
 of motion planning as future work, providing some suggested direction
-in~\secref{BLAH}.
+in~\secref{sec:future_work}.
 
 \section{Background}
 
 While autonomous landing of multirotor UAVs onto moving vehicles has been
-demonstrated in a variety of scenarios~\cite{BLAH}, many problems still remain to
-create a truly robust solution. Most low-cost landing methods depend on a fiducial
-landing marker, such as that shown in~\figref{fig:aruco_tag}, that is rigidly attached to the landing vehicle~\cite{BLAH}.
-A camera mounted to the UAV detects the fiducial landing marker, providing
-information about the relative position of the UAV to the landing vehicle.
-Though widely used and successful, this method quickly fails when the fiducial
-landing marker is not detected for significant periods of time.
+demonstrated in a variety of scenarios~\cite{wynn2019visual}, many problems still remain to
+create a truly robust solution. Here we detail several of these outstanding
+problems as they relate to the specifc fields of state estimation, control and
+motion planning.
+
+\subsection{State Estimation}
+Most low-cost landing methods assume that the landing vehicle is equipped with a
+fiducial marker, such as that shown in~\figref{fig:aruco_tag}, that serves as
+the designated landing pad for the UAV.
+In these methods, a camera mounted to the UAV detects the fiducial landing marker, providing
+information about the relative position of the UAV to the landing
+vehicle~\cite{borowczyk2017autonomous}. Even if the motion of the landing vehicle is
+modeled, these methods quickly fail when the fiducial landing
+marker is not detected for several seconds~\cite{ling2014precision}.
 
 \begin{figure}[t]
   \centering
@@ -50,6 +57,53 @@ landing marker is not detected for significant periods of time.
   landing of multirotor UAVs onto moving vehicles.}
   \label{fig:aruco_tag}
 \end{figure}
+
+When landing in challenging conditions such as strong winds, bright sun, or
+dense fog, it is very common that a fiducial marker may be undetected by the UAV
+for long periods of time. Therefore, to create a truly robust landing solution,
+the state estimation algorithm must maintain an accurate estimate of the relative
+state between the UAV and the landing vehicle when the fiducial landing marker
+is not detected for significant durations. Chapter~\ref{chp:estimation_paper}
+describes an estimation algorithm that tracks and estimates the locations of
+visual features on the landing vehicle to achieve this. Experimental results
+from both simulation and hardware demonstrate the improved ability to operate
+without detections of the fiducial marker that results from the proposed
+estimator.
+
+\subsection{Control}
+A wide variety of control schemes for multirotor UAVs have been presented over
+the past two decades. While many of these control algorithms may satisfy the
+requirements for robust landing on moving vehicles, there has recently been a
+movement in the robotics community to appropriately deal with the evolution of a
+robot's state along a manifold using Lie theory~\cite{sola2018micro}. Though
+these methods have been widely used in the field of state
+estimation~\cite{sola2017quaternion, koch2017relative}, there has not been much
+work done applying Lie theory to optimal control.
+
+A controller for robust landing on moving vehicles would ideally be able to
+closely track a time-dependent trajectory. This would allow the UAV to
+accurately land on the moving vehicle at the precise time planned by the motion
+planning algorithm. To achieve this, Chapter~\ref{chp:control_paper} derives a
+linear-quadratic regulator (LQR) using Lie theory and hows in both simulation
+and hardware experiements that it can be used to accurately track a
+time-dependent trajectory.
+
+\subsection{Motion Planning}
+The motion planning problem associated with autonomous vehicles is especially
+important when it is not only important the destination the vehicle must reach,
+but also the path it must take to get there. This is commonly important when
+navigating around obstacles. In the case of landing on moving vehicles, motion
+planning is commonly important to assure that the UAV descends vertically on the
+landing pad to avoid potential obstacles including buildings, terrain, and
+vehicle superstructure.
+
+As with the control problem, much work has been previously presented that would
+likely satisfy the requirements for a robust landing
+solution~\cite{mellinger2011minimum}. Solutions have also been specifically
+presented to generate paths for a UAV landing on a moving
+vehicle using model-predictive control in real time~\cite{baca2019autonomous}.
+While we do not propose any improvements to these methods in this thesis, we
+describe some potential directions for future work in~\secref{sec:future_work}.
 
 \section{Contributions}
 The research described in this thesis makes two significant contributions:
