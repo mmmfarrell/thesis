@@ -16,7 +16,7 @@ in challenging conditions.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=5.5in]{figures/drone_convoy_support.png}
+  \includegraphics[width=4.5in]{figures/drone_convoy_support.png}
   \caption[UAV Convoy Support]{An example of multirotor UAVs used to increase
   situational awareness for a convoy of
 vehicles~\cite{ground_vehicle_based_drones}.}
@@ -27,9 +27,10 @@ vehicles~\cite{ground_vehicle_based_drones}.}
 State-of-the-art autonomous vehicle systems require robust solutions to three
 problems: state estimation, motion planning and control. In this thesis,
 we propose solutions to two of those three problems, state estimation and
-control, for a multirotor UAV landing on a moving vehicle. We leave the problem
-of motion planning as future work, providing some suggested direction
-in~\secref{sec:future_work}.
+control, for a multirotor UAV landing on a moving vehicle.
+% We leave the problem
+% of motion planning as future work, providing some suggested direction
+% in~\secref{sec:future_work}.
 
 \section{Background}
 
@@ -45,8 +46,16 @@ fiducial marker, such as that shown in~\figref{fig:aruco_tag}, that serves as
 the designated landing pad for the UAV.
 In these methods, a camera mounted to the UAV detects the fiducial landing marker, providing
 information about the relative position of the UAV to the landing
-vehicle~\cite{borowczyk2017autonomous}. Even if the motion of the landing vehicle is
-modeled, these methods quickly fail when the fiducial landing
+vehicle~\cite{borowczyk2017autonomous}. These measurements are often used in a
+filtering framework, such as a Kalman filter~\cite{kalman}, to produce a
+continous estimate of the relative state between the UAV and the landing
+vehicle. However, during landing, it is likely
+that the fiducial marker is not detected for periods of time due to occlusion,
+sun glare, or UAV motion. For this reason, it is important that the relative
+motion between the landing vehicle and the UAV is modeled and used to predict
+the relative state when the fiducial marker is not detected.
+Even with a good model though,
+these methods quickly fail when the fiducial landing
 marker is not detected for several seconds~\cite{ling2014precision}.
 
 \begin{figure}[h]
@@ -59,16 +68,28 @@ marker is not detected for several seconds~\cite{ling2014precision}.
 \end{figure}
 
 When landing in challenging conditions such as strong winds, bright sun, or
-dense fog, it is very common that a fiducial marker may be undetected by the UAV
+dense fog, it is very common that the fiducial marker may be undetected by the UAV
 for long periods of time. Therefore, to create a truly robust landing solution,
-the state estimation algorithm must maintain an accurate estimate of the relative
+the state estimation solution must maintain an accurate estimate of the relative
 state between the UAV and the landing vehicle when the fiducial landing marker
 is not detected for significant durations. Chapter~\ref{chp:estimation_paper}
-describes an estimation algorithm that tracks and estimates the locations of
-visual features on the landing vehicle to achieve this. Experimental results
-from both simulation and hardware demonstrate the improved ability to operate
-without detections of the fiducial marker that results from the proposed
-estimator.
+describes an estimation algorithm, based on the error-state Kalman
+filter~\cite{roumeliotis1999circumventing}, that tracks and estimates the locations of
+visual features on the landing vehicle to achieve this goal.
+
+Visual feature
+tracking and estimation is a common technique in the field of visual
+odometry~\cite{qin2018vins}, however, almost all implementations assume that the
+tracked visual features are static with respect to an inertial reference frame.
+In the landing scenario, the landing vehicle occupies progressively more of the
+field of view of the UAV's camera as the UAV descends. We also note that in most
+applications, more precise state estimates are required the closer the UAV gets
+to the landing vehicle. For these reasons, the described estimation algorithm
+only tracks and estimates visual features that are rigidly attached to the landing vehicle.
+Experimental results
+from both simulation and hardware demonstrate accurate and consistent estimates
+result from the proposed algorithm even when the fiducial marker is undetected
+for long periods of time.
 
 \subsection{Control}
 A wide variety of control schemes for multirotor UAVs have been presented over
@@ -80,11 +101,11 @@ these methods have been widely used in the field of state
 estimation~\cite{sola2017quaternion, koch2017relative}, there has not been much
 work done applying Lie theory to optimal control.
 
-A controller for robust landing on moving vehicles would ideally be able to
+A controller for robustly landing a UAV onto a moving vehicle would ideally be able to
 closely track a time-dependent trajectory. This would allow the UAV to
 accurately land on the moving vehicle at the precise time planned by the motion
 planning algorithm. To achieve this, Chapter~\ref{chp:control_paper} derives a
-linear-quadratic regulator (LQR) using Lie theory and hows in both simulation
+linear-quadratic regulator (LQR) using Lie theory and shows in both simulation
 and hardware experiements that it can be used to accurately track a
 time-dependent trajectory.
 
@@ -93,7 +114,7 @@ The motion planning problem associated with autonomous vehicles is especially
 important when it is not only important the destination the vehicle must reach,
 but also the path it must take to get there. This is commonly important when
 navigating around obstacles. In the case of landing on moving vehicles, motion
-planning is commonly important to assure that the UAV descends vertically on the
+planning is important to assure that the UAV descends vertically on the
 landing pad to avoid potential obstacles including buildings, terrain, and
 vehicle superstructure.
 
