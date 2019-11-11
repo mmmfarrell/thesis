@@ -1,6 +1,6 @@
 % !TEX root=../root.tex
 
-To derive the error state dynamics of the multirotor UAV we first establish a few
+To derive the error-state dynamics of the multirotor UAV we first establish a few
 identities and approximations. As it is convenient to work with rotation
 matrices, we first write~\eqref{eq:q_des} in terms of rotation matrices. Since 
 rotation matrices concatenate in an order opposite to quaterions, we have
@@ -44,7 +44,7 @@ We also employ the skew symmetric identity that
   \skewmat{\vect{a}} \vect{b} = -\skewmat{\vect{b}} \vect{a}.
 \end{equation}
 
-\subsubsection{Position}
+\subsection{Position}
 
 Differentiating the error state for the position term given
 by~\eqref{eq:pos_err} we get
@@ -70,19 +70,42 @@ we get
   \des{\vect{v}}_{b/I}^{b} \\
   \begin{split}
   &= \left(R_{I}^{b}\right)^\transpose
-  \vect{v}_{b/I}^{b} \\
-  & \qquad - \left(R_{I}^{b}\right)^\transpose
+  \vect{v}_{b/I}^{b}
+  - \left(R_{I}^{b}\right)^\transpose
   \left(R\left(\exp_{\q}\left(\tilde{\vect{r}}_{I}^{b}\right)\right) \right)^\transpose
   \left(\vect{v}_{b/I}^{b} - \tilde{\vect{v}}_{b/I}^b\right) \\
   \end{split} \\
   \begin{split}
   &= \left(R_{I}^{b}\right)^\transpose
-  \vect{v}_{b/I}^{b} \\
-  & \qquad - \left(R_{I}^{b}\right)^\transpose
+  \vect{v}_{b/I}^{b}
+  - \left(R_{I}^{b}\right)^\transpose
   \left( I - \skewmat{\tilde{\vect{r}}_I^b}\right)
   \left(\vect{v}_{b/I}^{b} - \tilde{\vect{v}}_{b/I}^{b}\right).
   \end{split}
 \end{align}
+% \begin{align}
+  % \dot{\tilde{\vect{p}}}_{b/I}^{I} &= \left(R_{I}^{b}\right)^\transpose
+  % \vect{v}_{b/I}^{b} - \left(\des{R}_{I}^{b}\right)^\transpose
+  % \des{\vect{v}}_{b/I}^{b} \\ 
+  % &= \left(R_{I}^{b}\right)^\transpose
+  % \vect{v}_{b/I}^{b} -
+  % \left(R\left(\exp_{\q}\left(\tilde{\vect{r}}_{I}^{b}\right)\right) R_{I}^{b}\right)^\transpose
+  % \des{\vect{v}}_{b/I}^{b} \\
+  % \begin{split}
+  % &= \left(R_{I}^{b}\right)^\transpose
+  % \vect{v}_{b/I}^{b} \\
+  % & \qquad - \left(R_{I}^{b}\right)^\transpose
+  % \left(R\left(\exp_{\q}\left(\tilde{\vect{r}}_{I}^{b}\right)\right) \right)^\transpose
+  % \left(\vect{v}_{b/I}^{b} - \tilde{\vect{v}}_{b/I}^b\right) \\
+  % \end{split} \\
+  % \begin{split}
+  % &= \left(R_{I}^{b}\right)^\transpose
+  % \vect{v}_{b/I}^{b} \\
+  % & \qquad - \left(R_{I}^{b}\right)^\transpose
+  % \left( I - \skewmat{\tilde{\vect{r}}_I^b}\right)
+  % \left(\vect{v}_{b/I}^{b} - \tilde{\vect{v}}_{b/I}^{b}\right).
+  % \end{split}
+% \end{align}
 By simplifying and neglecting higher-order terms, we get the final expression
 \begin{equation}
   \dot{\tilde{\vect{p}}}_{b/I}^{I} = \left(R_{I}^{b}\right)^\transpose
@@ -90,7 +113,7 @@ By simplifying and neglecting higher-order terms, we get the final expression
     \skewmat{\vect{v}_{b/I}^{b}} \tilde{\vect{r}}_I^b.
 \end{equation}
 
-\subsubsection{Velocity}
+\subsection{Velocity}
 
 Differentiating the error state for the velocity term given
 by~\eqref{eq:vel_err} we get
@@ -104,20 +127,20 @@ we get
 \begin{align}
 \begin{split}
   \dot{\tilde{\vect{v}}}_{b/I}^{b} ={}& \left(gR_I^b \vect{e}_3 -
-    g\frac{s}{s_e}\vect{e}_3\right. \\
-    &\left.-\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right) \vect{v}_{b/I}^b -
+    g\frac{s}{s_e}\vect{e}_3
+    -\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right) \vect{v}_{b/I}^b -
                   \skewmat{\vect{\omega}_{b/I}^b}\vect{v}_{b/I}^b\right) \\
-    &- \left(g\des{R}_I^b \vect{e}_3 - g\frac{\des{s}}{s_e}\vect{e}_3 \right. \\
-    &- \left.\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right) \des{\vect{v}}_{b/I}^b -
+    &- \left(g\des{R}_I^b \vect{e}_3 - g\frac{\des{s}}{s_e}\vect{e}_3
+    - \drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right) \des{\vect{v}}_{b/I}^b -
     \skewmat{\des{\vect{\omega}}_{b/I}^b}\des{\vect{v}}_{b/I}^b\right) \\
 \end{split} \\
 \begin{split}
   \phantom{\dot{\tilde{\vect{v}}}_{b/I}^{b}}={}& \left(gR_I^b \vect{e}_3 -
   g\des{R}_I^b \vect{e}_3\right.) - \left(g\frac{s}{s_e}\vect{e}_3 -
       g\frac{\des{s}}{s_e}\vect{e}_3\right) \\
-    &-\left(\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right)
-      \vect{v}_{b/I}^b\right. \\
-    &- \left.\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right) \des{\vect{v}}_{b/I}^b
+                                               &-\left(\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right)
+      \vect{v}_{b/I}^b
+    - \drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right) \des{\vect{v}}_{b/I}^b
     \right) \\
     &- \left(\skewmat{\vect{\omega}_{b/I}^b}\vect{v}_{b/I}^b -
     \skewmat{\des{\vect{\omega}}_{b/I}^b} \des{\vect{v}}_{b/I}^b\right) \\
@@ -129,34 +152,88 @@ we get
     &-\left(g\frac{\tilde{s}}{s_e}\vect{e}_3\right)
     -\left(\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right)
     \tilde{\vect{v}}_{b/I}^b\right) \\
-    &- \left(\skewmat{\vect{\omega}_{b/I}^b}\vect{v}_{b/I}^b\right. \\
-    &-\left.\skewmat{\left(\vect{\omega}_{b/I}^{b} - \tilde{\vect{\omega}}_{b/I}^{b}\right)} 
+    &- \left(\skewmat{\vect{\omega}_{b/I}^b}\vect{v}_{b/I}^b
+    -\skewmat{\left(\vect{\omega}_{b/I}^{b} - \tilde{\vect{\omega}}_{b/I}^{b}\right)} 
   \left(\vect{v}_{b/I}^{b} - \tilde{\vect{v}}_{b/I}^{b}\right)\right) \\
 \end{split} \\
 \begin{split}
   \phantom{\dot{\tilde{\vect{v}}}_{b/I}^{b}} = {}& \left(-g
-  \skewmat{\tilde{\vect{r}}_I^b} R_I^b \vect{e}_3\right) \\
-    &-\left(g\frac{\tilde{s}}{s_e}\vect{e}_3\right)
+  \skewmat{\tilde{\vect{r}}_I^b} R_I^b \vect{e}_3\right)
+    -\left(g\frac{\tilde{s}}{s_e}\vect{e}_3\right)
     -\left(\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right)
     \tilde{\vect{v}}_{b/I}^b\right) \\
-    &- \left(\skewmat{\vect{\omega}_{b/I}^b}\vect{v}_{b/I}^b\right. \\
-    &-\left.\skewmat{\left(\vect{\omega}_{b/I}^{b} - \tilde{\vect{\omega}}_{b/I}^{b}\right)} 
+    &- \left(\skewmat{\vect{\omega}_{b/I}^b}\vect{v}_{b/I}^b
+    -\skewmat{\left(\vect{\omega}_{b/I}^{b} - \tilde{\vect{\omega}}_{b/I}^{b}\right)} 
   \left(\vect{v}_{b/I}^{b} - \tilde{\vect{v}}_{b/I}^{b}\right)\right). \\
 \end{split}
 \end{align}
+% \begin{align}
+% \begin{split}
+  % \dot{\tilde{\vect{v}}}_{b/I}^{b} ={}& \left(gR_I^b \vect{e}_3 -
+    % g\frac{s}{s_e}\vect{e}_3\right. \\
+    % &\left.-\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right) \vect{v}_{b/I}^b -
+                  % \skewmat{\vect{\omega}_{b/I}^b}\vect{v}_{b/I}^b\right) \\
+    % &- \left(g\des{R}_I^b \vect{e}_3 - g\frac{\des{s}}{s_e}\vect{e}_3 \right. \\
+    % &- \left.\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right) \des{\vect{v}}_{b/I}^b -
+    % \skewmat{\des{\vect{\omega}}_{b/I}^b}\des{\vect{v}}_{b/I}^b\right) \\
+% \end{split} \\
+% \begin{split}
+  % \phantom{\dot{\tilde{\vect{v}}}_{b/I}^{b}}={}& \left(gR_I^b \vect{e}_3 -
+  % g\des{R}_I^b \vect{e}_3\right.) - \left(g\frac{s}{s_e}\vect{e}_3 -
+      % g\frac{\des{s}}{s_e}\vect{e}_3\right) \\
+    % &-\left(\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right)
+      % \vect{v}_{b/I}^b\right. \\
+    % &- \left.\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right) \des{\vect{v}}_{b/I}^b
+    % \right) \\
+    % &- \left(\skewmat{\vect{\omega}_{b/I}^b}\vect{v}_{b/I}^b -
+    % \skewmat{\des{\vect{\omega}}_{b/I}^b} \des{\vect{v}}_{b/I}^b\right) \\
+% \end{split} \\
+% \begin{split}
+  % \phantom{\dot{\tilde{\vect{v}}}_{b/I}^{b}} \approx {}& \left(gR_I^b \vect{e}_3 -
+    % g\left( I + \skewmat{\tilde{\vect{r}}_I^b} \right) R_{I}^{b}
+  % \vect{e}_3\right) \\
+    % &-\left(g\frac{\tilde{s}}{s_e}\vect{e}_3\right)
+    % -\left(\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right)
+    % \tilde{\vect{v}}_{b/I}^b\right) \\
+    % &- \left(\skewmat{\vect{\omega}_{b/I}^b}\vect{v}_{b/I}^b\right. \\
+    % &-\left.\skewmat{\left(\vect{\omega}_{b/I}^{b} - \tilde{\vect{\omega}}_{b/I}^{b}\right)} 
+  % \left(\vect{v}_{b/I}^{b} - \tilde{\vect{v}}_{b/I}^{b}\right)\right) \\
+% \end{split} \\
+% \begin{split}
+  % \phantom{\dot{\tilde{\vect{v}}}_{b/I}^{b}} = {}& \left(-g
+  % \skewmat{\tilde{\vect{r}}_I^b} R_I^b \vect{e}_3\right) \\
+    % &-\left(g\frac{\tilde{s}}{s_e}\vect{e}_3\right)
+    % -\left(\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right)
+    % \tilde{\vect{v}}_{b/I}^b\right) \\
+    % &- \left(\skewmat{\vect{\omega}_{b/I}^b}\vect{v}_{b/I}^b\right. \\
+    % &-\left.\skewmat{\left(\vect{\omega}_{b/I}^{b} - \tilde{\vect{\omega}}_{b/I}^{b}\right)} 
+  % \left(\vect{v}_{b/I}^{b} - \tilde{\vect{v}}_{b/I}^{b}\right)\right). \\
+% \end{split}
+% \end{align}
 
 By simplifying and neglecting higher-order terms, we get the final expression
 \begin{equation}
   \begin{split}
   \dot{\tilde{\vect{v}}}_{b/I}^{b} = {}& g
   \skewmat{R_I^b \vect{e}_3} \tilde{\vect{r}}_I^b
-    -g\frac{\tilde{s}}{s_e}\vect{e}_3 \\
-    &-\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right)
+    -g\frac{\tilde{s}}{s_e}\vect{e}_3
+   -\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right)
     \tilde{\vect{v}}_{b/I}^b \\
     &- \skewmat{\vect{\omega}_{b/I}^b} \tilde{\vect{v}}_{b/I}^b +
     \skewmat{\vect{v}_{b/I}^b} \tilde{\vect{\omega}}_{b/I}^b.
   \end{split}
 \end{equation}
+% \begin{equation}
+  % \begin{split}
+  % \dot{\tilde{\vect{v}}}_{b/I}^{b} = {}& g
+  % \skewmat{R_I^b \vect{e}_3} \tilde{\vect{r}}_I^b
+    % -g\frac{\tilde{s}}{s_e}\vect{e}_3 \\
+    % &-\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right)
+    % \tilde{\vect{v}}_{b/I}^b \\
+    % &- \skewmat{\vect{\omega}_{b/I}^b} \tilde{\vect{v}}_{b/I}^b +
+    % \skewmat{\vect{v}_{b/I}^b} \tilde{\vect{\omega}}_{b/I}^b.
+  % \end{split}
+% \end{equation}
 
 %\begin{multline}
   %\dot{\tilde{\vect{v}}}_{b/I}^{b} =\\
@@ -181,7 +258,7 @@ By simplifying and neglecting higher-order terms, we get the final expression
 %\end{align}
 
 
-\subsubsection{Attitude}
+\subsection{Attitude}
 
 To derive the error state dynamics corresponding to attitude, we start
 with~\eqref{eq:rdot_diff}. From~\eqref{eq:r_def} we see that $\dot{\vect{r}}_I^b
