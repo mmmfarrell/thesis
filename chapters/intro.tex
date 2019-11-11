@@ -93,7 +93,7 @@ for long periods of time.
 
 \subsection{Motion Planning}
 The motion planning problem associated with autonomous vehicles is especially
-important when the path the vehicle takes is critical.
+important when the path of the vehicle's motion is critical.
 This is commonly the case when
 navigating close to obstacles. In the case of landing on moving vehicles, it is
 often desired that the UAV descends vertically on the landing pad to avoid
@@ -109,7 +109,7 @@ It is likely that one or more of these solutions may be sufficient to create a
 robust landing system.
 While we do not propose any improvements to these methods in this thesis, we
 describe some potential directions for future work related to motion planning
-in~\secref{sec:future_work}.
+in~\secref{sec:future_motion_planning}.
 
 \subsection{Control}
 A wide variety of control schemes for multirotor UAVs have been presented over
@@ -155,7 +155,8 @@ state estimation and control schemes with a competent motion planner.
 The remainder of this thesis is organized as follows.
 Chapter~\ref{chp:experimental_apparatus} details the hardware and software
 systems used
-in the experiments. Chapter~\ref{chp:estimation_paper} describes the state
+in the experiments described in this thesis. Chapter~\ref{chp:estimation_paper}
+describes a state
 estimation algorithm that maintains accurate and consistent estimates even when
 a fiducial landing marker is not detected for significant periods of time.
 Chapter~\ref{chp:control_paper} derives an error-state LQR controller for a

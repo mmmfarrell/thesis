@@ -14,9 +14,13 @@ This is made possible, in part, due to the use of the Robot Operating System\foo
 \href{www.ros.org}{www.ros.org}} (ROS) as a middleware. ROS provides a way for separate
 programs, or nodes, to share information between one another.
 
-A network diagram of the system can be seen in~\figref{fig:network_diagram}. The estimator and
-controller for the UAV were implemented as two separate nodes where the
-estimator node provided the state estimate of the UAV to the controller node.
+A network diagram of the software system can be seen in~\figref{fig:network_diagram}. The estimator and
+controller for the UAV are implemented as two separate nodes, where the
+estimator node provides the state estimate of the UAV to the controller node.
+The controller node computes the desired control action based on the error
+between the estimated state and the desired state. This desired control action
+is then sent to the ROSflight flight control stack~\cite{jackson2016rosflight}
+which then actuates either a simulated UAV or the real hardware platform.
 
 \begin{figure}[htbp]
   \centering
