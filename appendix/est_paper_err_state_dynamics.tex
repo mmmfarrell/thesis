@@ -54,13 +54,11 @@ with~\eqref{eq:quat_true_state} and letting $\tilde{\q}_I^b = \exp_{\q} \left(
   \tilde{\vect{\theta}}_I^b \right)$ such that
 \begin{equation}
   \q_I^b  = \hat{\q}_I^b \otimes \tilde{\q}_I^b
-  \right).
 \end{equation}
 Differentiating with respect to time results in
 \begin{equation}
   \dot{\q}_I^b  = \dot{\hat{\q}}_I^b \otimes \tilde{\q}_I^b + 
   \hat{\q}_I^b \otimes \dot{\tilde{\q}}_I^b
-  \right)
 \end{equation}
 which we multiply all terms on the left by $\left( \hat{\q}_I^b \right)^{-1}$
 and simplify to yield
@@ -68,11 +66,10 @@ and simplify to yield
   \left( \hat{\q}_I^b \right)^{-1} \otimes \dot{\q}_I^b  &= \left( \hat{\q}_I^b
   \right)^{-1} \otimes \dot{\hat{\q}}_I^b \otimes \tilde{\q}_I^b + 
   \left( \hat{\q}_I^b \right)^{-1} \otimes \hat{\q}_I^b \otimes \dot{\tilde{\q}}_I^b
-  \right) \\
+  \\
   \left( \hat{\q}_I^b \right)^{-1} \otimes \dot{\q}_I^b  &= \left( \hat{\q}_I^b
   \right)^{-1} \otimes \dot{\hat{\q}}_I^b \otimes \tilde{\q}_I^b + 
   \dot{\tilde{\q}}_I^b
-  \right).
 \end{align}
 We then rearrange the above equation and simplify using the true-state and
 estimated-state dynamics of the UAV attitude state given
@@ -82,7 +79,7 @@ error-state definition from~\eqref{eq:quat_error_state}:
   \dot{\tilde{\q}}_I^b &=
   \left( \hat{\q}_I^b \right)^{-1} \otimes \dot{\q}_I^b  - \left( \hat{\q}_I^b
   \right)^{-1} \otimes \dot{\hat{\q}}_I^b \otimes \tilde{\q}_I^b
-  \right) \\
+  \\
   &=
   \left( \hat{\q}_I^b \right)^{-1} \otimes \q_I^b \otimes
   \begin{pmatrix}
@@ -95,9 +92,10 @@ error-state definition from~\eqref{eq:quat_error_state}:
   \begin{pmatrix}
     0 \\
     \frac{1}{2} \left( \bar{\vect{\omega}}_{b/I}^b - \hat{\vect{\beta}}_\omega
+    \right)
   \end{pmatrix}
   \otimes \tilde{\q}_I^b
-  \right) \\
+  \\
   &=
   \label{eq:intermed_eq1}
   \frac{1}{2} \tilde{\q}_I^b \otimes
@@ -109,10 +107,9 @@ error-state definition from~\eqref{eq:quat_error_state}:
   - \frac{1}{2}
   \begin{pmatrix}
     0 \\
-    \left( \bar{\vect{\omega}}_{b/I}^b - \hat{\vect{\beta}}_\omega
+    \left( \bar{\vect{\omega}}_{b/I}^b - \hat{\vect{\beta}}_\omega \right)
   \end{pmatrix}
-  \otimes \tilde{\q}_I^b
-  \right). 
+  \otimes \tilde{\q}_I^b.
 \end{align}
 Applying~\eqref{eq:quat_otimes_product} and noting that the quaternion group
 operator $\otimes$ can also be written as
@@ -141,8 +138,8 @@ we can expand~\eqref{eq:intermed_eq1} as matrix-like products
       \left( \bar{\vect{\omega}}_{b/I}^b - \hat{\vect{\beta}}_\omega \right) &
       \skewmat{\bar{\vect{\omega}}_{b/I}^b - \hat{\vect{\beta}}_\omega }
   \end{pmatrix}
-  \tilde{\q}_I^b
-  \right). \nonumber
+  \tilde{\q}_I^b.
+  \nonumber
 \end{align}
 We then simplify the previous equation using the error-state definition
 $\tilde{\vect{\beta}}_\omega \triangleq \vect{\beta}_\omega -
