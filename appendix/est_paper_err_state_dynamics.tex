@@ -1,0 +1,410 @@
+\chapter{Derivation of Error-State Dynamics for the Error-State Kalman Filter}
+\label{apdx:estimation_err_state_derivation}
+
+\section{UAV Position Error-State Dynamics}
+To derive the error-state dynamics for the UAV position state, we start by
+differentiating the error-state definition given
+in~\eqref{eq:est_paper_uav_pos_err_state} with respect to time to yield
+\begin{equation}
+  \dot{\tilde{\vect{p}}}_{b/I}^I = \dot{\vect{p}}_{b/I}^I - \dot{\hat{\vect{p}}}_{b/I}^I.
+\end{equation}
+We then substitue in the corresponding dynamics from~\eqref{eq:uav_dynamics}
+and~\eqref{eq:estimated_dynamics}
+\begin{align}
+  \dot{\tilde{\vect{p}}}_{b/I}^I
+  &=
+  \left( R_I^b \right)^\transpose \vect{v}_{b/I}^b
+  - \left( \hat{R}_I^b \right)^\transpose \hat{\vect{v}}_{b/I}^b.
+\end{align}
+We expand this equation using the approximation for $\left( R_I^b \right)^\transpose$ given
+in~\eqref{eq:est_paper_RTapprox} and the error-state definition given
+in~\eqref{eq:est_paper_vector_error_state} resulting in
+\begin{align}
+  \dot{\tilde{\vect{p}}}_{b/I}^I
+  &\approx
+  \left( \hat{R}_I^b \right)^\transpose
+  \left( I + \skewmat{\tilde{\vect{\theta}}_I^b} \right)
+  \left( \hat{\vect{v}}_{b/I}^b + \tilde{\vect{v}}_{b/I}^b \right)
+  - \left( \hat{R}_I^b \right)^\transpose \hat{\vect{v}}_{b/I}^b \\
+  &\approx
+  \left( \hat{R}_I^b \right)^\transpose
+  \left( \hat{\vect{v}}_{b/I}^b + \tilde{\vect{v}}_{b/I}^b
+  + \skewmat{\tilde{\vect{\theta}}_I^b} \hat{\vect{v}}_{b/I}^b
+  + \skewmat{\tilde{\vect{\theta}}_I^b} \tilde{\vect{v}}_{b/I}^b \right)
+  - \left( \hat{R}_I^b \right)^\transpose \hat{\vect{v}}_{b/I}^b \\
+  &\approx
+  \left( \hat{R}_I^b \right)^\transpose \tilde{\vect{v}}_{b/I}^b
+  + \left( \hat{R}_I^b \right)^\transpose \skewmat{\tilde{\vect{\theta}}_I^b} \hat{\vect{v}}_{b/I}^b
+  + \left( \hat{R}_I^b \right)^\transpose \skewmat{\tilde{\vect{\theta}}_I^b} \tilde{\vect{v}}_{b/I}^b.
+\end{align}
+We assume the error-state components to be small, neglecting the higher-order
+terms to get the final expression
+\begin{align}
+  \dot{\tilde{\vect{p}}}_{b/I}^I
+  &\approx
+  \left( \hat{R}_I^b \right)^\transpose \tilde{\vect{v}}_{b/I}^b
+  - \left( \hat{R}_I^b \right)^\transpose \skewmat{\hat{\vect{v}}_{b/I}^b}
+  \tilde{\vect{\theta}}_I^b.
+\end{align}
+
+\section{UAV Attitude Error-State Dynamics}
+To derive the error-state dynamics for the UAV attitude state, we
+follow~\cite{koch2017relative}, starting
+with~\eqref{eq:quat_true_state} and letting $\tilde{\q}_I^b = \exp_{\q} \left(
+  \tilde{\vect{\theta}}_I^b \right)$ such that
+\begin{equation}
+  \q_I^b  = \hat{\q}_I^b \otimes \tilde{\q}_I^b
+  \right).
+\end{equation}
+Differentiating with respect to time results in
+\begin{equation}
+  \dot{\q}_I^b  = \dot{\hat{\q}}_I^b \otimes \tilde{\q}_I^b + 
+  \hat{\q}_I^b \otimes \dot{\tilde{\q}}_I^b
+  \right)
+\end{equation}
+which we multiply all terms on the left by $\left( \hat{\q}_I^b \right)^{-1}$
+and simplify to yield
+\begin{align}
+  \left( \hat{\q}_I^b \right)^{-1} \otimes \dot{\q}_I^b  &= \left( \hat{\q}_I^b
+  \right)^{-1} \otimes \dot{\hat{\q}}_I^b \otimes \tilde{\q}_I^b + 
+  \left( \hat{\q}_I^b \right)^{-1} \otimes \hat{\q}_I^b \otimes \dot{\tilde{\q}}_I^b
+  \right) \\
+  \left( \hat{\q}_I^b \right)^{-1} \otimes \dot{\q}_I^b  &= \left( \hat{\q}_I^b
+  \right)^{-1} \otimes \dot{\hat{\q}}_I^b \otimes \tilde{\q}_I^b + 
+  \dot{\tilde{\q}}_I^b
+  \right).
+\end{align}
+We then rearrange the above equation and simplify using the true-state and
+estimated-state dynamics of the UAV attitude state given
+in~\eqref{eq:uav_dynamics} and~\eqref{eq:estimated_dynamics} along with the
+error-state definition from~\eqref{eq:quat_error_state}:
+\begin{align}
+  \dot{\tilde{\q}}_I^b &=
+  \left( \hat{\q}_I^b \right)^{-1} \otimes \dot{\q}_I^b  - \left( \hat{\q}_I^b
+  \right)^{-1} \otimes \dot{\hat{\q}}_I^b \otimes \tilde{\q}_I^b
+  \right) \\
+  &=
+  \left( \hat{\q}_I^b \right)^{-1} \otimes \q_I^b \otimes
+  \begin{pmatrix}
+    0 \\
+    \frac{1}{2} \left( \bar{\vect{\omega}}_{b/I}^b - \vect{\beta}_\omega
+    -\vect{\upsilon}_\omega \right)
+  \end{pmatrix}
+  - \left( \hat{\q}_I^b
+  \right)^{-1} \otimes \hat{\q}_I^b \otimes
+  \begin{pmatrix}
+    0 \\
+    \frac{1}{2} \left( \bar{\vect{\omega}}_{b/I}^b - \hat{\vect{\beta}}_\omega
+  \end{pmatrix}
+  \otimes \tilde{\q}_I^b
+  \right) \\
+  &=
+  \label{eq:intermed_eq1}
+  \frac{1}{2} \tilde{\q}_I^b \otimes
+  \begin{pmatrix}
+    0 \\
+    \left( \bar{\vect{\omega}}_{b/I}^b - \vect{\beta}_\omega -
+    \vect{\upsilon}_\omega \right)
+  \end{pmatrix}
+  - \frac{1}{2}
+  \begin{pmatrix}
+    0 \\
+    \left( \bar{\vect{\omega}}_{b/I}^b - \hat{\vect{\beta}}_\omega
+  \end{pmatrix}
+  \otimes \tilde{\q}_I^b
+  \right). 
+\end{align}
+Applying~\eqref{eq:quat_otimes_product} and noting that the quaternion group
+operator $\otimes$ can also be written as
+\begin{equation}
+	\q^a \otimes \q^b = \begin{pmatrix} q_0^b & \left(-\bar{\q}^{b}\right)^\transpose \\ \bar{\q}^b & q^b_0 I - \skewmat{\bar{\q}^b} \end{pmatrix}
+	\begin{pmatrix} q^a \\ \bar{\q}^a \end{pmatrix},
+\end{equation}
+we can expand~\eqref{eq:intermed_eq1} as matrix-like products
+\begin{align}
+  \dot{\tilde{\q}}_I^b &=
+  \frac{1}{2}
+  \begin{pmatrix}
+    0 & -\left( \bar{\vect{\omega}}_{b/I}^b - \vect{\beta}_\omega -
+      \vect{\upsilon}_\omega
+    \right)^\transpose \\
+      \left( \bar{\vect{\omega}}_{b/I}^b - \vect{\beta}_\omega -
+    \vect{\upsilon}_\omega \right) &
+    -\skewmat{\bar{\vect{\omega}}_{b/I}^b - \vect{\beta}_\omega -
+    \vect{\upsilon}_\omega }
+  \end{pmatrix}
+  \tilde{\q}_I^b \\
+                       & \qquad - \frac{1}{2}
+  \begin{pmatrix}
+    0 & -\left( \bar{\vect{\omega}}_{b/I}^b - \hat{\vect{\beta}}_\omega
+    \right)^\transpose \\
+      \left( \bar{\vect{\omega}}_{b/I}^b - \hat{\vect{\beta}}_\omega \right) &
+      \skewmat{\bar{\vect{\omega}}_{b/I}^b - \hat{\vect{\beta}}_\omega }
+  \end{pmatrix}
+  \tilde{\q}_I^b
+  \right). \nonumber
+\end{align}
+We then simplify the previous equation using the error-state definition
+$\tilde{\vect{\beta}}_\omega \triangleq \vect{\beta}_\omega -
+\hat{\vect{\beta}}_\omega$ giving
+\begin{align}
+  \dot{\tilde{\q}}_I^b &=
+  \frac{1}{2}
+  \begin{pmatrix}
+    0 & -\left( - \tilde{\vect{\beta}}_\omega -
+      \vect{\upsilon}_\omega
+    \right)^\transpose \\
+    \left( - \tilde{\vect{\beta}}_\omega -
+    \vect{\upsilon}_\omega \right) &
+    \skewmat{ -2\bar{\vect{\omega}}_{b/I}^b + 2\hat{\vect{\beta}}_\omega
+      + \tilde{\vect{\beta}}_\omega + \vect{\upsilon}_\omega }
+  \end{pmatrix}
+  \tilde{\q}_I^b
+\end{align}
+which implies that
+\begin{align}
+  \begin{pmatrix}
+    1 \\
+    \frac{1}{2} \dot{\tilde{\vect{\theta}}}_I^b
+  \end{pmatrix}
+  &=
+  \frac{1}{2}
+  \begin{pmatrix}
+    0 & -\left( - \tilde{\vect{\beta}}_\omega -
+      \vect{\upsilon}_\omega
+    \right)^\transpose \\
+    \left( - \tilde{\vect{\beta}}_\omega -
+    \vect{\upsilon}_\omega \right) &
+    \skewmat{ -2\bar{\vect{\omega}}_{b/I}^b + 2\hat{\vect{\beta}}_\omega
+      + \tilde{\vect{\beta}}_\omega + \vect{\upsilon}_\omega }
+  \end{pmatrix}
+  \begin{pmatrix}
+    1 \\
+    \frac{1}{2} \tilde{\vect{\theta}}_I^b
+  \end{pmatrix}.
+\end{align}
+To get the final expression, we drop the scalar equation and neglect
+second-order terms to yield
+\begin{align}
+  \dot{\tilde{\vect{\theta}}}_I^b
+  &=
+    \left( - \tilde{\vect{\beta}}_\omega -
+    \vect{\upsilon}_\omega \right) 
+    + \frac{1}{2}
+    \skewmat{ -2\bar{\vect{\omega}}_{b/I}^b + 2\hat{\vect{\beta}}_\omega
+      + \tilde{\vect{\beta}}_\omega + \vect{\upsilon}_\omega }
+    \tilde{\vect{\theta}}_I^b \\
+  &\approx
+  -\skewmat{ \bar{\vect{\omega}}_{b/I}^b - \hat{\vect{\beta}}_\omega}
+    \tilde{\vect{\theta}}_I^b
+    - \tilde{\vect{\beta}}_\omega -
+    \vect{\upsilon}_\omega .
+\end{align}
+
+\section{UAV Velocity Error-State Dynamics}
+Similar to the UAV position error-state derivation, to derive the error-state
+dynamics for the UAV velocity state, we begin with the time derivative of the
+error-state definition
+\begin{equation}
+  \dot{\tilde{\vect{v}}}_{b/I}^I = \dot{\vect{v}}_{b/I}^I -
+  \dot{\hat{\vect{v}}}_{b/I}^I.
+\end{equation}
+We then substitue in the dynamics from~\eqref{eq:uav_dynamics}
+and~\eqref{eq:estimated_dynamics} and expand using the error-state definitions
+and approximations
+\begin{align}
+  \dot{\tilde{\vect{v}}}_{b/I}^I
+  =&
+  R_I^b \vect{g}
+  +
+  \skewmat{\vect{v}_{b/I}^b}
+  \left( \bar{\vect{\omega}}_{b/I}^b - \vect{\beta}_\omega -
+  \vect{\upsilon}_\omega \right)
+  +
+  \left( \bar{\vect{a}} - \vect{\beta}_a - \vect{\upsilon}_a \right) \\
+                                  & \qquad -
+                                  \left( \hat{R}_I^b \vect{g}
+  +
+  \skewmat{\hat{\vect{v}}_{b/I}^b}
+  \left( \bar{\vect{\omega}}_{b/I}^b - \hat{\vect{\beta}}_\omega \right)
+  +
+\left( \bar{\vect{a}} - \hat{\vect{\beta}}_a \right) \right) \nonumber \\
+  \approx&
+  \left( I - \skewmat{\tilde{\vect{\theta}}_I^b }\right) \hat{R}_I^b \vect{g}
+  +
+  \skewmat{ \hat{\vect{v}}_{b/I}^b + \tilde{\vect{v}}_{b/I}^b } 
+  \left( \bar{\vect{\omega}}_{b/I}^b - \hat{\vect{\beta}}_\omega -
+    \tilde{\vect{\beta}}_\omega -
+  \vect{\upsilon}_\omega \right) \\
+                                  & \qquad 
+  + \left( \bar{\vect{a}} - \hat{\vect{\beta}}_a - \tilde{\vect{\beta}}_a - \vect{\upsilon}_a \right)
+  - \left( \hat{R}_I^b \vect{g}
+  +
+  \skewmat{\hat{\vect{v}}_{b/I}^b}
+  \left( \bar{\vect{\omega}}_{b/I}^b - \hat{\vect{\beta}}_\omega \right)
+  +
+\left( \bar{\vect{a}} - \hat{\vect{\beta}}_a \right) \right) \nonumber
+\end{align}
+which we can simplify and neglect high-order terms to yield the final
+expression:
+\begin{align}
+  \dot{\tilde{\vect{v}}}_{b/I}^I
+  \approx&
+  \skewmat{ \hat{R}_I^b \vect{g} } \tilde{\vect{\theta}}_I^b 
+  -
+  \skewmat{ \hat{\vect{v}}_{b/I}^b } \tilde{\vect{\beta}}_\omega
+  -
+  \skewmat{ \hat{\vect{v}}_{b/I}^b } \vect{\upsilon}_\omega
+  -
+  \skewmat{ \bar{\omega}_{b/I}^b - \hat{\vect{\beta}}_\omega }
+  \tilde{\vect{v}}_{b/I}^b
+  -
+  \tilde{\vect{\beta}}_a
+  -
+  \vect{\upsilon}_a.
+\end{align}
+
+\section{UAV Bias Error-State Dynamics}
+To derive the error-state dynamics for the UAV bias states, we start with the
+time derivative of their error-state definitions
+\begin{align}
+  \dot{\tilde{\vect{\beta}}}_a &= \dot{\vect{\beta}}_a -
+  \dot{\hat{\vect{\beta}}}_a \\
+  \dot{\tilde{\vect{\beta}}}_\omega &= \dot{\vect{\beta}}_\omega -
+  \dot{\hat{\vect{\beta}}}_\omega
+\end{align}
+We then substitue in the dynamics from~\eqref{eq:uav_dynamics}
+and~\eqref{eq:estimated_dynamics} to yield the final expression
+\begin{align}
+  \dot{\tilde{\vect{\beta}}}_a &= \vect{\eta}_{\beta_a} \\
+  \dot{\tilde{\vect{\beta}}}_\omega &= \vect{\eta}_{\beta_\omega}.
+\end{align}
+
+\section{Landing Vehicle Position Error-State Dynamics}
+Similar to the method used for the UAV states, to derive the error-state
+dynamics for the landing vehicle position state, we start with the time
+derivative of the error-state definition
+\begin{equation}
+  \dot{\tilde{\vect{p}}}_{g/b}^{v} = \dot{\vect{p}}_{g/b}^{v} -
+  \dot{\hat{\vect{p}}}_{g/b}^{v}.
+\end{equation}
+We then substitue in the dynamics from~\eqref{eq:goal_dynamics}
+and~\eqref{eq:estimated_dynamics} and expand using the error-state definitions
+and approximations
+\begin{align}
+  \dot{\tilde{\vect{p}}}_{g/b}^{v}
+  &=
+  I_{3 \times 2} \left( R_{I}^{g} \right)^\transpose
+  \vect{v}_{g/I}^{g} - \left( R_{I}^{b} \right)^\transpose
+  \vect{v}_{b/I}^{b}
+  -
+  \left(
+  I_{3 \times 2} \left( \hat{R}_{I}^{g} \right)^\transpose
+  \hat{\vect{v}}_{g/I}^{g} - \left( \hat{R}_{I}^{b} \right)^\transpose
+  \hat{\vect{v}}_{b/I}^{b}
+  \right) \\
+  &\approx
+  \label{eq:goal_pos_err_state1}
+  I_{3 \times 2} \left( \hat{R}_{I}^{g} \right)^\transpose
+  \left( R \left( \tilde{\psi}_{I}^{g} \right) \right)^\transpose
+  \left( \hat{\vect{v}}_{g/I}^{g} + \tilde{\vect{v}}_{g/I}^{g} \right) - \left(
+  \hat{R}_{I}^{b} \right)^\transpose
+  \left( I + \skewmat{\tilde{\vect{\theta}}_I^b} \right)
+  \left( \hat{\vect{v}}_{b/I}^{b} + \tilde{\vect{v}}_{b/I}^{b} \right) \\
+  & \qquad -
+  \left(
+  I_{3 \times 2} \left( \hat{R}_{I}^{g} \right)^\transpose
+  \hat{\vect{v}}_{g/I}^{g} - \left( \hat{R}_{I}^{b} \right)^\transpose
+  \hat{\vect{v}}_{b/I}^{b}
+  \right). \nonumber
+\end{align}
+From~\cite{sola2018micro}, by assuming $\tilde{\psi}_I^g$ is small, we can approximate 
+\begin{equation}
+  \left( R \left( \tilde{\psi}_I^g \right) \right)^\transpose \approx I -
+  \skewmat{\tilde{\psi}_I^g}
+  \label{eq:2d_err_rot_approx}
+\end{equation}
+where the two dimensional skew-symmetric matrix is given by
+\begin{equation}
+  \skewmat{\psi} \triangleq
+  \begin{bmatrix}
+    0 & -\psi \\
+    \psi & 0
+  \end{bmatrix}.
+\end{equation}
+We can then substitue~\eqref{eq:2d_err_rot_approx}
+into~\eqref{eq:goal_pos_err_state1} and simplify and neglect higher-order terms
+to get the final expression
+\begin{align}
+  \dot{\tilde{\vect{p}}}_{g/b}^{v}
+  &\approx
+  \label{eq:goal_pos_err_state1}
+  I_{3 \times 2} \left( \hat{R}_{I}^{g} \right)^\transpose
+  \left( I - \skewmat{\tilde{\psi}_I^g} \right)
+  \left( \hat{\vect{v}}_{g/I}^{g} + \tilde{\vect{v}}_{g/I}^{g} \right)
+  - \left( \hat{R}_{I}^{b} \right)^\transpose
+  \left( I + \skewmat{\tilde{\vect{\theta}}_I^b} \right)
+  \left( \hat{\vect{v}}_{b/I}^{b} + \tilde{\vect{v}}_{b/I}^{b} \right) \\
+  & \qquad -
+  \left(
+  I_{3 \times 2} \left( \hat{R}_{I}^{g} \right)^\transpose
+  \hat{\vect{v}}_{g/I}^{g} - \left( \hat{R}_{I}^{b} \right)^\transpose
+  \hat{\vect{v}}_{b/I}^{b}
+  \right). \nonumber \\
+  &\approx
+  \label{eq:goal_pos_err_state1}
+  I_{3 \times 2} \left( \hat{R}_{I}^{g} \right)^\transpose
+  \tilde{\vect{v}}_{g/I}^g
+  +
+  I_{3 \times 2} \left( \hat{R}_{I}^{g} \right)^\transpose
+  \skewmat{ \tilde{\psi}_I^g } \hat{\vect{v}}_{g/I}^g
+  +
+  \left( \hat{R}_{I}^{b} \right)^\transpose \skewmat{ \hat{\vect{v}}_{b/I}^{b} } 
+  \tilde{\vect{\theta}}_I^b
+  -
+  \left( \hat{R}_{I}^{b} \right)^\transpose \tilde{\vect{v}}_{b/I}^{b} .
+\end{align}
+
+\section{Landing Vehicle Velocity Error-State Dynamics}
+Similar to the UAV bias states, the error-state dynamics of the landing vehicle
+velocity state are simply found by starting with the time derivative of the
+error-state definition
+\begin{equation}
+  \dot{\tilde{\vect{v}}}_{g/I}^g = \dot{\vect{v}}_{g/I}^g -
+  \dot{\hat{\vect{v}}}_{g/I}^g
+\end{equation}
+and substituting in the dynamics from~\eqref{eq:goal_dynamics}
+and~\eqref{eq:estimated_dynamics} to get the final expression
+\begin{equation}
+  \dot{\tilde{\vect{v}}}_{g/I}^g = \vect{\eta}_{gv}.
+\end{equation}
+
+\section{Landing Vehicle Attitude Error-State Dynamics}
+\MF{TODO after fix 2D rotation section}
+
+\section{Landing Vehicle Angular Rate Error-State Dynamics}
+The error-state dynamics of the landing vehicle angular rate state are found by
+starting with the time derivative of the error-state definition
+\begin{equation}
+  \dot{\tilde{\omega}}_{g/I}^g = \dot{\omega}_{g/I}^g -
+  \dot{\hat{\omega}}_{g/I}^g.
+\end{equation}
+We then substitute in the dynamics from~\eqref{eq:goal_dynamics}
+and~\eqref{eq:estimated_dynamics} to yield the final expression
+\begin{equation}
+  \dot{\tilde{\omega}}_{g/I}^g = \eta_{g\omega}. 
+\end{equation}
+
+\section{Visual Feature Vector Error-State Dynamics}
+Starting with the time derivative of the error-state definition for the visual
+feature vector states,
+\begin{equation}
+  \dot{\tilde{\vect{r}}}_{i/g}^g = \dot{\vect{r}}_{i/g}^g  -
+  \dot{\hat{\vect{r}}}_{i/g}^g,
+\end{equation}
+and substituting in the dynamics from~\eqref{eq:feature_dynamics}
+and~\eqref{eq:estimated_dynamics} yields
+\begin{equation}
+  \dot{\tilde{\vect{r}}}_{i/g}^g = \vect{0}.
+\end{equation}
+
