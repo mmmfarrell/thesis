@@ -1,6 +1,43 @@
 % !TEX root=../master.tex
 
-\chapter{Estimation Paper}
+\chapter{Improving State Estimation of a Landing Vehicle \\
+From a Multirotor UAV Using Feature Tracking}
 \label{chp:estimation_paper}
 
-Estimation paper goes here.
+\graphicspath{{estimation_paper/}}
+
+\section{Introduction} \label{sec:intro}
+\input{estimation_paper/introduction/background}
+\input{estimation_paper/introduction/paper_layout}
+
+\section{Mathematical Conventions} \label{sec:model}
+\input{estimation_paper/model/notation}
+\input{estimation_paper/model/quaternions}
+\input{estimation_paper/model/s1}
+
+\section{Estimation} \label{sec:estimation}
+\input{estimation_paper/estimation/estimator}
+\input{estimation_paper/estimation/dynamics}
+\input{estimation_paper/estimation/measurements}
+\input{estimation_paper/estimation/initialization}
+
+\section{Simulation} \label{sec:simulation}
+\input{estimation_paper/simulation/simulation}
+
+\section{Hardware} \label{sec:hardware}
+\input{estimation_paper/hardware/platform}
+\input{estimation_paper/hardware/aruco}
+\input{estimation_paper/hardware/feature_tracking}
+\input{estimation_paper/hardware/mocap}
+\input{estimation_paper/hardware/landing_vehicle}
+\input{estimation_paper/hardware/results}
+
+\section{Conclusion} \label{sec:conclusion}
+The proposed estimator provides a method for maintaining accurate and consistent
+estimates of the state of a landing vehicle when a fiducial landing marker is
+not detected for significant periods of time. This improvement is achieved by
+tracking and estimating the locations of unknown visual features on the landing
+vehicle. The simulation and hardware experiments show that by tracking and
+estimating the locations of just 10 visual features, the multirotor UAV can
+continue to reliably operate with respect to the landing vehicle for long
+periods of time without detecting the fiducial landing marker.
