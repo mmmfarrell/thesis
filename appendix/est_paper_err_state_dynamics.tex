@@ -377,7 +377,29 @@ and~\eqref{eq:estimated_dynamics} to get the final expression
 \end{equation}
 
 \section{Landing Vehicle Attitude Error-State Dynamics}
-\MF{TODO after fix 2D rotation section}
+To derive the error-state dynamics for the landing vehicle attitude state, we
+first start by defining
+\begin{equation}
+  \tilde{R}_I^g \triangleq \exp_R \left( \tilde{\psi}_I^g \right)
+\end{equation}
+such that we can write~\eqref{eq:2d_rot_err_state} as
+\begin{equation}
+  \tilde{R}_I^g = \left( \hat{R}_I^g \right)^\transpose R_I^g.
+\end{equation}
+We then take the time derivative of the above equation to yield
+\begin{equation}
+  \dot{\tilde{R}}_I^g = \left( \dot{\hat{R}}_I^g \right)^\transpose R_I^g + 
+  \left( \hat{R}_I^g \right)^\transpose \dot{R}_I^g.
+\end{equation}
+We then substitue in the dynamics from~\eqref{eq:goal_dynamics}
+and~\eqref{eq:estimated_dynamics} such that
+\begin{equation}
+  \dot{\tilde{R}}_I^g = \left( -\skewmat{ \hat{\omega}_{g/I}^g } \hat{R}_I^g \right)^\transpose R_I^g + 
+  \left( \hat{R}_I^g \right)^\transpose \left( -\skewmat{ \omega_{g/I}^g }
+    R_I^g
+\right).
+\end{equation}
+\MF{TODO this isnt finished}
 
 \section{Landing Vehicle Angular Rate Error-State Dynamics}
 The error-state dynamics of the landing vehicle angular rate state are found by
