@@ -18,7 +18,7 @@ system for UAVs landing on moving vehicles.
 
 \section{Future Work}
 \label{sec:future_work}
-While the research presented in this thesis presents improvements to current
+While the research in this thesis presents improvements to current
 state-of-the-art methods, there remain many opportunities for improvements to
 continue to be made in the future. The following subsections outline
 recommendations and directions for future work related to the autonomous
@@ -27,15 +27,15 @@ estimation, motion planning, and control.
 
 \subsection{State Estimation}
 The estimation algorithm presented in Chapter~\ref{chp:estimation_paper} details
-a method of tracking and estimating visual features that are rigidly attached to
-a moving vehicle to aid in estimation when a visual fiducial landing marker is
+a method of tracking and estimating the locations of visual features 
+to aid in estimation when a visual fiducial landing marker is
 not detected. The results of this work were quite remarkable, showing that a UAV
 can continue to operate accurately with respect to a landing vehicle for more
-than a minute. As mentioned in~\secref{sec:estimator}, however, the estimation algorithm
+than a minute. As mentioned in~\secref{sec:estimation}, however, this estimation algorithm
 assumes that all tracked features are rigidly attached to the landing vehicle.
 Therefore, before the presented estimation algorithm can be used in a commercial
 product, a feature tracker must be developed that can reliably filter out visual
-features that are not a part of the landing vehicle.
+features that are not part of the landing vehicle.
 Recently, there has been much research done
 in the fields of image and video segmentation that could be leveraged for such a
 task~\cite{chen2018encoder}. Alternative methods that depend on
