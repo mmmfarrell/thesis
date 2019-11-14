@@ -45,14 +45,14 @@ Most low-cost landing methods assume that the landing vehicle is equipped with a
 fiducial marker, such as that shown in~\figref{fig:aruco_tag}, that serves as
 the designated landing pad for the UAV.
 In these methods, a camera mounted to the UAV detects the fiducial landing marker, providing
-information about the relative position of the UAV to the landing
+information about the relative pose of the landing
 vehicle~\cite{borowczyk2017autonomous}. These measurements are often used in a
 filtering framework, such as a Kalman filter~\cite{kalman}, to produce a
 continous estimate of the relative state between the UAV and the landing
 vehicle. However, during landing, it is likely
 that the fiducial marker is not detected for periods of time due to occlusion,
 sun glare, or UAV motion. For this reason, it is important that the relative
-motion between the landing vehicle and the UAV is modeled and used to predict
+motion between the landing vehicle and the UAV is modeled and used in the  and used to predict
 the relative state when the fiducial marker is not detected.
 Even with a good model though,
 these methods quickly fail when the fiducial landing
@@ -79,7 +79,7 @@ visual features on the landing vehicle to achieve this goal.
 
 Visual feature
 tracking and estimation is a common technique in the field of visual
-odometry~\cite{qin2018vins}, however, almost all implementations assume that the
+odometry~\cite{qin2018vins}; however, almost all implementations assume that the
 tracked visual features are static with respect to an inertial reference frame.
 In the landing scenario, the landing vehicle occupies progressively more of the
 field of view of the UAV's camera as the UAV descends. We also note that in most
@@ -103,19 +103,19 @@ touchdown may also be important to minimize the risk of damage to the UAV.
 
 Much work has been previously presented in the field of motion planning for
 small, multirotor UAVs~\cite{mellinger2011minimum}. Specific methods have also been 
-presented to generate paths for a UAV landing on a moving
-vehicle using model-predictive control in real time~\cite{baca2019autonomous}.
-It is likely that one or more of these solutions may be sufficient to create a
-robust landing system.
+presented that generate paths for a UAV landing on a moving
+vehicle by using model-predictive control techniques in real time~\cite{baca2019autonomous}.
+% It is likely that one or more of these solutions may be sufficient to create a
+% robust landing system.
 While we do not propose any improvements to these methods in this thesis, we
 describe some potential directions for future work related to motion planning
 in~\secref{sec:future_motion_planning}.
 
 \subsection{Control}
-A wide variety of control schemes for multirotor UAVs have been presented over
-the past two decades.
-A controller to robustly landing a UAV onto a moving vehicle should be able to
-closely track a time-dependent trajectory as described in the previous section.
+% A wide variety of control schemes for multirotor UAVs have been presented over
+% the past two decades.
+A controller to robustly land a UAV onto a moving vehicle should be able to
+accurately track a time-dependent trajectory as described in the previous section.
 While many previously presented control algorithms may satisfy the
 requirements for robust landing on moving vehicles, there has recently been a
 movement in the robotics community to appropriately deal with the evolution of a
@@ -127,7 +127,7 @@ work done applying Lie theory to optimal control.
 Chapter~\ref{chp:control_paper} of this thesis derives a
 linear-quadratic regulator (LQR) using Lie theory that computes control based on
 the error-state dynamics of the system. Not only is this a more principled
-approach, but it also achieves significant gains in computational efficiency.
+approach than previous LQR methods, but it also achieves significant gains in computational efficiency.
 Simulation and hardware results show that the derived controller can accurately
 track a time-dependent trajectory, making it a good candidate for use in a
 robust landing system.
@@ -135,19 +135,27 @@ robust landing system.
 \section{Summary of Contributions}
 The research described in this thesis makes two significant contributions:
 \begin{itemize}
-\item A method of state estimation is developed that maintains accurate and
-  consistent estimates of the state of a landing vehicle even when a fiducial landing
-  marker is not detected for significant periods of time by a multirotor UAV.
-\item An optimal control scheme for a multirotor UAV is derived in an error-state, linear
-  quadratic regulator (LQR) formulation. This provides an optimal control scheme
-  for a multirotor to follow any dynamically feasible, time-dependent
-  trajectory.
+\item A method of state estimation is developed that allows a multirotor UAV to
+  continue to operate reliably with respect to a landing vehicle even when a
+  fiducial landing marker is not detected for significant periods of time.
+% \item A method of state estimation is developed that maintains accurate and
+  % consistent estimates of the state of a landing vehicle even when a fiducial landing
+  % marker is not detected for significant periods of time by a multirotor UAV.
+\item An optimal control scheme for a multirotor UAV is derived using an error-state,
+  LQR formulation that enables accurate tracking of any dynamically feasible,
+  time-dependent trajectory.
+% \item An optimal control scheme for a multirotor UAV is derived in an error-state, linear
+  % quadratic regulator (LQR) formulation. This provides an optimal control scheme
+  % for a multirotor to follow any dynamically feasible, time-dependent
+  % trajectory.
 \end{itemize}
 
-These contributions were demonstrated in both simulation and hardware
+These contributions are demonstrated in both simulation and hardware
 experiments found in Chapters~\ref{chp:estimation_paper}
-and~\ref{chp:control_paper}. These results give us reason to believe that a
-complete and robust landing solution could be created by combining the proposed
+and~\ref{chp:control_paper}. These results 
+% give us reason to believe that a
+show that a
+complete and robust landing solution can be created by combining the proposed
 state estimation and control schemes with a competent motion planner.
 
 \section{Thesis Outline}
@@ -155,12 +163,16 @@ state estimation and control schemes with a competent motion planner.
 The remainder of this thesis is organized as follows.
 Chapter~\ref{chp:experimental_apparatus} details the hardware and software
 systems used
-in the experiments described in this thesis. Chapter~\ref{chp:estimation_paper}
-describes a state
-estimation algorithm that maintains accurate and consistent estimates even when
-a fiducial landing marker is not detected for significant periods of time.
-Chapter~\ref{chp:control_paper} derives an error-state LQR controller for a
+in the experiments described in this thesis.
+Chapter~\ref{chp:estimation_paper}
+describes an improved method of state estimation for a multirotor UAV landing on
+a moving vehicle including results from simulation and hardware experiments.
+% describes a state
+% estimation algorithm that maintains accurate and consistent estimates even when
+% a fiducial landing marker is not detected for significant periods of time.
+Chapter~\ref{chp:control_paper} derives and demonstrates the performance of
+an error-state LQR controller for a
 multirotor UAV following a dynamically feasible, time-dependent trajectory.
 Chapter~\ref{chp:conclusion} provides some concluding remarks including
-suggestions for future work that can build upon the work described in this
+suggestions for future work that builds upon the work described in this
 thesis.
