@@ -6,10 +6,19 @@
 \section{Problem Statement}
 As multirotor unmanned aerial vehicles (UAVs) have become popular
 platforms for commercial and consumer products over the past decade, a variety
-of new use cases have emerged that require operation from moving vehicles.
+of new use cases have emerged that require autonomous operation from larger
+vehicles acting as moving, mobile base stations.
 Such use cases include
 maritime surveillance, package delivery, and convoy
-support (see~\figref{fig:drone_convoy_support}). While there are
+support (see~\figref{fig:drone_convoy_support}).
+% State-of-the-art autonomous vehicle systems require robust solutions to three
+% main problems: state estimation, motion planning, and control. In this thesis,
+% we propose solutions to two of those three problems, state estimation and
+% control, for a multirotor UAV landing on a moving vehicle.
+% We leave the problem
+% of motion planning as future work, providing some suggested direction
+% in~\secref{sec:future_work}.
+While there are
 many facets to operating from moving vehicles, this thesis works toward creating
 a robust solution to autonomously landing multirotor UAVs onto moving vehicles
 in challenging conditions.
@@ -21,26 +30,19 @@ in challenging conditions.
   situational awareness for a convoy of
 vehicles
 
-Source:~\cite{ground_vehicle_based_drones}}
+Source:~\cite{ground_vehicle_drone}}
 %
   \label{fig:drone_convoy_support}
 \end{figure}
 
-State-of-the-art autonomous vehicle systems require robust solutions to three
-problems: state estimation, motion planning and control. In this thesis,
-we propose solutions to two of those three problems, state estimation and
-control, for a multirotor UAV landing on a moving vehicle.
-% We leave the problem
-% of motion planning as future work, providing some suggested direction
-% in~\secref{sec:future_work}.
 
 \section{Background}
 
-While autonomous landing of multirotor UAVs onto moving vehicles has been
-demonstrated in a variety of scenarios~\cite{wynn2019visual}, many problems still remain to
+Autonomous landing of multirotor UAVs onto moving vehicles has been previously
+demonstrated in a variety of scenarios~\cite{wynn2019visual}; however, many problems still remain to
 create a truly robust solution. Here we detail several of these outstanding
-problems as they relate to the specifc fields of state estimation, motion
-planning, and control.
+problems as they relate to the three principal problems that must be solved by
+all autonomous UAVs: state estimation, motion planning, and control.
 
 \subsection{State Estimation}
 Most low-cost landing methods assume that the landing vehicle is equipped with a
@@ -54,9 +56,9 @@ continous estimate of the relative state between the UAV and the landing
 vehicle. However, during landing, it is likely
 that the fiducial marker is not detected for periods of time due to occlusion,
 sun glare, or UAV motion. For this reason, it is important that the relative
-motion between the landing vehicle and the UAV is modeled and used in the  and used to predict
+motion between the landing vehicle and the UAV is modeled and used to predict
 the relative state when the fiducial marker is not detected.
-Even with a good model though,
+However, even with a good model,
 these methods quickly fail when the fiducial landing
 marker is not detected for several seconds~\cite{ling2014precision}.
 
@@ -70,7 +72,7 @@ marker is not detected for several seconds~\cite{ling2014precision}.
 \end{figure}
 
 When landing in challenging conditions such as strong winds, bright sun, or
-dense fog, it is very common that the fiducial marker may be undetected by the UAV
+dense fog, it is common that the fiducial marker may be undetected by the UAV
 for long periods of time. Therefore, to create a truly robust landing solution,
 the state estimation solution must maintain an accurate estimate of the relative
 state between the UAV and the landing vehicle when the fiducial landing marker
@@ -84,8 +86,10 @@ tracking and estimation is a common technique in the field of visual
 odometry~\cite{qin2018vins}; however, almost all implementations assume that the
 tracked visual features are static with respect to an inertial reference frame.
 In the landing scenario, the landing vehicle occupies progressively more of the
-field of view of the UAV's camera as the UAV descends. We also note that in most
-applications, more precise state estimates are required the closer the UAV gets
+field of view of the UAV's camera as the UAV descends, making it progressively
+more difficult for typical visual odometry algorithms. We also note that in most
+applications, more precise state estimates are required the closer the UAV
+approaches
 to the landing vehicle. For these reasons, the described estimation algorithm
 only tracks and estimates visual features that are rigidly attached to the landing vehicle.
 Experimental results
