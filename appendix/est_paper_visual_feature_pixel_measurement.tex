@@ -1,0 +1,229 @@
+\chapter{Derivation of Visual Feature Pixel Measurement Model for the Error-State Kalman Filter}
+\label{apdx:estimation_pixel_meas_model}
+
+To derive the measurement Jacobian for the visual feature pixel measurements, we
+first start with the residual model from~\eqref{eq:rpix}
+\begin{align}
+  \vect{r}_{\text{pix}}
+  &= \frac{1}{\e_3^\transpose \vect{p}_{i/c}^c} I_{2 \times 3} K
+  \vect{p}_{i/c}^c + \vect{\eta}_{\text{pix}} - \frac{1}{\e_3^\transpose \hat{\vect{p}}_{i/c}^c} I_{2 \times 3} K
+  \hat{\vect{p}}_{i/c}^c.
+\end{align}
+We then note that
+\begin{align}
+  H_{\text{pix}} &= \frac{ \partial \vect{r}_{\text{pix}} }{ \partial \tilde{\x}
+  } \\
+         &= \frac{ \partial }{ \partial \tilde{\x}}
+         \left( \frac{1}{\e_3^\transpose \vect{p}_{i/c}^c} I_{2 \times 3} K
+         \vect{p}_{i/c}^c \right) + \frac{ \partial }{ \partial \tilde{\x}}
+         \left( \vect{\eta}_{\text{pix}} \right) - \frac{ \partial }{ \partial
+           \tilde{\x}} \left( \frac{1}{\e_3^\transpose \hat{\vect{p}}_{i/c}^c} I_{2 \times 3} K
+         \hat{\vect{p}}_{i/c}^c \right) \\
+         &= \frac{ \partial }{ \partial \tilde{\x}}
+         \left( \frac{1}{\e_3^\transpose \vect{p}_{i/c}^c} I_{2 \times 3} K
+         \vect{p}_{i/c}^c \right) + \vect{0} + \vect{0} \\
+          &= 
+         \frac{1}{\e_3^\transpose \vect{p}_{i/c}^c} I_{2 \times 3} K
+         \frac{\partial}{\partial \tilde{\x}} \vect{p}_{i/c}^c 
+         - \frac{\e_3^\transpose \frac{\partial}{\partial \tilde{\x}} 
+         \vect{p}_{i/c}^c}{\left( \e_3^\transpose
+         \vect{p}_{i/c}^c \right)^2 } I_{2 \times 3} K
+          \vect{p}_{i/c}^c. 
+          \label{eq:H_pix_expanded}
+\end{align}
+As $\vect{p}_{i/c}^c$ appears in~\eqref{eq:H_pix_expanded}, we substitute in our
+best possible estimate for this vector, $\hat{\vect{p}}_{i/c}^c$, such that
+\begin{align}
+  H_{\text{pix}} 
+  &\approx
+  \frac{1}{\e_3^\transpose \hat{\vect{p}}_{i/c}^c} I_{2 \times 3} K
+ \frac{\partial}{\partial \tilde{\x}} \vect{p}_{i/c}^c 
+ - \frac{\e_3^\transpose \frac{\partial}{\partial \tilde{\x}} 
+ \vect{p}_{i/c}^c}{\left( \e_3^\transpose
+ \hat{\vect{p}}_{i/c}^c \right)^2 } I_{2 \times 3} K
+ \hat{\vect{p}}_{i/c}^c. 
+\end{align}
+
+To solve for $\frac{\partial}{\partial \tilde{\x}} \vect{p}_{i/c}^c$, we must
+first establish a few approximations related to the landing vehicle attitude
+state, $\psi_I^g$. In~\eqref{eq:2d_err_rot_approx} we established that the 2D
+rotation matrix created from $\tilde{\psi}_I^g$ can be approximated as
+\begin{equation}
+  \left( R_{\text{2D}} \left( \tilde{\psi}_I^g \right) \right)^\transpose \approx I -
+  \skewmat{\tilde{\psi}_I^g}.
+\end{equation}
+We extend this to the 3D rotation matrix created from $\tilde{\psi}_I^g$ noting
+that
+\begin{equation}
+  \left( R_{\text{3D}} \left( \tilde{\psi}_I^g \right) \right)^\transpose \approx I -
+  \skewmat{
+    \begin{matrix}
+  0 \\ 0 \\ \tilde{\psi}_I^g  \end{matrix}
+  }.
+  \label{eq:3d_psi_rot_approx}
+\end{equation}
+
+We now expand~\eqref{eq:p_i_c_c} using the error-state definitions along with
+the approximations given in~\eqref{eq:3d_psi_rot_approx}
+and~\eqref{eq:est_paper_Rapprox}:
+\begin{align}
+  \vect{p}_{i/c}^c &= R_b^c \left( R_I^b \left( R_I^g \right)^\transpose
+  \vect{r}_{i/g}^g + R_I^b \vect{p}_{g/b}^v - \vect{p}_{c/b}^b \right) \\
+  &= R_b^c \left( \left( I - \skewmat{\tilde{\vect{\theta}}_I^b
+    } \right) \hat{R}_I^b \left( I +
+    \skewmat{ \begin{matrix} 0 \\ 0 \\ \tilde{\psi}_I^g \end{matrix} }
+  \right) \left( \hat{R}_I^g \right)^\transpose
+  \left( \hat{\vect{r}}_{i/g}^g + \tilde{\vect{r}}_{i/g}^g \right) \right. \\
+  & \qquad \left. + \left( I -
+  \skewmat{\tilde{\vect{\theta}}_I^b} \right) \hat{R}_I^b
+  \left( \hat{\vect{p}}_{g/b}^v + \tilde{\vect{p}}_{g/b}^v \right) -
+  \vect{p}_{c/b}^b \right). \nonumber \\
+\end{align}
+By simplifying and ignoring higher-order terms
+\begin{align}
+  \vect{p}_{i/c}^c 
+  &= R_b^c \left( \hat{R}_I^b \left( \hat{R}_I^g \right)^\transpose
+  \hat{\vect{r}}_{i/g}^g + \hat{R}_I^b \hat{\vect{p}}_{g/b}^v - \vect{p}_{c/b}^b
+  - \skewmat{\tilde{\vect{\theta}}_I^b} \hat{R}_I^b \left( \hat{R}_I^g
+    \right)^\transpose \hat{\vect{r}}_{i/g}^g \right. \\
+  & \qquad \left. + \hat{R}_I^b
+    \skewmat{\begin{matrix} 0 \\ 0 \\ \tilde{\psi}_I^g \end{matrix}} \left( \hat{R}_I^g
+  \right)^\transpose \hat{\vect{r}}_{i/g}^g +
+\hat{R}_I^b \left( \hat{R}_I^g
+    \right)^\transpose \tilde{\vect{r}}_{i/g}^g
+    - \skewmat{\tilde{\vect{\theta}}_I^b} \hat{R}_I^b \hat{\vect{p}}_{g/b}^v
+    + \hat{R}_I^b \tilde{\vect{p}}_{g/b}^v
+   \right). \nonumber \\
+    &= \hat{\vect{p}}_{i/c}^c
+    + R_b^c \left( 
+  - \skewmat{\tilde{\vect{\theta}}_I^b} \hat{R}_I^b \left( \hat{R}_I^g
+    \right)^\transpose \hat{\vect{r}}_{i/g}^g + \hat{R}_I^b
+    \skewmat{\begin{matrix} 0 \\ 0 \\ \tilde{\psi}_I^g \end{matrix}} \left( \hat{R}_I^g
+  \right)^\transpose \hat{\vect{r}}_{i/g}^g \right. \label{eq:p_i_c_c_simplified} \\
+    & \qquad \left. +
+\hat{R}_I^b \left( \hat{R}_I^g
+    \right)^\transpose \tilde{\vect{r}}_{i/g}^g
+                   - \skewmat{\tilde{\vect{\theta}}_I^b} \hat{R}_I^b \hat{\vect{p}}_{g/b}^v
+    + \hat{R}_I^b \tilde{\vect{p}}_{g/b}^v
+   \right) \nonumber. 
+\end{align}
+Using~\eqref{eq:p_i_c_c_simplified}, we define $\frac{\partial}{\partial \tilde{\x}} \vect{p}_{i/c}^c$ by its
+non-zero components,
+\begin{align}
+  \frac{\partial}{\partial \tilde{\vect{\theta}}_I^b } \vect{p}_{i/c}^c
+  &=
+  R_b^c \skewmat{ \hat{R}_I^b \left( \left( \hat{R}_I^g \right)^\transpose
+  \hat{\vect{r}}_{i/g}^g + \hat{\vect{p}}_{g/b}^v \right) } \\
+  \frac{\partial}{\partial \tilde{\vect{p}}_{g/b}^v} \vect{p}_{i/c}^c
+  &=
+  R_b^c \hat{R}_I^b \\
+  \frac{\partial}{\partial \tilde{\psi}_I^g} \vect{p}_{i/c}^c
+  &=
+  R_b^c \hat{R}_I^b \left( \hat{R}_I^g \right)^\transpose
+  \skewmat{\begin{matrix} 0 \\ 0 \\ 1 \end{matrix}} \hat{\vect{r}}_{i/g}^g \\
+  \frac{\partial}{\partial \tilde{\vect{r}}_{i/g}^g} \vect{p}_{i/c}^c
+  &=
+  R_b^c \hat{R}_I^b \left( \hat{R}_I^g \right)^\transpose .
+\end{align}
+
+
+% \MF{TODO put this stuff in another appendix}
+% To compute the measurement Jacobian, we first expand~\eqref{eq:p_i_c_c}
+% \begin{align}
+  % \vect{p}_{i/c}^c &= R_b^c \left( \left( I - \skewmat{\tilde{\vect{\theta}}_I^b
+    % } \right) \hat{R}_I^b \left( I + \skewmat{\tilde{\vect{\theta}}_I^g }
+  % \right) \left( \hat{R}_I^g \right)^\transpose
+% \left( \hat{\vect{r}}_{i/g}^g  + \tilde{\vect{r}}_{i/g}^g \right) + \left( I - \skewmat{\tilde{\vect{\theta}}_I^b
+% } \right) \hat{R}_I^b \left( \hat{\vect{p}}_{g/b}^v + \tilde{\vect{p}}_{g/b}^v \right) - \vect{p}_{c/b}^b \right).
+% \end{align}
+% By simplifying and ignoring secord-order terms,
+% \begin{align*}
+  % \vect{p}_{i/c}^c &= R_b^c \left( \hat{R}_I^b \left( \hat{R}_I^g \right)^\transpose
+  % \hat{\vect{r}}_{i/g}^g + \hat{R}_I^b \hat{\vect{p}}_{g/b}^v - \vect{p}_{c/b}^b
+  % - \skewmat{\tilde{\vect{\theta}}_I^b} \hat{R}_I^b \left( \hat{R}_I^g
+    % \right)^\transpose \hat{\vect{r}}_{i/g}^g + \hat{R}_I^b
+    % \skewmat{\tilde{\vect{\theta}}_I^g} \left( \hat{R}_I^g
+  % \right)^\transpose \hat{\vect{r}}_{i/g}^g +
+% \hat{R}_I^b \left( \hat{R}_I^g
+    % \right)^\transpose \tilde{\vect{r}}_{i/g}^g \right. \\
+                   % &- \left. \skewmat{\tilde{\vect{\theta}}_I^b} \hat{R}_I^b \hat{\vect{p}}_{g/b}^v
+    % + \hat{R}_I^b \tilde{\vect{p}}_{g/b}^v
+   % \right). \\
+    % &= \hat{\vect{p}}_{i/c}^c
+    % + R_b^c \left( 
+  % - \skewmat{\tilde{\vect{\theta}}_I^b} \hat{R}_I^b \left( \hat{R}_I^g
+    % \right)^\transpose \hat{\vect{r}}_{i/g}^g + \hat{R}_I^b
+    % \skewmat{\tilde{\vect{\theta}}_I^g} \left( \hat{R}_I^g
+  % \right)^\transpose \hat{\vect{r}}_{i/g}^g +
+% \hat{R}_I^b \left( \hat{R}_I^g
+    % \right)^\transpose \tilde{\vect{r}}_{i/g}^g
+                   % - \skewmat{\tilde{\vect{\theta}}_I^b} \hat{R}_I^b \hat{\vect{p}}_{g/b}^v
+    % + \hat{R}_I^b \tilde{\vect{p}}_{g/b}^v
+   % \right), 
+% \end{align*}
+% which we define as
+% \begin{equation*}
+  % \vect{p}_{i/c}^c = \hat{\vect{p}}_{i/c}^c + \tilde{\vect{p}}_{i/c}^c .
+% \end{equation*}
+% For simplicity we note that 
+% \begin{equation}
+  % H_{\text{pix}} = \frac{\partial}{\partial \tilde{\x}} \vect{r}_{\text{pix}}
+% \end{equation}
+% and that
+% \begin{align*}
+  % \frac{\partial}{\partial \tilde{\x}} \left( \frac{1}{\e_3^\transpose \hat{\vect{p}}_{i/c}^c} I_{2 \times 3} K
+  % \hat{\vect{p}}_{i/c}^c \right) &= \vect{0}
+% \\
+  % \frac{\partial}{\partial \tilde{\x}} \vect{\eta}_{\text{pix}} &= \vect{0}
+% \end{align*}
+% such that
+% \begin{equation}
+  % H_{\text{pix}} = \frac{\partial}{\partial \tilde{\x}}
+ % \left( \frac{1}{\e_3^\transpose \vect{p}_{i/c}^c} I_{2 \times 3} K
+ % \vect{p}_{i/c}^c \right).
+% \end{equation}
+% We expand this using the chain rule to show that
+% \begin{align}
+  % H_{\text{pix}} &= \frac{\partial}{\partial \tilde{\x}}
+ % \left( \frac{1}{\e_3^\transpose \vect{p}_{i/c}^c} I_{2 \times 3} K
+ % \vect{p}_{i/c}^c \right) \\
+  % &= 
+ % \frac{1}{\e_3^\transpose \vect{p}_{i/c}^c} I_{2 \times 3} K
+ % \frac{\partial}{\partial \tilde{\x}} \vect{p}_{i/c}^c 
+ % - \frac{\e_3^\transpose \frac{\partial}{\partial \tilde{\x}} 
+ % \vect{p}_{i/c}^c}{\left( \e_3^\transpose
+ % \vect{p}_{i/c}^c \right)^2 } I_{2 \times 3} K
+  % \vect{p}_{i/c}^c. 
+  % % \label{eq:H_pix_expanded}
+% \end{align}
+% As $\vect{p}_{i/c}^c$ appears in~\eqref{eq:H_pix_expanded}, we substitute in our
+% best possible estimate for this vector, $\hat{\vect{p}}_{i/c}^c$, such that
+% \begin{align}
+  % H_{\text{pix}} 
+  % &\approx
+  % \frac{1}{\e_3^\transpose \hat{\vect{p}}_{i/c}^c} I_{2 \times 3} K
+ % \frac{\partial}{\partial \tilde{\x}} \vect{p}_{i/c}^c 
+ % - \frac{\e_3^\transpose \frac{\partial}{\partial \tilde{\x}} 
+ % \vect{p}_{i/c}^c}{\left( \e_3^\transpose
+ % \hat{\vect{p}}_{i/c}^c \right)^2 } I_{2 \times 3} K
+ % \hat{\vect{p}}_{i/c}^c. 
+% \end{align}
+% We define $\frac{\partial}{\partial \tilde{\x}} \vect{p}_{i/c}^c$ by its
+% non-zero components,
+% \begin{align*}
+  % \frac{\partial}{\partial \tilde{\vect{\theta}}_I^b } \vect{p}_{i/c}^c
+  % &=
+  % R_b^c \skewmat{ \hat{R}_I^b \left( \left( \hat{R}_I^g \right)^\transpose
+  % \hat{\vect{r}}_{i/g}^g + \hat{\vect{p}}_{g/b}^v \right) } \\
+  % \frac{\partial}{\partial \tilde{\vect{p}}_{g/b}^v} \vect{p}_{i/c}^c
+  % &=
+  % R_b^c \hat{R}_I^b \\
+  % \frac{\partial}{\partial \tilde{\theta}_I^g} \vect{p}_{i/c}^c
+  % &=
+  % R_b^c \hat{R}_I^b \left( \hat{R}_I^g \right)^\transpose
+  % \skewmat{\begin{matrix} 0 \\ 0 \\ 1 \end{matrix}} \hat{\vect{r}}_{i/g}^g \\
+  % \frac{\partial}{\partial \tilde{\vect{r}}_{i/c}^c} \vect{p}_{i/c}^c
+  % &=
+  % R_b^c \hat{R}_I^b \left( \hat{R}_I^g \right)^\transpose .
+% \end{align*}
+
