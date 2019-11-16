@@ -40,11 +40,20 @@ and Tim McLain.
 \input{estimation_paper/hardware/results}
 
 \section{Conclusion} \label{sec:conclusion}
-The proposed estimator provides a method for maintaining accurate and consistent
-estimates of the state of a landing vehicle when a fiducial landing marker is
+The proposed ESKF provides a method for maintaining accurate and consistent
+estimates of the state of a landing target vehicle when a fiducial landing marker is
 not detected for significant periods of time. This improvement is achieved by
-tracking and estimating the locations of unknown visual features on the landing
-vehicle. The simulation and hardware experiments show that by tracking and
-estimating the locations of just 10 visual features, the multirotor UAV can
-continue to reliably operate with respect to the landing vehicle for long
-periods of time without detecting the fiducial landing marker.
+tracking and estimating the locations of unknown visual features on the target
+vehicle.
+The presented experiments demonstrated that the addition of just 10 visual
+feature positions to the estimated state
+is sufficient to allow for reliable operation for more than one
+minute without detection of the fiducial landing marker.
+% The presented experiments demonstrated that when 10 visual
+% features are tracked and estimated, a multirotor UAV can
+% continue to operate reliably with respect a target vehicle for over a minute
+% without detecting the fiducial landing marker.
+% tThe simulation and hardware experiments show that by tracking and
+% estimating the locations of just 10 visual features, the multirotor UAV can
+% continue to reliably operate with respect to the landing vehicle for long
+% periods of time without detecting the fiducial landing marker.
