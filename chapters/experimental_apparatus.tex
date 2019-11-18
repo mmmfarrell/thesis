@@ -8,37 +8,50 @@ are detailed in Chapters~\ref{chp:estimation_paper} and~\ref{chp:control_paper}.
 
 \section{Software}
 \subsection {Robot Operating System}
-The same C++ algorithm implementations were used both in hardware and simulation
-experiments.
+The simulation and hardware experiments described in this thesis use the same
+C++ algorithm implementations.
+% The same C++ algorithm implementations were used both in hardware and simulation
+% experiments.
 This was made possible, in part, due to the use of the Robot Operating System\footnote{Robot Operating System:
 \href{www.ros.org}{www.ros.org}} (ROS) as a middleware. ROS provides a way for separate
-programs, or nodes, to share information between one another.
+programs, or nodes, to share information during runtime.
+% between one another.
 
 A network diagram of the software system can be seen in~\figref{fig:network_diagram}. The estimator and
 controller for the UAV were implemented as two separate nodes. 
-The estimator node provided the state estimate of the UAV to the controller node.
-The controller node computed the desired control action based on the error
-between the estimated state and the desired state. This desired control action
-was sent to the ROSflight flight control stack~\cite{jackson2016rosflight}
-which then actuated either a simulated UAV or the UAV hardware platform.
+The estimator node computed the state estimate of the UAV and the controller
+node computed the desired control action based on the estimated state.
+% to the controller node.
+% The controller node computed the desired control action based on the error
+% between the estimated state and the desired state.
+% This desired control action
+% was sent to
+The ROSflight flight control stack~\cite{jackson2016rosflight}
+then used the control action to actuate
+% which then actuated
+either a simulated UAV or the UAV hardware platform.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=3.5in]{figures/roscopter.png}
-  \caption[Software Architecture Network Diagram]{A network diagram of the
-  software running during both simulation and hardware experiments.}
+  \caption[Software Architecture Network Diagram]{Network diagram of the
+  software running during simulation and hardware experiments.}
 %
   \label{fig:network_diagram}
 \end{figure}
 
 \subsection {Gazebo}
-For simulation experiments, the Gazebo\footnote{Gazebo:
-\href{www.gazebosim.org}{www.gazebosim.org}} simulation environment was used with the ROSflight software-in-the-loop
+% For simulation experiments,
+The Gazebo\footnote{Gazebo:
+\href{www.gazebosim.org}{www.gazebosim.org}} simulation environment was used
+% for simulation experiments in conjunction
+in conjunction
+with the ROSflight software-in-the-loop
 (SIL) simulation.
 % This SIL simulation meant that not only the same estimator and controller nodes
 % were running in simulation as in hardware, but also the same software from the
 % flight controller.
-This simulation setup provided for an easier transition from software
+This setup provided for an easier transition from software
 experiments to
 hardware experiments.
 
@@ -48,17 +61,23 @@ hardware experiments.
 % making the transition from simulation to hardware less difficult.
 
 \subsection {ROScopter}
-The estimator and controller nodes of the ROScopter\footnote{ROScopter:
+The simulation and hardware experiments described in this thesis also used
+the estimator and controller nodes of the ROScopter\footnote{ROScopter:
 \href{www.github.com/byu-magicc/roscopter}{www.github.com/byu-magicc/roscopter}}
-project were also used during certain points of the simulation and hardware
-experiments described in this thesis. In the experiments of the estimator proposed in
+project.
+% were also used during certain points of the simulation and hardware
+% experiments described in this thesis.
+% In the experiments of the estimator proposed in
+During testing of the estimator proposed in
 Chapter~\ref{chp:estimation_paper}, the ROScopter controller node was used to
-close the loop around the produced estimates. In the experiments of the 
+close the loop around the produced estimates.
+% In the experiments of the 
+While experimenting with the
 controller proposed in Chapter~\ref{chp:control_paper}, the ROScopter estimator node
 was used to provide state estimates of the UAV to the controller.
 
 \section{Hardware}
-The multirotor UAV used in hardware experiments can be seen
+The multirotor UAV used in hardware experimentation can be seen
 in~\figref{f:drone_pic}. The UAV was built on a DJI Flamewheel 450 frame.
 Specific components contained on the UAV are detailed in the following
 subsections.

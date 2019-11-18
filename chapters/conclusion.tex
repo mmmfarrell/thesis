@@ -17,8 +17,10 @@ periods of time.
 The control algorithm in Chapter~\ref{chp:control_paper} provides a principled
 and computationally efficient method for the UAV to track a time-dependent
 trajectory to reach touchdown on the target vehicle. The results of simulation and hardware
-experiments show that the combination of these estimation and control
-algorithms, together with a motion planning algorithm, would result in a robust
+experiments show that the combination of these
+% estimation and control
+% algorithms, together with a motion planning algorithm, would result in a robust
+algorithms with a motion planning algorithm would result in a robust
 system for UAVs landing on moving vehicles.
 
 \section{Future Work}
@@ -28,8 +30,11 @@ state-of-the-art methods, there remain many opportunities for future
 improvements.
 The following subsections outline
 recommendations and directions for future work related to the autonomous
-landing of multirotor UAVs on moving vehicles specific to the fields of state
-estimation, motion planning, and control.
+landing of multirotor UAVs on moving vehicles.
+% specific to the fields of state
+% estimation, motion planning, and control.
+These recommendations are divided into the specific fields of state estimation,
+motion planning, and control.
 
 \subsection{State Estimation}
 The estimation algorithm presented in Chapter~\ref{chp:estimation_paper} details
@@ -87,7 +92,7 @@ with significant superstructure or when a UAV must re-enter and land inside of a
 package delivery truck. While planning trajectories for UAVs with respect to
 static obstacles has been widely researched, planning trajectories to avoid
 dynamic obstacles that are rigidly attached to the desired landing target is its
-own, unique problem to be solved.
+own unique problem to be solved.
 
 When operating from vehicles with complex motion, 
 it can also be important to precisely time the touchdown of the UAV.
@@ -111,8 +116,15 @@ As discussed in Chapter~\ref{chp:control_paper}, the controller presented is
 based in Lie theory, operating on the error-state of the system.
 % to accurately track a time-dependent trajectory. While
 While operating on the error-state provides other
-advantages, the main advantage to this approach is that it should
-outperform typical Euler angle formulations during extreme maneuvers.
+advantages, the main advantage to this approach is that it is more
+mathematically principled than typical Euler angle formulations. This, in
+theory, should allow for more accurate tracking during extreme maneuvers, where
+less principled methods struggle.
+% extreme maneuvers.
+% tracking during extreme maneuvers than less principled methods struggle.
+% angle formulations struggle.
+% should
+% outperform typical Euler angle formulations during extreme maneuvers.
 % perform better during more extreme maneuvers than a typical ZYX Euler angle
 % formulation.
 This controller should be tested with feasible trajectories of acrobatic
@@ -123,15 +135,16 @@ maneuvers to demonstrate this advantage.
 One key assumption made by the controller is that the
 % One potential down side to the proposed controller is that it assumes the
 error-state of the system is always small. This was
-especially not true during takeoff, when the UAV was far from the sinusoidal
+especially not true in the experiments during takeoff, when the UAV was far from the sinusoidal
 desired trajectory.
 % always true as the UAV had to converge onto the sinusoidal trajectory from stationary
 % takeoff.
-This resulted in unsteady transient behavior when the error-state values were
-not saturated.
+This resulted in unsteady transient behavior if the error-state values were
+not saturated to be small.
 % To satisfy this assumption,
 % the true performance of the controller,
-The controller should be tested with
+Instead of one, static trajectory,
+the controller should be tested with
 dynamically planned trajectories which always begin at the current state of the
 UAV. With these trajectories, the error-state of the system would always be forced to
 be small, satisfying this key assumption.

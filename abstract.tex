@@ -6,30 +6,43 @@
 % The abstract is a summary of the dissertation, thesis, or selected project with emphasis on the findings of the study.  The abstract must not exceed 1 page in length.  It should be printed in the same font and size as the rest of the work.  The abstract precedes the acknowledgments page and the body of the work.
 Though multirotor unmanned aerial vehicles (UAVs) have become widely used 
 during the past decade, challenges in autonomy have prevented their
-widespread operation from moving vehicles. Emerging use cases including maritime
+widespread use when moving vehicles act as their base stations.
+% from moving vehicles.
+Emerging use cases including maritime
 surveillance, package delivery and convoy support require UAVs to autonomously
-take off and land from moving vehicles in potentially challenging weather
-conditions. This thesis presents improved solutions to both the estimation and
+take off from and land onto moving vehicles in potentially challenging weather
+conditions. This thesis presents improved solutions to both the state estimation and
 control problems that must be solved
-to enable robust, autonomous landing of multirotor UAVs onto a moving vehicle in
-challenging conditions.
+to enable robust, autonomous landing of multirotor UAVs onto moving vehicles.
+% in
+% challenging conditions.
 % for a multirotor UAV to robustly land
 % autonomously on a moving vehicle in challenging conditions.
 
-Current state-of-the-art UAV landing systems depend on visual fiducial markers
-which serve as the landing pad for the UAV on the moving vehicle. However, in challenging weather
-conditions, these fiducial markers may be undetected by the UAV for significant
-periods of time. This thesis details a state estimation algorithm that tracks
-and estimates the locations of unknown visual features on the landing vehicle in
-addition to the fiducial marker. Simulation and hardware experiments described
-in this thesis demonstrate that using these additional visual features results in
-accurate and consistent state estimates of the landing vehicle even when the
-fiducial marker is undetected for long durations.
+Current state-of-the-art UAV landing systems depend on the detection of visual
+fiducial markers placed on the landing target vehicle. However, in challenging
+weather conditions, these fiducial markers may be undected for significant
+periods of time. This thesis proposes a state estimation algorithm that tracks
+and estimates the locations of unknown visual features on the target vehicle to
+improve the estimation
+% of the state of the target vehicle
+when the fiducial marker is not detected.
+% addition to the fiducial marker.
+% Current state-of-the-art UAV landing systems depend on visual fiducial markers
+% which serve as the landing pad for the UAV on the moving vehicle. However, in challenging weather
+% conditions, these fiducial markers may be undetected by the UAV for significant
+% periods of time. This thesis details a state estimation algorithm that tracks
+% and estimates the locations of unknown visual features on the landing vehicle in
+% addition to the fiducial marker. Simulation and hardware experiments described
+% in this thesis demonstrate that using these additional visual features results in
+% accurate and consistent state estimates of the landing vehicle even when the
+% fiducial marker is undetected for long durations.
 
 This thesis also describes an improved control scheme that enables a multirotor
 UAV to accurately track a time-dependent trajectory. Rooted in Lie theory, this
 controller computes the optimal control signal based on an error-state
-formulation of the UAV dynamics, similar to that used in state estimation.
+formulation of the UAV dynamics.
+% similar to that used in state estimation.
 Simulation and hardware experiements of this control scheme demonstrate its
 accuracy and computational efficiency, making it a viable control scheme for a
 robust landing system.
