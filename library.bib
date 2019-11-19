@@ -238,6 +238,10 @@ archivePrefix = {arXiv},
 @article{diebel2006representing,
   title={Representing attitude: Euler angles, unit quaternions, and rotation vectors},
   author={Diebel, James},
+  journal={Matrix},
+  volume={58},
+  number={15-16},
+  pages={1--35},
   year={2006}
 }
 
@@ -266,23 +270,22 @@ archivePrefix = {arXiv},
   organization={IEEE}
 }
 
-@article{casey2013AttitudeRepresentation,
-abstract = {Complementary filter-based algorithms for attitude estimation seek to minimize the short-comings associated with the low-cost MEMS sensors and low-power embedded processors that are frequently used in unmanned aerial vehicles. This paper explores the performance impact of three different ingredients for attitude estimation within the complementary filter framework: 1) kinematic propagation, 2) attitude representation, and 3) the assumptions on the behavior of the angular rate vector between samples. Forward Euler integration and matrix exponential propagation methods are compared within several attitude representations, namely the direction cosine matrix (DCM), quaternion, Euler angle, and the angle-axis schemes. Assumptions of constant, linear, and quadratic angular velocities between samples are also examined. The resulting algorithms are evaluated from the points of view of accuracy, computational load, and noise response. Tests using analytic inputs as well as real data within the framework of the SLUGS autopilot are performed to evaluate algorithm performance. The results of the experiments indicate that by combining matrix exponential propagation with a quaternion representation of attitude high accuracy can be obtained with a standard processor.},
-author = {Casey, Robert T. and Karpenko, Mark and Curry, Renwick and Elkaim, Gabriel},
-doi = {10.2514/6.2013-4615},
-file = {:home/capn/Downloads/Paper from Ren Curry - Read and comment - Casey2013GNC (1).pdf:pdf},
-isbn = {978-1-62410-224-0},
-journal = {AIAA Guidance, Navigation, and Control (GNC) Conference},
-pages = {1--25},
-title = {Attitude Representation and Kinematic Propagation for Low-Cost {UAVs}},
-url = {http://arc.aiaa.org/doi/abs/10.2514/6.2013-4615},
-year = {2013}
+@inproceedings{casey2013AttitudeRepresentation,
+
+  title={Attitude representation and kinematic propagation for low-cost {UAVs}},
+  author={Casey, Robert T and Karpenko, Mark and Curry, Renwick and Elkaim, Gabriel},
+  booktitle={AIAA Guidance, Navigation, and Control (GNC) Conference},
+  pages={4615},
+  year={2013}
 }
 
-@inproceedings{Markley2004MultiplicativeVA,
-  title={Multiplicative vs. Additive Filtering for Spacecraft Attitude Determination},
-  author={F. Landis Markley},
-  year={2004}
+@article{Markley2004MultiplicativeVA,
+  title={Multiplicative vs. additive filtering for spacecraft attitude determination},
+  author={Markley, F Landis},
+  journal={Dynamics and Control of Systems and Structures in Space},
+  number={467-474},
+  year={2004},
+  publisher={NASA’s Goddard Space Flight Center Greenbelt, MD}
 }
 
 @inproceedings{farrell2019error,
@@ -463,7 +466,7 @@ year = {2013}
 }
 
 @inproceedings{mourikis2007multi,
-  title={A multi-state constraint Kalman filter for vision-aided inertial navigation},
+  title={A multi-state constraint {Kalman} filter for vision-aided inertial navigation},
   author={Mourikis, Anastasios I and Roumeliotis, Stergios I},
   booktitle={Proceedings 2007 IEEE International Conference on Robotics and Automation},
   pages={3565--3572},
@@ -510,8 +513,8 @@ note = {Accessed: 2019-11-14}
 
 @misc{openpilotrevo,
 author = {{Banggood}},
-title = {{OpenPilot CC3D Revolution Revo 10DOF STM32F4 Flight Controller Staight
-         Pin for RC Drone FPV Racing Multi Rotor}},
+title = {{OpenPilot CC3D} Revolution Revo {10DOF STM32F4} Flight Controller Staight
+         Pin for {RC} Drone {FPV} Racing Multi Rotor},
 howpublished = {\url{https://www.banggood.com/OpenPilot-CC3D-Revolution-Revo-10DOF-STM32F4-Flight-Controller-Staight-Pin-p-1000068.html?cur_warehouse=CN}},
 note = {Accessed: 2019-11-14}
 }
@@ -535,7 +538,7 @@ note = {Accessed: 2019-11-14}
 @article{romero2018speeded,
   title={Speeded up detection of squared fiducial markers},
   author={Romero-Ramirez, Francisco J and Mu{\~n}oz-Salinas, Rafael and Medina-Carnicer, Rafael},
-  journal={Image and vision Computing},
+  journal={Image and Vision Computing},
   volume={76},
   pages={38--47},
   year={2018},

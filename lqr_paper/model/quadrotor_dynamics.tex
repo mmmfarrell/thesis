@@ -26,9 +26,9 @@ then the rigid body dynamics of a multirotor UAV are as follows~\cite{leishman20
 		\dot{\vect{p}}_{b/I}^{I} &= \left(R_{I}^{b}\right)^\transpose \vect{v}_{b/I}^{b} \nonumber \\
 		\dot{\vect{v}}_{b/I}^{b} &= gR_I^b \vect{e}_3 - g\frac{s}{s_e}\vect{e}_3 -
                 \drag \left( I - \vect{e}_3 \vect{e}_3^\top \right)
-                \vect{v}_{b/I}^b - \nonumber \\
-                \label{eq:dynamics}
-                & \qquad \skewmat{\vect{\omega}_{b/I}^b}\vect{v}_{b/I}^b \\
+                \vect{v}_{b/I}^b -
+                \skewmat{\vect{\omega}_{b/I}^b}\vect{v}_{b/I}^b
+                \label{eq:dynamics} \\
                 \dot{\vect{q}}_{I}^{b} 
 	% \end{pmatrix}
 	&= 	
@@ -52,18 +52,18 @@ where $\drag$ is a linear drag constant, $s_e$ is the throttle command required 
 
 \subsection{Error-State Dynamics} \label{subsec:error_state_dyn}
 
-It is useful to consider what is known as the \emph{error-state} of the
+It is useful to consider what is known as the \emph{error state} of the
 quadrotor.  This concept has a long history in state estimation and is used in
 the error-state Kalman
-filter~\cite{sola2017quaternion,Markley2004MultiplicativeVA}.  The error-state
+filter~\cite{sola2017quaternion,Markley2004MultiplicativeVA}.  The error state
 is used in state estimation as a principled way to represent the covariance
 about attitude in terms of a vector space, as opposed to some local
 approximation.  This relationship is also useful in control for the same reason.
-Performing control in the vector space of error-state provides a principled way
+Performing control in the vector space of error state provides a principled way
 to leverage well-understood and efficient linear algebra machinery to solve
 control problems over non-vector quantities, such as attitude.  
 
-We define the error-state of some quantity $\vect{y}$ as
+We define the error state of some quantity $\vect{y}$ as
 \begin{equation}
   \tilde{\vect{y}}=\vect{y} \boxminus \des{\vect{y}},
   \label{eq:error}
@@ -74,7 +74,7 @@ $\des{\vect{y}}$ $\in \mathbb{R}^{n}$, the $\boxminus$ operator may be
 defined as the vector subtraction operator. However, due to the attitude component of our
 state, the vector subtraction operator is not defined between $\x$ and
 $\des{\x}$. We instead define the
-error-state piecewise for
+error state piecewise for
 each component of the state and combine these into an error-state vector
 \begin{equation}
   \tilde{\vect{x}}=\begin{bmatrix}{\tilde{\vect{p}}}_{b/I}^{I} &
@@ -82,15 +82,15 @@ each component of the state and combine these into an error-state vector
 \tilde{\vect{r}}_{I}^{b}\end{bmatrix}^{\top}\in\mathbb{R}^{9\times1},
   \label{eq:error_state}
 \end{equation}
-where $\tilde{\vect{p}}_{b/I}^{I}$ is the error-state associated with
-position, $\tilde{\vect{v}}_{b/I}^{b}$ is the error-state associated with
-velocity, and $\tilde{\vect{r}}_{I}^{b}$ is the error-state associated
+where $\tilde{\vect{p}}_{b/I}^{I}$ is the error state associated with
+position, $\tilde{\vect{v}}_{b/I}^{b}$ is the error state associated with
+velocity, and $\tilde{\vect{r}}_{I}^{b}$ is the error state associated
 with attitude.
 %While the state itself is a not a vector quantity due to the attitude
 %representation, the error state \emph{is} a vector
 %quantity, allowing us to use many common techniques to perform control.
 
-In our case, the error-states associated with
+In our case, the error states associated with
 position and velocity are simply defined using vector subtraction
 \begin{align}
   \label{eq:pos_err}
@@ -98,7 +98,7 @@ position and velocity are simply defined using vector subtraction
   \tilde{\vect{v}}_{b/I}^{b} &= \vect{v}_{b/I}^{b} - \des{\vect{v}}_{b/I}^{b},
   \label{eq:vel_err}
 \end{align}
-however, the error-state associated with attitude is more complicated.
+however, the error state associated with attitude is more complicated.
 %In simplest terms, the subtraction operator is
 %not a sensible operation for a unit quaternion, therefore we must turn to other
 %methods to define the error state.
@@ -127,7 +127,7 @@ and~\eqref{eqn:log_map} to express
 \end{align}
 as described by~\cite{hertzberg2013integrating}.
 
-Even though $\vect{r}_I^b$ is a vector, we cannot simply compute the error-state
+Even though $\vect{r}_I^b$ is a vector, we cannot simply compute the error state
 as $\tilde{\vect{r}}_I^b=\vect{r}_I^b-\des{\vect{r}}_I^b$ because $\vect{r}_I^b$
 is a minimal representation of $\vect{q}_I^b$, which is a double cover of the
 Lie group $\SO\mathopen{}\mathclose\bgroup\left(3\aftergroup\egroup\right)$. %$SO\left(3\right)$.
@@ -141,8 +141,8 @@ where $R_I^b\left(\des{R}_I^b\right)^{\top}$ moves the desired vector
 derivative, $\dot{\des{\vect{r}}}_I^b$, from its own tangent space to the tangent space of $\dot{\vect{r}}_I^b$.
 With both vectors in the same tangent space, the vector subtraction in~\eqref{eq:rdot_diff} is valid.
 
-For use in control, we similarly define an error-state for the control input
-with the error-state being the difference between the current control input and
+For use in control, we similarly define an error state for the control input
+with the error state being the difference between the current control input and
 some reference input.
 Using the same definition as in~\eqref{eq:error}, we can see that
 \begin{align}
@@ -184,13 +184,18 @@ of the quadrotor as
         \dot{\tilde{\vect{v}}}_{b/I}^{b} &= g\skewmat{R_I^b
           \vect{e}_3} \tilde{\vect{r}}_I^b -g\frac{\tilde{s}}{s_e}\vect{e}_3
           -\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right)
-          \tilde{\vect{v}}_{b/I}^b \nonumber \\
-                                         & \qquad - \skewmat{\vect{\omega}_{b/I}^b}
+          \tilde{\vect{v}}_{b/I}^b 
+                                         - \skewmat{\vect{\omega}_{b/I}^b}
           \tilde{\vect{v}}_{b/I}^b + \skewmat{\vect{v}_{b/I}^b}
-          \tilde{\vect{\omega}}_{b/I}^b \nonumber \\
+          \tilde{\vect{\omega}}_{b/I}^b 
+          \label{eq:error_state_dynamics}
+          \\
+          % \tilde{\vect{v}}_{b/I}^b \nonumber \\
+                                         % & \qquad - \skewmat{\vect{\omega}_{b/I}^b}
+          % \tilde{\vect{v}}_{b/I}^b + \skewmat{\vect{v}_{b/I}^b}
+          % \tilde{\vect{\omega}}_{b/I}^b \nonumber \\
           \dot{\tilde{\vect{r}}}_{I}^{b} &= \tilde{\vect{\omega}}_{b/I}^{b} -
-        \skewmat{\vect{\omega}_{b/I}^{b} } \tilde{\vect{r}}_I^b,
-	\label{eq:error_state_dynamics}
+        \skewmat{\vect{\omega}_{b/I}^{b} } \tilde{\vect{r}}_I^b, \nonumber
 \end{align}
 or succinctly,
 \begin{equation}

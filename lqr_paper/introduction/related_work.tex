@@ -18,9 +18,11 @@ the LQR gains at every control step.
 Recently there has been a movement in the robotics community to appropriately
 deal with the evolution of a robot's state along a manifold using Lie
 theory~\cite{sola2018micro}. Though these methods have widely been used in the
-field of state estimation~\cite{sola2017quaternion}~\cite{koch2017relative}, a
+field of state estimation~\cite{sola2017quaternion,koch2017relative}, a
+% field of state estimation~\cite{sola2017quaternion}~\cite{koch2017relative}, a
 few methods have emerged that also apply Lie theory to
-control~\cite{yu2015high}~\cite{lee2010geometric}. We propose a formulation of
+control~\cite{yu2015high,lee2010geometric}. We propose a formulation of
+% control~\cite{yu2015high}~\cite{lee2010geometric}. We propose a formulation of
 the LQR problem that properly deals with the manifold nature of the state,
 specifically the attitude component. Most previous LQR solutions
 for a multirotor UAV use an Euler angle representation of attitude and treat the
@@ -29,7 +31,7 @@ though it is not~\cite{diebel2006representing}. While some methods use unit
 quaternions or rotation matrices to properly represent atttiude, these are also
 not inherently a vector space and extra steps are required to orthonormalize or
 otherwise force the attitude to stay on the
-manifold~\cite{reyes2013lqr}~\cite{foehn2018onboard}. The proposed solution is
+manifold~\cite{reyes2013lqr,foehn2018onboard}. The proposed solution is
 derived from Lie theory and care is taken to ensure that all vector
 manipulations are done with
 appropriate vector quantities so that the state remains on the manifold.
