@@ -3,7 +3,7 @@
 
 \section{UAV Position}
 To derive the error-state dynamics for the UAV position state, we start by
-differentiating the error state definition given
+differentiating the error-state definition given
 in~\eqref{eq:est_paper_uav_pos_err_state} with respect to time to yield
 \begin{equation}
   \dot{\tilde{\vect{p}}}_{b/I}^I = \dot{\vect{p}}_{b/I}^I - \dot{\hat{\vect{p}}}_{b/I}^I.
@@ -17,7 +17,7 @@ and~\eqref{eq:estimated_dynamics}
   - \left( \hat{R}_I^b \right)^\transpose \hat{\vect{v}}_{b/I}^b.
 \end{align}
 We expand this equation using the approximation for $\left( R_I^b \right)^\transpose$ given
-in~\eqref{eq:est_paper_RTapprox} and the error state definition given
+in~\eqref{eq:est_paper_RTapprox} and the error-state definition given
 in~\eqref{eq:est_paper_vector_error_state} resulting in
 \begin{align}
   \dot{\tilde{\vect{p}}}_{b/I}^I
@@ -37,7 +37,7 @@ in~\eqref{eq:est_paper_vector_error_state} resulting in
   + \left( \hat{R}_I^b \right)^\transpose \skewmat{\tilde{\vect{\theta}}_I^b} \hat{\vect{v}}_{b/I}^b
   + \left( \hat{R}_I^b \right)^\transpose \skewmat{\tilde{\vect{\theta}}_I^b} \tilde{\vect{v}}_{b/I}^b.
 \end{align}
-We assume the error state components to be small, neglecting the second-order
+We assume the error-state components to be small, neglecting the second-order
 terms to get the final expression
 \begin{align}
   \dot{\tilde{\vect{p}}}_{b/I}^I
@@ -74,7 +74,7 @@ and simplify to yield
 We then rearrange the above equation and simplify using the true-state and
 estimated-state dynamics of the UAV attitude state given
 in~\eqref{eq:uav_dynamics} and~\eqref{eq:estimated_dynamics} along with the
-error state definition from~\eqref{eq:quat_error_state}:
+error-state definition from~\eqref{eq:quat_error_state}:
 \begin{align}
   \dot{\tilde{\q}}_I^b &=
   \left( \hat{\q}_I^b \right)^{-1} \otimes \dot{\q}_I^b  - \left( \hat{\q}_I^b
@@ -142,7 +142,7 @@ we can expand~\eqref{eq:intermed_eq1} as matrix-like products
   \tilde{\q}_I^b.
   \nonumber
 \end{align}
-We then simplify the previous equation using the error state definition
+We then simplify the previous equation using the error-state definition
 $\tilde{\vect{\beta}}_\omega \triangleq \vect{\beta}_\omega -
 \hat{\vect{\beta}}_\omega$ giving
 \begin{align}
@@ -202,13 +202,13 @@ second-order terms to yield
 \section{UAV Velocity}
 Similar to the approach for the UAV position state, to derive the error-state
 dynamics for the UAV velocity state, we begin with the time derivative of the
-error state definition
+error-state definition
 \begin{equation}
   \dot{\tilde{\vect{v}}}_{b/I}^I = \dot{\vect{v}}_{b/I}^I -
   \dot{\hat{\vect{v}}}_{b/I}^I.
 \end{equation}
 We then substitute in the dynamics from~\eqref{eq:uav_dynamics}
-and~\eqref{eq:estimated_dynamics} and expand using the error state definitions
+and~\eqref{eq:estimated_dynamics} and expand using the error-state definitions
 and approximations
 \begin{align}
   \dot{\tilde{\vect{v}}}_{b/I}^I
@@ -264,7 +264,7 @@ expression:
 
 \section{Sensor Biases}
 To derive the error-state dynamics for the UAV bias states, we start with the
-time derivative of their error state definitions
+time derivative of their error-state definitions
 \begin{align}
   \dot{\tilde{\vect{\beta}}}_a &= \dot{\vect{\beta}}_a -
   \dot{\hat{\vect{\beta}}}_a \\
@@ -281,13 +281,13 @@ and~\eqref{eq:estimated_dynamics} to yield the final expression
 \section{Target Vehicle Position}
 Similar to the method used for the UAV states, to derive the error-state
 dynamics for the target vehicle position state, we start with the time
-derivative of the error state definition
+derivative of the error-state definition
 \begin{equation}
   \dot{\tilde{\vect{p}}}_{g/b}^{v} = \dot{\vect{p}}_{g/b}^{v} -
   \dot{\hat{\vect{p}}}_{g/b}^{v}.
 \end{equation}
 We then substitute in the dynamics from~\eqref{eq:goal_dynamics}
-and~\eqref{eq:estimated_dynamics} and expand using the error state definitions
+and~\eqref{eq:estimated_dynamics} and expand using the error-state definitions
 and approximations
 \begin{align}
   \dot{\tilde{\vect{p}}}_{g/b}^{v}
@@ -364,7 +364,7 @@ to get the final expression
 \section{Target Vehicle Velocity}
 Similar to the UAV bias states, the error-state dynamics of the target vehicle
 velocity state are simply found by starting with the time derivative of the
-error state definition
+error-state definition
 \begin{equation}
   \dot{\tilde{\vect{v}}}_{g/I}^g = \dot{\vect{v}}_{g/I}^g -
   \dot{\hat{\vect{v}}}_{g/I}^g
@@ -379,7 +379,7 @@ and~\eqref{eq:estimated_dynamics} to get the final expression
 To derive the error-state dynamics for the target vehicle attitude state,
 we follow the method used for deriving the error-state dynamics for the
 previous vector states because we treat $\psi_I^g$ as a vector space. We,
-therefore, start by taking the time derivative of the error state definition
+therefore, start by taking the time derivative of the error-state definition
 given in~\eqref{eq:2d_att_err_state}
 \begin{equation}
   \dot{\tilde{\psi}}_I^g = \dot{\psi}_I^g - \dot{\hat{\psi}}_I^g.
@@ -419,7 +419,7 @@ and simplify to get the final expression
 
 \section{Target Vehicle Angular Rate}
 The error-state dynamics of the target vehicle angular rate state are found by
-starting with the time derivative of the error state definition
+starting with the time derivative of the error-state definition
 \begin{equation}
   \dot{\tilde{\omega}}_{g/I}^g = \dot{\omega}_{g/I}^g -
   \dot{\hat{\omega}}_{g/I}^g.
@@ -431,7 +431,7 @@ and~\eqref{eq:estimated_dynamics} to yield the final expression
 \end{equation}
 
 \section{Visual Feature Vector}
-Starting with the time derivative of the error state definition for the visual
+Starting with the time derivative of the error-state definition for the visual
 feature vector states,
 \begin{equation}
   \dot{\tilde{\vect{r}}}_{i/g}^g = \dot{\vect{r}}_{i/g}^g  -
