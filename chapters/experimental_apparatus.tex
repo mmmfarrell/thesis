@@ -8,12 +8,14 @@ are detailed in Chapters~\ref{chp:estimation_paper} and~\ref{chp:control_paper}.
 
 \section{Software}
 \subsection {Robot Operating System}
-The simulation and hardware experiments described in this thesis use the same
-C++ algorithm implementations.
+The simulation and hardware experiments described in this thesis used the same
+C++ implementations of the proposed algorithms.
 % The same C++ algorithm implementations were used both in hardware and simulation
 % experiments.
 This was made possible, in part, due to the use of the Robot Operating System\footnote{Robot Operating System:
-\href{www.ros.org}{www.ros.org}} (ROS) as a middleware. ROS provides a way for separate
+\url{www.ros.org}}
+% \href{www.ros.org}{www.ros.org}}
+(ROS) as a middleware. ROS provides a way for separate
 programs, or nodes, to share information during runtime.
 % between one another.
 
@@ -27,7 +29,7 @@ node computed the desired control action based on the estimated state.
 % This desired control action
 % was sent to
 The ROSflight flight control stack~\cite{jackson2016rosflight}
-then used the control action to actuate
+used this computed control action to actuate
 % which then actuated
 either a simulated UAV or the UAV hardware platform.
 
@@ -43,7 +45,9 @@ either a simulated UAV or the UAV hardware platform.
 \subsection {Gazebo}
 % For simulation experiments,
 The Gazebo\footnote{Gazebo:
-\href{www.gazebosim.org}{www.gazebosim.org}} simulation environment was used
+\url{www.gazebosim.org}}
+% \href{www.gazebosim.org}{www.gazebosim.org}}
+simulation environment was used
 % for simulation experiments in conjunction
 in conjunction
 with the ROSflight software-in-the-loop
@@ -53,7 +57,8 @@ with the ROSflight software-in-the-loop
 % flight controller.
 This setup provided for an easier transition from software
 experiments to
-hardware experiments.
+hardware experiments as all of the necessary software was first proven in
+simulation.
 
 % This simulation setup allowed the
 % same estimator and controller implementations to
@@ -63,7 +68,8 @@ hardware experiments.
 \subsection {ROScopter}
 The simulation and hardware experiments described in this thesis also used
 the estimator and controller nodes of the ROScopter\footnote{ROScopter:
-\href{www.github.com/byu-magicc/roscopter}{www.github.com/byu-magicc/roscopter}}
+\url{www.github.com/byu-magicc/roscopter}}
+% \href{www.github.com/byu-magicc/roscopter}{www.github.com/byu-magicc/roscopter}}
 project.
 % were also used during certain points of the simulation and hardware
 % experiments described in this thesis.
@@ -83,7 +89,7 @@ Specific components contained on the UAV are detailed in the following
 subsections.
 
 \subsection{Flight Controller}
-The multirotor UAV was equipped with an OpenPilot CC3D Revolution 32 bit F4
+The multirotor UAV was equipped with an OpenPilot CC3D Revolution 32-bit F4
 flight controller as shown in~\figref{fig:f4}. The flight controller ran the
 ROSflight firmware which provided an easy interface
 for the controller node on the onboard computer to control the UAV.
@@ -91,8 +97,8 @@ for the controller node on the onboard computer to control the UAV.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=2.5in]{figures/f4.jpg}
-  \caption[OpenPilot CC3D Revolution 32 bit F4]{OpenPilot CC3D Revolution 32
-    bit F4 flight controller. \\ \hspace{\textwidth} Source:~\cite{openpilotrevo}
+  \caption[OpenPilot CC3D Revolution 32-bit F4]{OpenPilot CC3D Revolution 32-bit
+    F4 flight controller. \\ \hspace{\textwidth} Source:~\cite{openpilotrevo}
 }
 %
   \label{fig:f4}
@@ -115,7 +121,9 @@ computation was done on the onboard computer during the hardware experiments.
 \subsection{Motion Capture}
 Hardware flight experiments were performed in the motion capture room in the
 MAGICC Lab at Brigham Young University. This room is equipped with an OptiTrack\footnote{OptiTrack:
-\href{www.optitrack.com}{www.optitrack.com}} motion tracking system that
+\url{www.optitrack.com}}
+% \href{www.optitrack.com}{www.optitrack.com}}
+motion tracking system that
 provided high-rate measurements of the position and attitude of the multirotor
 UAV during the experiments.
 
@@ -125,7 +133,8 @@ the multirotor UAV was outfitted with an ELP USB camera with a 2.1 mm lens as
 shown in~\figref{fig:camera}. The intrinsic parameters of the sensor were
 accurately calibrated using a software package provided by ROS\footnote{ROS
 camera\_calibration:
-\href{wiki.ros.org/camera_calibration}{wiki.ros.org/camera\_calibration}}.
+\url{wiki.ros.org/camera_calibration}}.
+% \href{wiki.ros.org/camera_calibration}{wiki.ros.org/camera\_calibration}}.
 However, the mounting position and attitude of the camera were only roughly
 approximated.
 
@@ -133,9 +142,7 @@ approximated.
   \centering
   \includegraphics[width=2.5in]{figures/camera.jpg}
   \caption[ELP USB Camera with 2.1 mm Lens]{ELP USB Camera with a 2.1 mm
-  lens.
-
-  Source:~\cite{webcam}
+    lens. \\ \hspace{\textwidth} Source:~\cite{webcam}
 }
 %
   \label{fig:camera}

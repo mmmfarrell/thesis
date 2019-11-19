@@ -28,7 +28,7 @@ in challenging conditions.
   \includegraphics[width=4.5in]{figures/drone_convoy_support.png}
   \caption[UAV Convoy Support]{Multirotor UAVs used to increase
   situational awareness for a convoy of
-vehicles
+vehicles.
 
 Source:~\cite{ground_vehicle_drone}}
 %
@@ -56,7 +56,8 @@ In these methods, a camera mounted to the UAV detects the fiducial landing marke
 information about the relative pose of the target
 vehicle~\cite{borowczyk2017autonomous}. These measurements are often used in a
 filtering framework, such as a Kalman filter~\cite{kalman}, to produce a
-continuous estimate of the relative state between the UAV and the target
+% continuous
+high-rate estimate of the relative state between the UAV and the target
 vehicle. During landing, it is likely
 that the fiducial marker is not detected for periods of time due to occlusion,
 sun glare, or UAV motion. For this reason, it is important that the relative
@@ -95,17 +96,18 @@ odometry~\cite{qin2018vins}; however, almost all implementations assume the
 tracked visual features are static with respect to an inertial reference frame.
 In the landing scenario, the target vehicle occupies progressively more of the
 field of view of the UAV's camera as the UAV descends. This makes it progressively
-more difficult for typical visual odometry algorithms, resulting in decreased
+more difficult for typical visual odometry algorithms to track features,
+resulting in a decreased
 reliability of the estimates as the UAV approaches the landing target.
 We also note that in most
 applications, more precise state estimates are required as the UAV
 approaches
-the landing target to avoid obstacles and ensure a gentle landing.
+the landing target to avoid obstacles and to ensure a gentle landing.
 For these reasons, the described estimation algorithm
 only tracks and estimates visual features that are rigidly attached to the
 target vehicle.
-Simulation and hardware tests of the proposed algorithm demonstrate accurate and consistent estimates
-even when the fiducial marker is undetected
+Simulation and hardware tests of the proposed algorithm demonstrated accurate and consistent estimates
+even when the fiducial marker was undetected
 for long periods of time.
 
 \subsection{Motion Planning}
@@ -122,8 +124,8 @@ touchdown may also be important to minimize the risk of damage to the UAV.
 % Much work has been previously presented in the field of motion planning for
 % small multirotor UAVs~\cite{mellinger2011minimum}.
 Specific methods have been previously
-presented to generate dynamically feasible trajectories for UAVs landing on a moving
-vehicle. One such method uses real-time model-predictive control techniques to
+presented to generate dynamically feasible trajectories for UAVs landing on moving
+vehicles. One such method uses real-time model-predictive control techniques to
 generate trajectories for a UAV landing on a moving car~\cite{baca2019autonomous}.
 % It is likely that one or more of these solutions may be sufficient to create a
 % robust landing system.
