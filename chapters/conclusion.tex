@@ -3,25 +3,38 @@
 \chapter{Conclusion}
 \label{chp:conclusion}
 
-The robust autonomous operation of multirotor UAVs from moving vehicles would benefit a
+The robust autonomous operation of multirotor UAVs from moving vehicle base
+stations could benefit a
 variety of new industries.
+In an effort to make this a possibility,
 % The ability of multirotor UAVs to autonomously operate from a moving vehicle
 % provides the potential for UAVs to benefit a variety of new industries.
-This
-thesis presents improvements to the estimation and control algorithms of a UAV
-for use during landing on a moving vehicle. The estimation algorithm in
+% Working toward this goal,
+this
+thesis presents improvements to state estimation and control methods used by UAVs
+during landing on moving vehicles.
+% of a UAV
+% for use during landing on a moving vehicle.
+The estimation algorithm proposed in
 Chapter~\ref{chp:estimation_paper}
-allows the UAV to continue to operate reliably with respect to the target vehicle
+allows a UAV to continue to operate reliably with respect to a target vehicle
 even when a fiducial landing marker is not detected for significant
 periods of time.
-The control algorithm in Chapter~\ref{chp:control_paper} provides a principled
-and computationally efficient method for the UAV to track a time-dependent
-trajectory to reach touchdown on the target vehicle. The results of simulation and hardware
-experiments show that the combination of these
-% estimation and control
-% algorithms, together with a motion planning algorithm, would result in a robust
-algorithms with a motion planning algorithm would result in a robust
-system for UAVs landing on moving vehicles.
+The control algorithm proposed in Chapter~\ref{chp:control_paper} provides a principled
+and computationally efficient method for a UAV to track a feasible, time-dependent
+trajectory.
+% to reach touchdown on the target vehicle.
+Simulation and hardware tests demonstrated the accurate and robust performance
+of these two algorithms.
+These results suggest that a reliable system for UAVs landing
+on moving vehicle could be developed by combining these proposed state
+estimation and control algorithms with an adequate motion planning algorithm.
+% The results of simulation and hardware
+% experiments show that the combination of these
+% % estimation and control
+% % algorithms, together with a motion planning algorithm, would result in a robust
+% algorithms with a motion planning algorithm would result in a robust
+% system for UAVs landing on moving vehicles.
 
 \section{Future Work}
 \label{sec:future_work}
@@ -41,7 +54,8 @@ The estimation algorithm presented in Chapter~\ref{chp:estimation_paper} details
 a method of tracking and estimating the locations of visual features 
 to aid in estimation when a fiducial landing marker is
 not detected. The results of this work were quite remarkable, showing that a UAV
-can continue to operate accurately with respect to a target vehicle for more
+can continue to operate accurately with respect to a target vehicle without
+detecting a fiducial marker for more
 than a minute. However, as mentioned in~\secref{sec:estimation}, this estimation algorithm
 assumes that all tracked features are rigidly attached to the target vehicle.
 Therefore, before the presented estimation algorithm can be used in a commercial
@@ -85,8 +99,8 @@ challenging.
 % Motion planning for a UAV also presents a
 % problem when the UAV must navigate close to or around obstacles on
 % the moving vehicle.
-Dynamically feasible trajectories must be planned to enable the UAV to avoid
-obstacles during its approach to the landing target.
+Dynamically feasible trajectories must be planned for UAVs to avoid
+obstacles during their approach to the landing target.
 This problem is especially important when a UAV must land on a large boat
 with significant superstructure or when a UAV must re-enter and land inside of a
 package delivery truck. While planning trajectories for UAVs with respect to
@@ -112,14 +126,17 @@ trajectories for these scenarios.
 
 
 \subsection{Control}
-As discussed in Chapter~\ref{chp:control_paper}, the controller presented is
-based in Lie theory, operating on the error-state of the system.
+As discussed in Chapter~\ref{chp:control_paper}, the Lie-theory-based controller
+operates on the error state of the system.
 % to accurately track a time-dependent trajectory. While
-While operating on the error-state provides other
-advantages, the main advantage to this approach is that it is more
-mathematically principled than typical Euler angle formulations. This, in
-theory, should allow for more accurate tracking during extreme maneuvers, where
-less principled methods struggle.
+% The main advantage to operating on the error-state
+The main advantage to this approach is its mathematically principled nature.
+% While operating on the error state provides other
+% advantages, the main advantage to this approach is that it is more
+% mathematically principled than typical Euler angle formulations.
+This, in
+theory, allows for more accurate tracking during extreme maneuvers, where
+less principled methods, such as typical Euler angle formulations, struggle.
 % extreme maneuvers.
 % tracking during extreme maneuvers than less principled methods struggle.
 % angle formulations struggle.
@@ -135,19 +152,19 @@ maneuvers to demonstrate this advantage.
 One key assumption made by the controller is that the
 % One potential down side to the proposed controller is that it assumes the
 error-state of the system is always small. This was
-especially not true in the experiments during takeoff, when the UAV was far from the sinusoidal
-desired trajectory.
+especially not true in the flight experiments during takeoff, when the UAV was far from the
+desired sinusoidal trajectory.
 % always true as the UAV had to converge onto the sinusoidal trajectory from stationary
 % takeoff.
-This resulted in unsteady transient behavior if the error-state values were
+This resulted in unsteady transient behavior when the error-state values were
 not saturated to be small.
 % To satisfy this assumption,
 % the true performance of the controller,
-Instead of one, static trajectory,
+Instead of a static trajectory,
 the controller should be tested with
-dynamically planned trajectories which always begin at the current state of the
-UAV. With these trajectories, the error-state of the system would always be forced to
-be small, satisfying this key assumption.
+dynamically planned trajectories which begin at the current state of the
+UAV. With these trajectories, the error state of the system would be forced to
+be small, satisfying this important assumption.
 % small
 % always remain small, satisfying the key assumption of the controller.
 % The experiments described in~\ref{chp:control_paper} used a simple sinusoidal
