@@ -109,7 +109,7 @@ we get
 % \end{align}
 By simplifying and neglecting higher-order terms, we get the final expression
 \begin{equation}
-  \dot{\tilde{\vect{p}}}_{b/I}^{I} = \left(R_{I}^{b}\right)^\transpose
+  \dot{\tilde{\vect{p}}}_{b/I}^{I} \approx \left(R_{I}^{b}\right)^\transpose
   \tilde{\vect{v}}_{b/I}^{b} - \left(R_{I}^{b}\right)^\transpose
     \skewmat{\vect{v}_{b/I}^{b}} \tilde{\vect{r}}_I^b.
 \end{equation}
@@ -122,7 +122,6 @@ by~\eqref{eq:vel_err} we get
   \dot{\tilde{\vect{v}}}_{b/I}^{b} = \dot{\vect{v}}_{b/I}^{b} -
     \dot{\des{\vect{v}}}_{b/I}^{b}.
 \end{equation}
-
 Substituting in the multirotor dynamics from~\eqref{eq:dynamics} and simplifying
 we get
 \begin{align}
@@ -211,11 +210,10 @@ we get
   % \left(\vect{v}_{b/I}^{b} - \tilde{\vect{v}}_{b/I}^{b}\right)\right). \\
 % \end{split}
 % \end{align}
-
 By simplifying and neglecting higher-order terms, we get the final expression
 \begin{equation}
   \begin{split}
-  \dot{\tilde{\vect{v}}}_{b/I}^{b} = {}& g
+  \dot{\tilde{\vect{v}}}_{b/I}^{b} \approx {}& g
   \skewmat{R_I^b \vect{e}_3} \tilde{\vect{r}}_I^b
     -g\frac{\tilde{s}}{s_e}\vect{e}_3
    -\drag \left( I - \vect{e}_3 \vect{e}_3^\transpose \right)
@@ -269,7 +267,6 @@ we get
 \dot{\tilde{\vect{r}}}_I^b = \vect{\omega}_{b/I}^{b} -
 R_I^b\left(\des{R}_I^b\right)^\transpose \des{\vect{\omega}}_{b/I}^{b}.
 \end{equation}
-
 We can simplify this expression and show that
 \begin{align}
   \dot{\tilde{\vect{r}}}_I^b &= \vect{\omega}_{b/I}^{b} -
@@ -286,7 +283,7 @@ We can simplify this expression and show that
 \end{align}
 By simplifying and neglecting higher-order terms, we get the final expression
 \begin{equation}
-  \dot{\tilde{\vect{r}}}_I^b = \tilde{\vect{\omega}}_{b/I}^{b} -
+  \dot{\tilde{\vect{r}}}_I^b \approx \tilde{\vect{\omega}}_{b/I}^{b} -
   \skewmat{\vect{\omega}_{b/I}^{b} } \tilde{\vect{r}}_I^b.
 \end{equation}
 

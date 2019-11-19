@@ -1,7 +1,7 @@
 \chapter{Derivation of Visual Feature Pixel Measurement Model for the Error-State Kalman Filter}
 \label{apdx:estimation_pixel_meas_model}
 
-To derive the measurement Jacobian for the visual feature pixel measurements, we
+To derive the measurement residual Jacobian for the visual feature pixel measurements, we
 first start with the residual model from~\eqref{eq:rpix}
 \begin{align}
   \vect{r}_{\text{pix}}
@@ -49,13 +49,15 @@ first establish a few approximations related to the landing vehicle attitude
 state, $\psi_I^g$. In~\eqref{eq:2d_err_rot_approx} we established that the 2D
 rotation matrix created from $\tilde{\psi}_I^g$ can be approximated as
 \begin{equation}
-  \left( R_{\text{2D}} \left( \tilde{\psi}_I^g \right) \right)^\transpose \approx I -
+  \left( R_{\text{2D}} \left( \tilde{\psi}_I^g \right) \right)^\transpose
+  \approx I +
   \skewmat{\tilde{\psi}_I^g}.
 \end{equation}
 We extend this to the 3D rotation matrix created from $\tilde{\psi}_I^g$ noting
 that
 \begin{equation}
-  \left( R_{\text{3D}} \left( \tilde{\psi}_I^g \right) \right)^\transpose \approx I -
+  \left( R_{\text{3D}} \left( \tilde{\psi}_I^g \right) \right)^\transpose
+  \approx I +
   \skewmat{
     \begin{matrix}
   0 \\ 0 \\ \tilde{\psi}_I^g  \end{matrix}
@@ -69,7 +71,7 @@ and~\eqref{eq:est_paper_Rapprox}:
 \begin{align}
   \vect{p}_{i/c}^c &= R_b^c \left( R_I^b \left( R_I^g \right)^\transpose
   \vect{r}_{i/g}^g + R_I^b \vect{p}_{g/b}^v - \vect{p}_{c/b}^b \right) \\
-  &= R_b^c \left( \left( I - \skewmat{\tilde{\vect{\theta}}_I^b
+  &\approx R_b^c \left( \left( I - \skewmat{\tilde{\vect{\theta}}_I^b
     } \right) \hat{R}_I^b \left( I +
     \skewmat{ \begin{matrix} 0 \\ 0 \\ \tilde{\psi}_I^g \end{matrix} }
   \right) \left( \hat{R}_I^g \right)^\transpose
@@ -82,7 +84,7 @@ and~\eqref{eq:est_paper_Rapprox}:
 By simplifying and ignoring higher-order terms
 \begin{align}
   \vect{p}_{i/c}^c 
-  &= R_b^c \left( \hat{R}_I^b \left( \hat{R}_I^g \right)^\transpose
+  &\approx R_b^c \left( \hat{R}_I^b \left( \hat{R}_I^g \right)^\transpose
   \hat{\vect{r}}_{i/g}^g + \hat{R}_I^b \hat{\vect{p}}_{g/b}^v - \vect{p}_{c/b}^b
   - \skewmat{\tilde{\vect{\theta}}_I^b} \hat{R}_I^b \left( \hat{R}_I^g
     \right)^\transpose \hat{\vect{r}}_{i/g}^g \right. \\
@@ -94,7 +96,7 @@ By simplifying and ignoring higher-order terms
     - \skewmat{\tilde{\vect{\theta}}_I^b} \hat{R}_I^b \hat{\vect{p}}_{g/b}^v
     + \hat{R}_I^b \tilde{\vect{p}}_{g/b}^v
    \right). \nonumber \\
-    &= \hat{\vect{p}}_{i/c}^c
+    &\approx \hat{\vect{p}}_{i/c}^c
     + R_b^c \left( 
   - \skewmat{\tilde{\vect{\theta}}_I^b} \hat{R}_I^b \left( \hat{R}_I^g
     \right)^\transpose \hat{\vect{r}}_{i/g}^g + \hat{R}_I^b
