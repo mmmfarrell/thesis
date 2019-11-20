@@ -77,12 +77,12 @@ with the individual components given by
 
 By linearizing at every time step, the CARE
 must be solved at each time step with the current $A$ and $B$ matrices. We use the
-closed form, Schur decomposition method described in~\cite{laub1979schur}. This
+closed-form, Schur decomposition method described in~\cite{laub1979schur}. This
 method allows us to relinearize and recompute the optimal control at full rate
 in our experiments.
 
 Although we relinearize and solve the CARE at each time step, the $Q$ and $R$
-gain matrices are fixed. We choose these gains based on Bryson's
+weighting matrices are fixed. We choose these gains based on Bryson's
 rule~\cite{hespanha2018linear}. In addition, we have found that better results
 are achieved by saturating the error-state in accordance with the maximum error
 terms used to choose the gains with Bryson's rule.

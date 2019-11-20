@@ -2,14 +2,14 @@
 
 \subsection{Traditional LQR}
 
-A linear-quadratic regulator provides the optimal state space controller gains
+A linear-quadratic regulator provides the optimal state-space controller gains
 for an LTI  system given by
 \begin{equation}
 \dot{{\bf x}}=A{\bf x}+B{\bf u},
 \end{equation}
 assuming full-state feedback. We define the cost-to-go for the infinite-time solution as
 \begin{equation}
-  J(\vect{x},\vect{u})=\int_{0}^{\infty}\left(\vect{x}^{\top}Q\vect{x}+\vect{u}R\vect{u}\right)dt
+  J(\vect{x},\vect{u})=\int_{0}^{\infty}\left(\vect{x}^{\top}Q\vect{x}+\vect{u}^{\top}R\vect{u}\right)dt
 \label{eq:lqr_cost}
 \end{equation}
 with $Q$ and $R$ being positive definite matrices that
@@ -22,7 +22,7 @@ where $K$ is given by
 \begin{equation}
   K = R^{-1}B^{\top}P,
 \end{equation}
-and $P$ is the solution to the Continuous-time Algebraic Riccati Equation (CARE),
+and $P$ is the solution to the continuous-time algebraic Riccati equation (CARE),
 \begin{equation}
   A^{\top}P + PA -PBR^{-1}B^{\top}P + Q = 0.
 \end{equation}

@@ -55,7 +55,7 @@ with the ROSflight software-in-the-loop
 % This SIL simulation meant that not only the same estimator and controller nodes
 % were running in simulation as in hardware, but also the same software from the
 % flight controller.
-This setup provided for an easier transition from software
+This setup provided an easier transition from software
 experiments to
 hardware experiments as all of the necessary software was first proven in
 simulation.
@@ -98,14 +98,23 @@ subsections.
 \subsection{Flight Controller}
 The multirotor UAV was equipped with an OpenPilot CC3D Revolution 32-bit F4
 flight controller as shown in~\figref{fig:f4}. The flight controller ran the
-ROSflight firmware which provided an easy interface
+ROSflight firmware that provided an easy interface
 for the controller node on the onboard computer to control the UAV.
 
+% \begin{figure}[htbp]
+  % \centering
+  % \includegraphics[width=2.5in]{figures/f4.jpg}
+  % \caption[OpenPilot CC3D Revolution 32-bit F4]{OpenPilot CC3D Revolution 32-bit
+    % F4 flight controller. \\ \hspace{\textwidth} Source:~\cite{openpilotrevo}
+% }
+% %
+  % \label{fig:f4}
+% \end{figure}
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=2.5in]{figures/f4.jpg}
   \caption[OpenPilot CC3D Revolution 32-bit F4]{OpenPilot CC3D Revolution 32-bit
-    F4 flight controller. \\ \hspace{\textwidth} Source:~\cite{openpilotrevo}
+    F4 flight controller~\cite{openpilotrevo}.
 }
 %
   \label{fig:f4}
@@ -116,11 +125,19 @@ The computer onboard the UAV was an NVIDIA Jetson TX2 equipped with an Orbitty
 carrier board. This configuration is shown in~\figref{fig:tx2_orbitty}. All
 computation was done on the onboard computer during the hardware experiments.
 
+% \begin{figure}[h]
+  % \centering
+  % \includegraphics[width=2.5in]{figures/tx2_orbitty.jpg}
+  % \caption[NVIDIA Jetson TX2 with Orbitty Carrier Board]{NVIDIA Jetson TX2
+  % with an Orbitty carrier board attached. \\\hspace{\textwidth} Source:~\cite{orbitty}
+  % }
+  % \label{fig:tx2_orbitty}
+% \end{figure}
 \begin{figure}[h]
   \centering
   \includegraphics[width=2.5in]{figures/tx2_orbitty.jpg}
   \caption[NVIDIA Jetson TX2 with Orbitty Carrier Board]{NVIDIA Jetson TX2
-  with an Orbitty carrier board attached. \\\hspace{\textwidth} Source:~\cite{orbitty}
+  with an Orbitty carrier board attached~\cite{orbitty}.
   }
   \label{fig:tx2_orbitty}
 \end{figure}
@@ -145,11 +162,20 @@ camera\_calibration:
 However, the mounting position and attitude of the camera were only roughly
 approximated.
 
+% \begin{figure}[h]
+  % \centering
+  % \includegraphics[width=2.5in]{figures/camera.jpg}
+  % \caption[ELP USB Camera with 2.1 mm Lens]{ELP USB Camera with a 2.1 mm
+    % lens. \\ \hspace{\textwidth} Source:~\cite{webcam}
+% }
+% %
+  % \label{fig:camera}
+% \end{figure}
 \begin{figure}[h]
   \centering
   \includegraphics[width=2.5in]{figures/camera.jpg}
   \caption[ELP USB Camera with 2.1 mm Lens]{ELP USB Camera with a 2.1 mm
-    lens. \\ \hspace{\textwidth} Source:~\cite{webcam}
+    lens~\cite{webcam}.
 }
 %
   \label{fig:camera}

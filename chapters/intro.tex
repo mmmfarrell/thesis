@@ -23,14 +23,23 @@ many facets to operating from moving vehicles, this thesis works toward creating
 a robust solution to autonomously landing multirotor UAVs onto moving vehicles
 in challenging conditions.
 
-\begin{figure}[h]
+% \begin{figure}[h]
+  % \centering
+  % \includegraphics[width=4.5in]{figures/drone_convoy_support.png}
+  % \caption[UAV Convoy Support]{Multirotor UAVs used to increase
+  % situational awareness for a convoy of
+% vehicles.
+
+% Source:~\cite{ground_vehicle_drone}}
+% %
+  % \label{fig:drone_convoy_support}
+% \end{figure}
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=4.5in]{figures/drone_convoy_support.png}
   \caption[UAV Convoy Support]{Multirotor UAVs used to increase
   situational awareness for a convoy of
-vehicles.
-
-Source:~\cite{ground_vehicle_drone}}
+vehicles~\cite{ground_vehicle_drone}.}
 %
   \label{fig:drone_convoy_support}
 \end{figure}
@@ -50,7 +59,7 @@ with a visual fiducial marker (e.g.~see~\figref{fig:aruco_tag})
 % Most landing methods assume that the target landing vehicle is equipped with a
 % fiducial marker,
 % such as the one shown in~\figref{fig:aruco_tag},
-which serves as
+that serves as
 the designated landing platform for the UAV.
 In these methods, a camera mounted to the UAV detects the fiducial landing marker, providing
 information about the relative pose of the target
@@ -61,7 +70,7 @@ high-rate estimate of the relative state between the UAV and the target
 vehicle. During landing, it is likely
 that the fiducial marker is not detected for periods of time due to occlusion,
 sun glare, or UAV motion. For this reason, it is important that the relative
-motion between the target vehicle and the UAV is modeled and used to predict
+motion between the target vehicle and the UAV be modeled and used to predict
 the relative state when the fiducial marker is not detected.
 However, even with a good model,
 these methods quickly fail when the fiducial landing
