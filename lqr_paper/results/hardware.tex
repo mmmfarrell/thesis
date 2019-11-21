@@ -2,7 +2,7 @@
 
 \subsection{Hardware}
 
-During the hardware experiments, the entire control algorithm was run at the
+During the hardware experiments, the entire control algorithm ran at the
 full streaming rate of the onboard IMU, which was set to 250 Hz. The computation
 time of the algorithm was shown to have a mean of 274.6 $\upmu \mathrm{s}$ and a standard
 deviation of 43.84 $\upmu \mathrm{s}$. This shows that the proposed LQR
@@ -39,9 +39,15 @@ estimated position.}
 
 Fig.~\ref{f:hardware_wps} shows the multirotor position along with the commanded
 positions for a waypoint path. The clean step response with minimal overshoot is
-notable considering we did not hand tune the LQR gains beyond an initial value
+notable considering we did not hand tune the LQR weighting matrices beyond an initial value
 derived from Bryson's rule. Fig. \ref{f:hardware_fig8} shows how well the
-multirotor is able to follow the figure-eight trajectory, and Fig.
+multirotor was able to follow the figure-eight trajectory, and Fig.
 \ref{f:hardware_fig8_2d} depicts the same flight plotted in two dimensions. The
 major deviations visible in this plot depict the take-off and landing portions
-of the flight.
+of the flight. Though the trajectory tracking was close, we hypothesize that the
+visible error resulted from unmodeled dynamics of the system.
+To minimize these errors, the internal gains
+of the flight controller could potentially be tuned to produce quicker and more accurate
+tracking of the commanded angular rates.
+% To improve
+% results, the internal gains of the flight controller could be tuned 

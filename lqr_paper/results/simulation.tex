@@ -22,8 +22,22 @@ line is the estimated position.}
 
 Figs.~\ref{f:sim_wps} and~\ref{f:sim_fig8} show simulation results of the
 controller following desired position step inputs (waypoints) and a figure-eight trajectory. The
-multirotor begins the simulation at rest on the ground and converges to the
-desired trajectory within a few seconds. Note that the figure-eight trajectory
-tracking is near perfect even though the feed forward inputs computed
-from~\eqref{eq:traj_p}{}--{}~\eqref{eq:traj_omega} do not account for the force due to drag and
-the controller does not model thrust dynamics nor torque dynamics.
+multirotor began the simulations at rest on the ground and converged to the
+desired trajectory within a few seconds. In~\figref{f:sim_wps}, we see that the
+simulated UAV significantly overshot the initial desired altitude of 5 m, but
+relatively smoothly reached the following step inputs. These results are
+noteworthy as the desired step inputs caused the error state of the system to be
+large, breaking a key assumption of the controller.
+% that the error
+% state of the system reamins small to be broken.
+% break the key assumption of this
+% controller, that the 
+
+In~\figref{f:sim_fig8}, we see that the simulated UAV smoothly converged to the
+desired trajectory.
+After convergence,
+% Note that
+the figure-eight trajectory
+tracking was near perfect even though the feed forward inputs computed
+from~\eqref{eq:traj_p}{}--{}~\eqref{eq:traj_omega} did not account for the force due to drag and
+the controller did not model thrust dynamics nor torque dynamics.
