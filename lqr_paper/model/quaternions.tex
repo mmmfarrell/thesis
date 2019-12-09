@@ -9,7 +9,8 @@ $\SO(3)$ of being more efficient to implement on modern hardware~\cite{casey2013
 
 We use Hamiltonian notation for unit quaternions $\in S^3$
 \begin{equation}
-\q=\begin{pmatrix}q_{0} & q_{x}i & q_{y} j & q_{z}k \end{pmatrix}%=\begin{pmatrix}q_{0} & \bar{\q} \end{pmatrix},
+% \q=\begin{pmatrix}q_{0} & q_{x}i & q_{y} j & q_{z}k \end{pmatrix}%=\begin{pmatrix}q_{0} & \bar{\q} \end{pmatrix},
+\q= q_{0} + q_{x}i + q_{y} j + q_{z}k 
 \end{equation}
 and define the complex numbers $i$, $j$, and $k$, such that
 \begin{equation}
@@ -43,8 +44,8 @@ R\left(\q\right)=\left(2q_{0}^{2}-1\right)I-2q_{0}\skewmat{\bar{\q}}+2\bar{\q}\b
 
 % We also need to frequently convert between the Lie group, $S^3$, and the Lie
 % algebra, $\mathbb{R}^3$, which enables us to operate in a vector space. This is done with the
-We also need to frequently convert between the Lie group, $S^3$, and the vector
-space, $\mathbb{R}^3$, which is isomorphic to the Lie algebra.
+We also need to frequently convert between the Lie group $S^3$, and the vector
+space $\mathbb{R}^3$, which is isomorphic to the Lie algebra.
 % algebra, $\mathbb{R}^3$, which enables us to operate in a vector space.
 This is done with the
 exponential and logarithmic mappings. The exponential mapping for a unit quaternion is defined as
