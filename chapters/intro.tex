@@ -20,7 +20,7 @@ support (see~\figref{fig:drone_convoy_support}).
 % in~\secref{sec:future_work}.
 While there are
 many facets to operating from moving vehicles, this thesis works toward creating
-a robust solution to autonomously landing multirotor UAVs onto moving vehicles
+a robust solution for autonomously landing multirotor UAVs onto moving vehicles
 in challenging conditions.
 
 % \begin{figure}[h]
@@ -103,7 +103,7 @@ Visual feature
 tracking and estimation is a common technique in the field of visual
 odometry~\cite{qin2018vins}; however, almost all implementations assume the
 tracked visual features are static with respect to an inertial reference frame.
-In the landing scenario, the target vehicle occupies progressively more of the
+In this landing scenario, the target vehicle occupies progressively more of the
 field of view of the UAV's camera as the UAV descends. This makes it progressively
 more difficult for typical visual odometry algorithms to track features,
 resulting in a decreased
@@ -157,7 +157,7 @@ movement in the robotics community aims to appropriately deal with the evolution
 robot's state along a manifold using Lie theory~\cite{sola2018micro}. Though
 Lie theory has been widely applied to the field of state
 estimation~\cite{sola2017quaternion, koch2017relative}, there is little 
-work applying Lie theory to optimal control.
+work applying Lie theory to optimal control of UAVs.
 
 Chapter~\ref{chp:control_paper} derives a
 linear-quadratic regulator (LQR) using Lie theory that computes control based on
