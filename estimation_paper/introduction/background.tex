@@ -1,0 +1,164 @@
+% !TEX root=../../master.tex
+
+Small multirotor unmanned air vehicles (UAVs) have rapidly become popular platforms for
+a variety of applications including
+inspection, reconnaissance, and search and rescue.
+% The ability of small multirotor UAVs to agily operate in confined spaces and to
+% take off and land vertically give them a unique advantage over other robotic
+% platforms.
+For many of these use cases, UAVs are required to operate
+autonomously, as skilled pilots are not feasible
+since they are often unable to maintain direct line of sight to the UAV.
+% due to
+% limitations in line of sight. 
+% A variety of emerging use cases
+% require multirotor UAVs to operate from larger, mobile vehicles.
+% a moving vehicle.
+% instead of from the static world.
+% These use
+% cases include martitime surveillance, where the UAV must operate from
+% a martitime vessel at sea,
+% and package delivery, where the UAV must operate from a large truck in motion.
+Newly emerging use cases such as maritime surveillance and package delivery
+pose unique problems, requiring UAVs to operate autonomously from larger,
+mobile vehicles instead of from a stationary base station.
+% require UAVs to operate autonomously from larger, mobile vehicles.
+% which carries the packages to be delivered.
+% The ability to operate reliably from a
+% moving vehicle is still a very active field of research, posing many unsolved
+% problems.
+
+% \cite{ling2014precision} AprilTag, kalman filter to predict
+% \cite{araar2017vision} relies on a known map of many AprilTags fiducials.
+% \cite{borowczyk2017autonomous} uses a single AprilTag, fast car
+% \cite{baca2019autonomous} main MBZIRC 2017 paper (tag = square with x)
+% \cite{falanga2017vision} MBZIRC, SVO + IMU
+% \cite{beul2017fast} MBZIRC
+% \cite{cantelli2017autonomous} MBZIRC
+% \cite{marantos2018vision} helicopter, tag (Aruco/April)
+
+% \cite{lee2012autonomous} IBVS
+% \cite{wynn2019visual} IBVS - nested tag
+
+Nearly all current approaches to the operation of multirotor UAVs with respect to moving
+vehicles rely on the
+% A variety of approaches to the operation of multirotor UAVs with respect to
+% moving vehicles have been proposed in literature.
+% Nearly all of these approaches rely on the
+detection of a fiducial marker on the moving vehicle for relative pose
+measurements. One of the earliest of these works
+used a known configuration of infrared LEDs on the landing vehicle as a fiducial
+marker~\cite{wenzel2011automatic}.
+% relied on the detection of infrared LEDs that were
+% illuminated in a known configuration on the landing
+% vehicle~\cite{wenzel2011automatic}.
+Since then, visual fiducial markers such as
+AprilTags~\cite{olson2011tags} and ArUco markers~\cite{garrido2016generation}
+have become more widely
+used~\cite{ling2014precision,borowczyk2017autonomous,marantos2018vision,
+araar2017vision}.
+% In 2017, the Mohamed Bin Zayed International Robotics Challenge (MBZIRC)
+% featured a stage that included landing a multirotor UAV on a visual fiducial
+% marker atop a moving golf
+% cart~\cite{baca2019autonomous,falanga2017vision,beul2017fast,cantelli2017autonomous}.
+% While some landing methods employ image-based visual
+% servoing~\cite{lee2012autonomous,wynn2019visual}, most methods
+% require an estimate of the state of the target landing vehicle.
+While some landing methods control the UAV entirely based on the detections of the
+fiducial marker~\cite{lee2012autonomous,wynn2019visual}, more robust methods
+compute control based on an estimate of the state of the target landing
+vehicle~\cite{ling2014precision}.
+
+% The Kalman filter~\cite{kalman} is a widely used algorithm 
+% As we should not expect uninterrupted detection of the fiducial marker during
+% landing, it is
+% important to model the dynamics of the target vehicle and use them to propagate
+% forward
+As the UAV descends toward the landing target, it is common
+that the fiducial marker remains undetected
+% to not detect the fiducial marker
+for periods of time due to poor lighting, occlusion, or extreme
+motion.
+% For this reason, it is important that a model of the dynamics of the target vehicle
+For this reason, it is important that the dynamics of the target vehicle are
+modeled and
+used by the estimation algorithm to predict the state of the target vehicle
+when measurements are not available.
+The Kalman filter~\cite{kalman} has been frequently used
+for this task, producing accurate estimates 
+% showing good results 
+when the fiducial marker is not detected for
+short periods of time~\cite{baca2019autonomous}.
+% n estimation method which models
+% the dynamics of the target vehicle is employed to maintain accurate estimates in
+% between measurements.
+% Ling notes in~\cite{ling2014precision} that it is important to model the
+% dynamics of the target vehicle so that they can be propagated forward for short
+% periods of time when the fiducial marker is not
+% detected.
+Due to imperfect motion models, however,
+all of the mentioned
+approaches are likely to fail if the fiducial marker is not detected for
+significant periods of time.
+% due to imperfect motion models.
+% because the target vehicle is likely to not
+% perfectly follow the modeled motion.
+% Even if the state of the target vehicle is estimated, the estimates are only as
+% good as the
+% motion model of the target vehicle when the fiducial marker is not detected.
+% We propose an improvement to these methods: 
+% To improve these methods, we propose an estimation algorithm that detects,
+% tracks, and estimates the positions of unknown visual features on the target
+% vehicle in addition to the fiducial marker.
+To improve these methods, we propose an estimation algorithm that uses
+measurements of unknown visual features on the target vehicle in addition to
+measurements resulting from detections of a fiducial marker.
+% to improve
+% estimation accuracy when the fiducial marker is not detected for significant
+% periods of time.
+
+% Tracking and estimating the positions of visual features is
+% a common technique used
+% % similar to that commonly used
+% in the field of visual odometry.
+Many visual odometry methods such
+as~\cite{qin2018vins,leutenegger2013keyframe,mourikis2007multi,mur2015orb} use
+detected and tracked visual features to aid in camera motion estimation.
+% as VINS-MONO, OKVIS, MSCKF, and ORB SLAM use an indirect approach
+% \cite{qin2018vins} VINS-MONO, feature extraction, optical flow frame to frame
+% \cite{leutenegger2013keyframe} OKVIS, BRISK features
+% \cite{mourikis2007multi} MSCKF, uses SIFT features
+% \cite{mur2015orb} ORB SLAM
+In these methods, the tracked visual features are assumed to belong to the
+static world.
+Visual odometry techniques
+% tracking static features
+have also been previously applied to landing on
+moving platforms~\cite{falanga2017vision}.
+During landing, however, static features become more sparse as the dynamic target vehicle
+occupies progessively more of the
+field of view of the UAV's camera. This results in detoriating
+estimates as the UAV approaches the landing target.
+% During landing, however, it is common for the target vehicle to occupy the
+% entire field of view of the UAV's camera, making it impossible to track static
+% features throughout the duration of the flight.
+% While visual odometry techniques have been
+% previously applied to landing on
+% moving platforms~\cite{falanga2017vision}, these methods still only tracked and
+% estimated static features.
+% During the landing phase, it is not uncommon, however, for the target vehicle
+% to occupy the entire field of view of the UAV's camera, making it not possible
+% to track static features throughout the duration of the flight.
+For this reason, the proposed estimator, instead, tracks and estimates the
+locations of
+visual features that are rigidly attached to the target vehicle. These tracked
+visual features provide information about the relative position of the target
+vehicle
+as long as the vehicle remains in the field of view of the camera.
+% for the duration of the flight.
+% movement of the UAV as well as
+% information about the movement of the target vehicle.
+We show in simulation and hardware experiments that the estimation of these tracked features allows
+for accurate estimates of the state of the target vehicle even
+when the fiducial marker is not detected for significant periods of time.
+

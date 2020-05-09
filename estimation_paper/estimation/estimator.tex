@@ -1,0 +1,264 @@
+% !TEX root=./root.tex
+
+% The propsed estimator estimates both the state of
+% the UAV and the state of the target vehicle as well as the positions of visual
+% landmarks on the target vehicle.
+% in the same Error-State Kalman
+% filter~\cite{sola2017quaternion}.
+% Though
+% This work focuses on the estimation of the state of a landing target
+% vehicle. However, we also estimate the state of the UAV to properly account for the
+% uncertainty in the UAV states that appear in the motion model of the target
+% vehicle and the measurement
+% models used. states upon which many of the measurement models depend.
+This work focuses on the estimation of the state of the landing target vehicle.
+However, as several of the measurement models employed depend on the state of the
+UAV, we also estimate the state of the UAV in the same filter to properly
+account for the uncertainty in its state.
+We, therefore, estimate the position, attitude, and velocity of the UAV given by
+$\hat{\vect{p}}_{b/I}^{I}$, $\hat{\vect{q}}_I^{b}$, and
+$\hat{\vect{v}}_{b/I}^b$.
+In addition, we estimate bias states for the acclerometer and gyroscope sensors that are
+used as inputs to the filter. These estimated states are given by
+$\hat{\vect{\beta}}_a$ and $\hat{\vect{\beta}}_{\omega}$.
+
+The estimated state of the target vehicle is defined as the position, velocity,
+attitude, and angular rate of the target vehicle.
+% denoted by
+% $\hat{\vect{p}}_{g/b}^{v}$, $\hat{\vect{v}}_{g/I}^{g}$, $\hat{\psi}_{I}^{g}$,
+% and $\hat{\omega}_{g/I}^{g}$.
+We note that the
+estimated position of the target vehicle, $\hat{\vect{p}}_{g/b}^v$, is relative to the position of the
+UAV.
+We formulate this state relatively,
+as this relative state is observable even with poor estimates of the UAV's global
+position, $\hat{\vect{p}}_{b/I}^I$, due to the relative information provided
+by the measurements as described in~\secref{sec:measurement_models}.
+For this work, we assume that the target vehicle's
+motion is constrained to a two-dimensional plane. This means that the estimated
+target vehicle velocity, $\hat{\vect{v}}_{g/I}^{g}$, is only of two dimensions and that the
+estimated attitude, $\hat{\psi}_{I}^g$, represents a planar rotation as
+described in~\secref{sec:planar_rotations}, implying that the estimated angular
+rate, $\hat{\omega}_{g/I}^g$ is of one dimension.
+
+As previously mentioned, we also estimate the locations of unknown visual
+features on the target vehicle.
+The vectors $\hat{\vect{r}}_{1/g}^{g}, \dots \hat{\vect{r}}_{n/g}^{g}$ represent the
+estimated locations of visual features $1, \dots n$ with respect to the goal frame and
+expressed in the goal frame. As we assume these features are rigidly attached to the
+target vehicle, these vectors remain constant as the vehicle moves and rotates.
+We show in the experiments described in~\secref{sec:est_paper_simulation}
+and~\secref{sec:est_paper_hardware} that the
+addition of only ten visual features to the estimated state significantly
+improves the estimates of the state of the target vehicle
+% $\hat{\x}_{\text{Goal}}$
+while the fiducial landing marker is not detected. 
+
+% We, therefore, estimate the position,
+% attitude, and velocity of the UAV together with the position, attitude, velocity,
+% and angular rate of the target vehicle and the positions of visual features on
+% the target vehicle. We also estimate bias states for the
+% accelerometer and gyroscope sensors that are used as inputs to the filter.
+% to properly
+% account for the uncertainty, as several of the 
+We express the full state of the estimated system as the tuple
+\begin{equation}
+  \hat{\x} =
+  \begin{pmatrix}
+    \hat{\x}_{\text{UAV}}, \hat{\x}_{\text{Goal}}, \hat{\x}_{\text{Features}}
+  \end{pmatrix}
+\end{equation}
+with the components defined as
+\begin{align}
+  \hat{\vect{x}}_{\text{UAV}} &=
+  \begin{pmatrix}
+    \hat{\vect{p}}_{b/I}^{I}, \hat{\vect{q}}_I^{b}, \hat{\vect{v}}_{b/I}^b,
+    \hat{\vect{\beta}}_a,
+    \hat{\vect{\beta}}_{\omega}
+  \end{pmatrix}
+    \in \mathbb{R}^3 \times S^3 \times \mathbb{R}^3 \times \mathbb{R}^3 \times
+    \mathbb{R}^3  \\
+  % \x_{\text{UAV}} &=
+  % \begin{bmatrix}
+    % \vect{p}_{b/I}^I &
+    % \phi & \theta & \psi &
+    % \vect{v}_{b/I}^b &
+    % \mu & \vect{\beta}_a & \vect{\beta}_\omega
+  % \end{bmatrix}^\transpose \\
+    \hat{\x}_{\text{Goal}} & =
+    \begin{pmatrix}
+      \hat{\vect{p}}_{g/b}^{v}, \hat{\vect{v}}_{g/I}^{g}, \hat{\psi}_{I}^{g},
+      \hat{\omega}_{g/I}^{g}
+    \end{pmatrix}
+    \in \mathbb{R}^3 \times \mathbb{R}^2 \times \mathbb{R}^1 \times \mathbb{R}^1
+    \\
+    \hat{\x}_{\text{Features}} & =
+    \begin{pmatrix}
+      \hat{\vect{r}}_{1/g}^{g}, \dots \hat{\vect{r}}_{n/g}^{g}
+    \end{pmatrix}
+    \in \mathbb{R}^3 \times \dots \mathbb{R}^3.
+\end{align}
+The inputs to the estimated system are given by
+\begin{equation}
+  \vect{u} = \begin{pmatrix} \bar{\vect{a}}_{b/I}^b, \bar{\vect{\omega}}_{b/I}^b \end{pmatrix} \in
+        \mathbb{R}^3 \times \mathbb{R}^3,
+\end{equation}
+which are directly measured from an inertial measurement unit mounted on the UAV.
+% Though
+% this work focuses on the estimation of the state of the landing target
+% vehicle, we also estimate the state of the UAV to properly account for the
+% uncertainty in these states upon which the motion model for
+% $\x_{\text{Goal}}$ and many of the measurement models depend.
+
+% The estimated states associated with the UAV, $\hat{\vect{x}}_{\text{UAV}}$,
+% contain the traditionally estimated states of position, attitude, and velocity
+% in addition to bias states for the accelerometer and gyroscope sensors.
+
+% The estimated states associated with the target vehicle,
+% $\hat{\vect{x}}_{\text{Goal}}$, contain the position, attitude, velocity, and
+% angular velocity of the target vehicle.
+% We note that the
+% estimated position of the target vehicle, $\hat{\vect{p}}_{g/b}^v$, is relative to the position of the
+% UAV.
+% We formulate this state relatively,
+% as this relative state is observable even with poor estimates of the UAV's global
+% position, $\hat{\vect{p}}_{g/I}^I$, due to the relative information provided
+% by the measurements as described in~\secref{sec:measurement_models}.
+% Note that $\hat{\vect{x}}_{\text{UAV}}$ contains the same states mentioned previously
+% in~\secref{sec:UAV_dynamics} with the addition of $\hat{\vect{\beta}}_a$ and
+% $\hat{\vect{\beta}}_\omega$, the estimated bias vectors for the acclerometer and
+% gyroscope sensors. On the
+% other hand, $\hat{\vect{x}}_{\text{Goal}}$ varies 
+% from the target vehicle states mentioned in~\secref{sec:landing_veh_dynamics}
+% by containing $\hat{\vect{p}}_{g/b}^v$ instead of $\hat{\vect{p}}_{b/I}^I$.
+% % as well as $\hat{\vect{r}}_{1/g}^{g} \dots \hat{\vect{r}}_{n/g}^{g}$.
+% We estimate the relative state, $\hat{\vect{p}}_{g/b}^v$, instead
+% of the global state, $\hat{\vect{p}}_{g/I}^I$, as the relative state is observable
+% even with poor estimates of the UAV's global position, $\hat{\vect{p}}_{b/I}^I$.
+
+% The estimated vectors $\hat{\vect{r}}_{1/g}^{g}, \dots \hat{\vect{r}}_{n/g}^{g}$ represent the
+% locations of visual features $1, \dots n$ with respect to the goal frame and
+% expressed in the goal frame. As we assume these features are rigidly attached to the
+% target vehicle, these vectors remain constant as the vehicle moves and rotates.
+% We show in the experiments described in~\secref{sec:est_paper_simulation}
+% and~\secref{sec:est_paper_hardware} that the
+% addition of only ten visual features to the estimated state significantly
+% improves the estimates of the state of the target vehicle
+% % $\hat{\x}_{\text{Goal}}$
+% while the fiducial landing marker is not detected. 
+
+We also note
+that the estimated state is of dynamic size. As visual features are
+detected they are added to the estimated state until a maximum size of the state
+is reached. As visual features leave the field of view of the camera,
+or are otherwise no longer tracked, they are removed from the estimated state
+to make room for new visual features to be added.
+
+% In the following
+% subsections, we define the error-state of the estimated system,  thdescribe the dynamic equations used to model the state of the
+% estimated system, the
+% initialization of certain states, and the specific
+% measurement models used to update the filter.
+
+% As mentioned in~\secref{sec:intro??} the estimation of these
+% visual landmarks allows the estimator to maintain accurate and consistent
+% estimates of the target vehicle even while the fiducial landing marker is not
+% detected for long periods of time.
+
+\subsection{Error-State Definition}
+
+As the estimated state is not a vector, but rather a tuple of Lie groups, we
+employ the error-state Kalman filter (ESKF) as described in~\cite{koch2017relative}.
+% The error-state of the estimated system is defined by
+We define the error-state of the estimated system as
+\begin{align}
+  \tilde{\vect{x}} =&
+  \left[ \begin{matrix}
+    \tilde{\vect{p}}_{b/I}^{I}, \tilde{\vect{\theta}}_I^{b}, \tilde{\vect{v}}_{b/I}^b,
+    \tilde{\vect{\beta}}_a,
+    \tilde{\vect{\beta}}_{\omega},
+    \tilde{\vect{p}}_{g/b}^{v}, \tilde{\vect{v}}_{g/I}^{g}, \tilde{\psi}_{I}^{g},
+    \tilde{\omega}_{g/I}^{g},
+      \tilde{\vect{r}}_{1/g}^{g}, \dots \tilde{\vect{r}}_{n/g}^{g}
+  \end{matrix} \right]
+  \in \mathbb{R}^{22 + 3n}
+\end{align}
+with the error-state components related to the vector states, $\x_{\vect{v}}$, defined with
+the vector subtraction operator as
+\begin{equation}
+\tilde{\x}_{\vect{v}} \triangleq \x_{\vect{v}} - \hat{\x}_{\vect{v}}
+\label{eq:est_paper_vector_error_state}
+\end{equation}
+such that
+\begin{equation}
+  \tilde{\vect{p}}_{b/I}^I = \vect{p}_{b/I}^I - \hat{\vect{p}}_{b/I}^I.
+  \label{eq:est_paper_uav_pos_err_state}
+\end{equation}
+We reiterate that we treat $\psi_I^g \in \mathbb{R}^1$
+% as a vector space
+such that
+\begin{equation}
+  \tilde{\psi}_I^g = \psi_I^g - \hat{\psi}_I^g.
+  \label{eq:2d_att_err_state}
+\end{equation}
+
+We follow~\cite{koch2017relative}, defining the error-state of the quaternion,
+$\q_I^b$,
+as the minimal representation
+\begin{equation}
+  \tilde{\vect{\theta}}_I^b \triangleq \log_{\q} \left( \left( \hat{\q}_I^b \right)^{-1}
+  \otimes \q_I^b \right)
+  \label{eq:quat_error_state}
+\end{equation}
+which implies
+\begin{equation}
+  \q_I^b  = \hat{\q}_I^b \otimes \exp_{\q} \left( \tilde{\vect{\theta}}_I^b
+  \right).
+  \label{eq:quat_true_state}
+\end{equation}
+As rotation matrices concatenate in the order opposite to
+quaternions,~\eqref{eq:quat_true_state} can also be expressed as
+\begin{equation}
+  R_I^b  = R \left( \exp_{\q} \left( \tilde{\vect{\theta}}_I^b \right) \right)
+  \hat{R}_I^b.
+  \label{eq:rot_true_state}
+\end{equation}
+% Similarly, we define the error-state of the 2D rotation matrix state, $R_I^g$,
+% as
+% \begin{equation}
+  % \tilde{\psi}_I^g = \log_R \left(  
+  % R_I^g \left( \hat{R}_I^g \right)^\transpose \right)
+  % \label{eq:2d_rot_err_state}
+% \end{equation}
+
+To derive the error-state dynamics and the measurement residual Jacobians in the
+following sections, we
+use an approximation for~\eqref{eq:rot_true_state} developed by first expanding
+the
+quaternion exponential using~\eqref{eq:est_paper_quaternion_exp_approx} as
+$\tilde{\vect{\theta}}_I^b$ is assumed to be small
+\begin{equation}
+  R_I^b  \approx R \left( \begin{bmatrix}
+      1 \\
+    \frac{1}{2} \tilde{\vect{\theta}}_I^b
+  \end{bmatrix}\right)
+  \hat{R}_I^b.
+\end{equation}
+We then employ~\eqref{eq:est_paper_R_from_q}, neglecting higher-order terms, to
+yield the approximation
+\begin{equation}
+  R_I^b  \approx 
+  \left( I - \skewmat{\tilde{\vect{\theta}}_I^b} \right)
+  \hat{R}_I^b.
+  \label{eq:est_paper_Rapprox}
+\end{equation}
+It can similarly be shown that
+\begin{equation}
+  \left( R_I^b \right)^\transpose  \approx 
+  \left( \hat{R}_I^b \right)^\transpose
+  \left( I + \skewmat{\tilde{\vect{\theta}}_I^b} \right).
+  \label{eq:est_paper_RTapprox}
+\end{equation}
+
+
+

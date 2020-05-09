@@ -1,0 +1,71 @@
+% !TEX root=../root.tex
+
+\subsection{Notation}
+
+Throughout the paper, we represent vectors with a bold letter (e.g., $\bf v$)
+and matrices with a captial letter (e.g., $A$). Other common notation used
+throughout the paper is contained below.
+\begin{center}
+\begin{tabularx}{\columnwidth}{lX}
+$R_a^b$ & Rotation matrix from reference frame $a$ to $b$ \\
+$\vect{v}_{a/b}^c$ & Vector state $\vect{v}$ of frame $a$ w.r.t.~frame $b$, expressed in frame $c$ \\
+$\hat{a}$ & Estimate of true variable $a$ \\
+$\bar{a}$ & Measurement of $a$ \\
+% $\des{a}$ & Desired value of $a$ \\
+$\dot{a}$ & Time derivative of $a$ \\
+$\tilde{a}$ & Error of variable $a$, i.e., $\tilde{a} \triangleq a - \hat{a}$
+\end{tabularx}
+\end{center}
+%
+We also make use of the following coordinate frames:
+\begin{center}
+\begin{tabularx}{\columnwidth}{lX}
+$I$ & The inertial coordinate frame in north-east-down\\
+% $\ell$ & The aircraft's vehicle-1 (body-level) coordinate frame \\
+$v$ & The aircraft's vehicle-1 (body-level) coordinate frame \\
+$b$ & The aircraft's body-fixed coordinate frame \\
+$c$ & The camera frame \\
+$g$ & The target landing vehicle's body-fixed coordinate frame located at the desired
+landing location (goal) of the aircraft
+\end{tabularx}
+\end{center}
+%
+We use the standard basis vectors $\vect{e}_1, \vect{e}_2, \vect{e}_3$,
+where $\vect{e}_1 = \begin{bmatrix} 1 & 0 & 0 \end{bmatrix}^\transpose$,
+$\vect{e}_2 = \begin{bmatrix} 0 & 1 & 0 \end{bmatrix}^\transpose$,
+and $\vect{e}_3 = \begin{bmatrix} 0 & 0 & 1 \end{bmatrix}^\transpose$.
+We also use the skew-symmetric matrix operator
+% We make frequent use of the skew-symmetric matrix operator defined by
+\begin{equation}
+  \skewmat{\vect{v}} \triangleq
+  \begin{bmatrix}
+  0 & -v_{3} & v_{2}\\
+  v_{3} & 0 & -v_{1}\\
+  -v_{2} & v_{1} & 0
+  \end{bmatrix},
+\end{equation}
+which is related to the cross-product between two vectors as
+\begin{equation}
+  \vect{v}\times\vect{w}=\skewmat{\vect{v}}\vect{w},
+\end{equation}
+and the skew-symmetric identity
+\begin{equation}
+  \skewmat{\vect{v}} \vect{w} = -\skewmat{\vect{w}} \vect{v}.
+\end{equation}
+We also use the two-dimensional skew-symmetric operator which acts on a scalar
+\begin{equation}
+  \skewmat{a} \triangleq
+  \begin{bmatrix}
+  0 & -a \\
+  a & 0
+  \end{bmatrix}.
+\end{equation}
+We use the identity matrix, $I$, as well as submatricies of $I$ denoted with
+subscripts such as
+\begin{equation}
+  I_{2 \times 3} =
+  \begin{bmatrix}
+    1 & 0 & 0 \\
+    0 & 1 & 0
+  \end{bmatrix}.
+\end{equation}

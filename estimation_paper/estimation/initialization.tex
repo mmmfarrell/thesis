@@ -1,0 +1,174 @@
+% !TEX root=./root.tex
+
+\subsection{State Initialization}
+% Unlike $\hat{\vect{x}}_{\text{UAV}}$ which is initialized based on an initial
+% guess of the true state, the estimated states associated with the landing
+% vehicle, $\hat{\vect{x}}_{\text{Goal}}$, and the estimated states associated
+% with the visual features, $\hat{\vect{x}}_{\text{Features}}$, are initialized
+% upon receiving the first measurements corresponding measurements.
+
+While the states associated with the UAV and sensor biases,
+$\hat{\x}_{\text{UAV}}$, are initialized at startup,
+the states associated with the target vehicle, $\hat{\x}_{\text{Goal}}$ are
+initialized upon receiving the first measurement from
+the detection of the fiducial marker given by
+% We assume that we can measure the
+% relative translation and rotation from the camera to the fiducial marker
+% at each detection. This measurement,
+\begin{equation}
+  \bar{\vect{z}} =
+  \begin{bmatrix}
+    \bar{\vect{p}}_{g/c}^c & \bar{R}_c^g
+  \end{bmatrix}.
+  \label{eq:fiducial_meas}
+\end{equation}
+We use this measurement to initialize the estimates of the states with
+% is used to initialize the goal states with
+\begin{align}
+  \hat{\vect{p}}_{g/b}^v &= \left( \hat{R}_I^b \right)^\transpose \left( \left ( R_b^c
+  \right)^\transpose \bar{\vect{p}}_{g/c}^c + \vect{p}_{c/b}^b
+\right)   \\
+      \hat{\vect{v}}_{g/I}^I &= \vect{0} \\
+      \hat{\psi_I^g} &= \text{yaw} \left( \bar{R}_c^g R_b^c \hat{R}_I^b \right)
+      \\
+      \hat{\omega_{g/I}^g} &= 0.
+  % quat::Quatd q_I2g_meas = x().q * q_b2c_ * z.q_c2a * q_a2g;
+  % const double yaw_meas = q_I2g_meas.euler()(2);
+\end{align}
+% where $R_b^c$ and $\vect{p}_{c/b}^b$ are assumed to be known constants and
+% $yaw()$ is a function that extracts the yaw Euler angle from a rotation matrix.
+
+% The linear and angular velocity of the landing vehicle are initialized to
+% zero with large enough covariances for the specific use case.
+
+Similar to the manner in which the target vehicle states are intialized,
+the visual feature states are initialized based on the first corresponding measurement received.
+% each time a new
+% landmark is added to the estimated vector, we initialize its state based on the
+% first measurement received.
+As we only receive a measurement of the pixel
+location of the visual feature in the camera image,
+\begin{equation}
+  \bar{\vect{z}} = \begin{bmatrix} \bar{p}_x & \bar{p}_y \end{bmatrix}
+  \label{eq:pixel_meas},
+\end{equation}
+the estimated state, $\hat{\vect{r}}_{i/g}^g$, is not entirely observered.
+Therefore, to initialize
+the feature state, we assume the feature lies in the $xy$ plane of the
+goal frame, initializing the $z$ component of $\hat{\vect{r}}_{i/g}^g$ to zero.
+% with a large enough covariance for the specific landing vehicle.
+To compute the
+$x$ and $y$ components of $\hat{\vect{r}}_{i/g}^g$,
+% we start with the pinhole camera
+% model.
+% We assume that the pixel measurements in~\eqref{eq:pixel_meas} have been
+% rectified to compensate for lens distortion such that
+% \begin{equation}
+  % \begin{bmatrix}
+    % p_x \\ p_y \\ 1
+  % \end{bmatrix} = \frac{1}{\e_3^\transpose \vect{p}_{i/c}^c} K \vect{p}_{i/c}^c \\
+% \end{equation}
+% where $K$ is the camera intrisic matrix.
+we start with~\eqref{eq:pinhole_camera}
+% If we invert $K$ and multiply by both
+% sides, we get
+% \begin{equation}
+ % \frac{1}{\e_3^\transpose \vect{p}_{i/c}^c} \vect{p}_{i/c}^c
+  % =
+  % K^{-1} \begin{bmatrix}
+    % p_x \\ p_y \\ 1
+  % \end{bmatrix}
+% \end{equation}
+which can be rotated and solved to yield
+\begin{equation}
+ \vect{p}_{i/c}^v
+  =
+  \left( \e_3^\transpose \vect{p}_{i/c}^c \right) \left( R_I^b
+  \right)^\transpose \left( R_b^c \right)^\transpose K^{-1} \begin{bmatrix}
+    \bar{p}_x \\ \bar{p}_y \\ 1
+  \end{bmatrix}.
+\end{equation}
+As $\e_3^\transpose \vect{p}_{i/c}^c$ is unknown, we define 
+\begin{equation}
+  \scaled{\vect{p}}_{i/c}^v
+  % =
+  \triangleq
+   \left( R_I^b
+  \right)^\transpose \left( R_b^c \right)^\transpose K^{-1} \begin{bmatrix}
+    \bar{p}_x \\ \bar{p}_y \\ 1
+  \end{bmatrix},
+\end{equation}
+which is equivalent to $\vect{p}_{i/c}^v$ up to a scale factor. As previously
+mentioned, we estimate this scale factor by assuming $\e_3^\transpose
+\vect{r}_{i/g}^g = 0$ such that
+\begin{equation}
+  \e_3^\transpose \hat{\vect{p}}_{i/c}^v = \e_3^\transpose \hat{\vect{p}}_{g/b}^v -
+  \e_3^\transpose \left( \hat{R}_I^b \right)^\transpose \vect{p}_{c/b}^b.
+\end{equation}
+We therefore initialize
+\begin{align}
+    \hat{\vect{r}}_{i/g}^g &= \hat{R}_I^g \left( \hat{\vect{p}}_{i/b}^v -
+    \hat{\vect{p}}_{g/b}^v \right)
+\end{align}
+where
+% This is used to solve for $\hat{\vect{r}}_{i/g}^g$ with
+\begin{align}
+  % \hat{\vect{p}}_{i/c}^v &= \frac{\e_3^\transpose
+  % \hat{\vect{p}}_{i/c}^v}{\e_3^\transpose \scaled{\vect{p}}_{i/c}^v} \scaled{\vect{p}}_{i/c}^v
+  % \\
+    \hat{\vect{p}}_{i/b}^v &= \frac{\e_3^\transpose
+  \hat{\vect{p}}_{i/c}^v}{\e_3^\transpose \scaled{\vect{p}}_{i/c}^v}
+  \scaled{\vect{p}}_{i/c}^v+ \left( \hat{R}_I^b \right)^\transpose
+  \vect{p}_{c/b}^b.
+    % \hat{\vect{p}}_{i/b}^v &= \hat{\vect{p}}_{i/c}^v + \left( R_I^b \right)^\transpose \vect{p}_{c/b}^b \\
+    % \hat{\vect{r}}_{i/g}^g &= \hat{R}_I^g \left( \hat{\vect{p}}_{i/b}^v -
+    % \hat{\vect{p}}_{g/b}^v \right).
+\end{align}
+
+% \begin{align}
+  % \begin{bmatrix}
+    % p_x \\ p_y \\ 1
+  % \end{bmatrix} &= \frac{1}{\e_3^\transpose \vect{p}_{i/c}^c} K \vect{p}_{i/c}^c \\
+  % \begin{bmatrix}
+    % X^c / Z^c \\
+    % Y^c / Z^c \\
+    % 1
+  % \end{bmatrix}
+   % &= K^{-1}
+  % \begin{bmatrix}
+    % p_x \\ p_y \\ 1
+  % \end{bmatrix} \\
+  % \begin{bmatrix}
+    % X^c / Z^c \\
+    % Y^c / Z^c \\
+    % 1
+  % \end{bmatrix}^v
+   % &= R_b^v R_c^b K^{-1}
+  % \begin{bmatrix}
+    % p_x \\ p_y \\ 1
+  % \end{bmatrix} \\
+% \end{align}
+% The resulting vector, $
+  % \begin{bmatrix}
+    % X^c / Z^c \\
+    % Y^c / Z^c \\
+    % 1
+  % \end{bmatrix}^v$
+  % is the vector $\vect{p}_{i/c}^v$ up to a scale factor. The vector can be scaled by assuming that the altitude of the landmark is equal to the
+% altitude of the goal. To get the expected altitude, we solve for
+% \begin{align}
+  % \e_3^\transpose \vect{p}_{g/c}^v &= \e_3^\transpose \vect{p}_{g/b}^v - \e_3^\transpose \vect{p}_{c/b}^v \\
+  % \e_3^\transpose \vect{p}_{g/c}^v &= \e_3^\transpose \vect{p}_{g/b}^v -
+  % \e_3^\transpose R_b^I \vect{p}_{c/b}^b \\
+  % \e_3^\transpose \vect{p}_{g/c}^v &= \frac{1}{\rho_g} -
+  % \e_3^\transpose R_b^I \vect{p}_{c/b}^b \\
+% \end{align}
+
+% This gives us the vector, $\vect{p}_{i/c}^v$.
+% With this vector, we can then reach the estimated state vector,
+% $\vect{p}_{i/g}^g$ with the following
+% \begin{align}
+  % \vect{p}_{i/v}^v &= \vect{p}_{i/c}^v + R_b^I \vect{p}_{c/b}^b \\
+  % \vect{p}_{i/g}^g &= R_v^g \left( \vect{p}_{i/v}^v - \vect{p}_{g/v}^v \right).
+% \end{align}
+

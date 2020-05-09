@@ -1,0 +1,711 @@
+% !TEX root=../../master.tex
+
+\subsection{Measurement Models}
+\label{sec:measurement_models}
+
+When
+updating the filter with measurements, we make use of the partial Kalman update
+which has been shown to improve estimates of bias states and constant values~\cite{brink2017partial}. The partial Kalman update provides a
+means to limit the effect of measurement updates to certain estimated
+states by providing a tuning vector
+\begin{equation}
+  \vect{\lambda} =
+\begin{bmatrix}
+  \lambda_1 & \lambda_2 & \dots & \lambda_N
+\end{bmatrix}
+\end{equation}
+where $\lambda_i \in \left[ 0, 1\right]$ determines the proportion of the
+measurement update applied to state $i$.
+In practice, we use $\lambda < 1$ only for the
+bias states, $\vect{\beta}_a$ and $\vect{\beta}_\omega$, and the
+constant-value states $\vect{r}_{1/g}^{g}, \dots \vect{r}_{n/g}^{g}$.
+
+With this formulation,
+when a measurement is received, we compute the Kalman gain
+\begin{equation}
+  K = P H^\transpose \left(H P H^\transpose + R \right)^{-1}
+\end{equation}
+where $H$ is the residual Jacobian for the measurement and $R$ is the
+measurement covariance. We then follow~\cite{brink2017partial}, using $K$ to update the filter such that
+\begin{align}
+  \hat{\tilde{\x}}^{+} &= \vect{\lambda} \odot K \vect{r} \\
+  P^{+} &= P + \Lambda \odot \left( \left(I - K H \right) P \left(I - K H
+  \right)^\transpose + K R K^\transpose - P \right)
+\end{align}
+where $\odot$ is the Hadamard product, $\vect{r}$ is the residual of the
+measurement and
+\begin{align}
+  \vect{1} &= \begin{bmatrix} 1 & 1 & \dots & 1 \end{bmatrix}^\transpose \\
+  \Lambda &= \vect{1} \vect{\lambda}^\transpose + \vect{\lambda} \vect{1} -
+  \vect{\lambda} \vect{\lambda}^\transpose.
+\end{align}
+
+As the estimate of the error state of the system, $\hat{\tilde{\x}}$, becomes
+non-zero after this update, we use this estimate to correct the estimated state,
+$\hat{\x}$. As the estimated state is not a vector, this correction is done
+piecewise. The vector components of the estimated state are
+updated as
+\begin{equation}
+  \hat{\vect{\x}}_{\vect{v}}^{+} = \hat{\vect{\x}}_{\vect{v}} + \tilde{\vect{\x}}_{\vect{v}}
+\end{equation}
+and the quaternion state is updated as
+\begin{equation}
+  \left( \hat{\q}_I^b \right)^{+}  = \hat{\q}_I^b \otimes \exp_{\q} \left(
+  \tilde{\vect{\theta}}_I^b \right).
+\end{equation}
+After this correction, the estimate of the error state of the system resets to
+zero.
+% reset to zero.
+% The estimate of the error state of the system is then reset to zero before any
+
+The measurement model, residual model and residual
+Jacobian are defined below for each type of measurement used in the filter.
+
+\subsubsection{Global UAV Position Measurement}
+We assume to receive a measurement of the position of the UAV with respect to
+the inertial frame.
+In our experiments, this measurement results from a motion capture system;
+however, in other applications,
+a sensor such as a real-time kinematic GPS unit could provide this measurement.
+% a similar measurement can be be used from RTK
+% GPS.
+% This measurement may come from a sensor such as GPS or a motion capture system.
+% The 
+% The measurement model and its estimate are
+The measurement and its model are
+written as
+\begin{align}
+  \vect{z}_{\text{pos}} &= h_{\text{pos}} \left( \x \right) + \vect{\eta}_{\text{pos}} \\
+  h_{\text{pos}} \left( \x \right) &= \vect{p}_{b/I}^I,
+  % \vect{\eta}_{\text{pos}},
+  % h_{\text{pos}} \left( \hat{\x} \right) &= \hat{\vect{p}}_{b/I}^I,
+\end{align}
+where $\vect{\eta}_{\text{pos}}$ is a zero-mean Gaussian process
+describing the sensor noise.
+For a given measurement of position, $\bar{\vect{z}}_{\text{pos}}$, the residual is
+given by
+\begin{equation}
+  \vect{r}_{\text{pos}} = \bar{\vect{z}}_{\text{pos}} - h_{\text{pos}} \left( \hat{\x}
+  \right).
+\end{equation}
+For the error-state Kalman filter, the residual is modeled as
+\begin{align}
+  % \vect{r}_{\text{pos}} &=  h_{\text{pos}} \left( \x \right) - h_{\text{pos}} \left( \hat{\x}
+  % \right) \\
+  \vect{r}_{\text{pos}} &=  \vect{z}_{\text{pos}} - h_{\text{pos}} \left( \hat{\x}
+  \right) \\
+                        &= \vect{p}_{b/I}^I + \eta_{\text{pos}} -
+                        \hat{\vect{p}}_{b/I}^I \\
+                        &= \tilde{\vect{p}}_{b/I}^I + \eta_{\text{pos}}.
+\end{align}
+This results in the residual Jacobian
+\begin{align}
+  H_{\text{pos}} &= \frac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\x}}\\
+                 &=
+   \begin{bmatrix}
+     \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{p}}_{b/I}^{I} } &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \dots &
+     \vect{0}
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{\theta}}_I^{b} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{v}}_{b/I}^b } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{\beta}}_a } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{\beta}}_{\omega} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{p}}_{g/b}^{v} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{v}}_{g/I}^{g} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\psi}_{I}^{g} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\omega}_{g/I}^{g} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{r}}_{i/g}^{g} }
+   \end{bmatrix} \\
+                 &=
+  \begin{bmatrix}
+    I_{3 \times 3} & \vect{0} & \vect{0} & \vect{0} & \vect{0} & \vect{0} &
+    \vect{0} & \vect{0} & \vect{0} & \vect{0} & \dots & \vect{0}
+  \end{bmatrix}.
+\end{align}
+
+% and the non-zero component of the Jacobian of the measurement model as
+% \begin{equation}
+  % \frac{\partial \hat{\vect{p}}_{b/I}^I}{\partial \vect{p}_{b/I}^I} = I_{3
+  % \times 3}.
+% \end{equation}
+
+\subsubsection{Global UAV Attitude Measurement}
+Similar to the position measurement above, we assume to receive a measurement of
+the attitude of the body frame of the UAV with respect to the inertial frame.
+In our experiments, this measurement results from a motion capture system;
+however, in other applications, a sensor such as an attitude and heading
+reference system could provide this measurement.
+% This measurement may
+% come from an attitude and heading reference system or from a motion
+% capture system. 
+% The measurement model and its estimate are
+The measurement and its model are 
+written as
+\begin{align}
+  \vect{z}_{\text{att}} &= h_{\text{att}} \left( \x \right) \otimes \exp_{\q} \left(
+  \vect{\eta}_{\text{att}} \right) \\
+  h_{\text{att}} \left( \x \right) &= \vect{q}_{I}^b, 
+  % \vect{\eta}_{\text{att}} \right) \\
+    % h_{\text{att}} \left( \hat{\x} \right) &= \hat{\vect{q}}_{I}^b,
+\end{align}
+where $\vect{\eta}_{\text{att}}$ is a zero-mean Gaussian process
+describing the sensor noise.
+For a given measurement of attitude, $\bar{\vect{z}}_{\text{att}}$, the residual is
+given by
+\begin{equation}
+  \vect{r}_{\text{att}} = \log_{\q} \left(  h_{\text{att}} \left(
+  \hat{\x} \right)^{-1} \otimes \bar{\vect{z}}_{\text{att}} \right),
+  % \vect{r}_{\text{att}} = \vect{z}_{\text{att}} - h_{\text{att}} \left( \hat{\x}
+\end{equation}
+which is modeled as
+\begin{align}
+  \vect{r}_{\text{att}} &= \log_{\q} \left(  h_{\text{att}} \left(
+  \hat{\x} \right)^{-1} \otimes \vect{z}_{\text{att}} \right) \\
+  % \hat{\x} \right)^{-1} \otimes h_{\text{att}} \left( \x \right) \right) \\
+                        &= \log_{\q} \left(  \left(
+  \hat{\vect{q}}_{I}^b \right)^{-1} \otimes \vect{q}_{I}^b \otimes \exp_{\q} \left(
+  \vect{\eta}_{\text{att}} \right)\right).
+\end{align}
+This is expanded using~\eqref{eq:quat_true_state} and simplified to yield
+\begin{align}
+  \vect{r}_{\text{att}}
+  % &= \log_{\q} \left(  h_{\text{att}} \left(
+  % \hat{\x} \right)^{-1} \otimes h_{\text{att}} \left( \x \right) \right) \\
+                        % &= \log_{\q} \left(  \left(
+  % \hat{\vect{q}}_{I}^b \right)^{-1} \otimes \vect{q}_{I}^b \otimes \exp_{\q} \left(
+  % \vect{\eta}_{\text{att}} \right)\right) \\
+                        &= \log_{\q} \left(  \left(
+                        \hat{\vect{q}}_{I}^b \right)^{-1} \otimes
+                        \hat{\vect{q}}_{I}^b \otimes \exp_{\q} \left(
+                      \tilde{\vect{\theta}}_I^b \right) \right)
+                          + \vect{\eta}_{\text{att}}  \\
+                        &= \tilde{\vect{\theta}}_I^b
+                          + \vect{\eta}_{\text{att}}. 
+\end{align}
+This results in the residual Jacobian
+\begin{align}
+  H_{\text{att}} &= \frac{\partial \vect{r}_{\text{att}}}{\partial \tilde{\x}}\\
+                 &=
+   \begin{bmatrix}
+     \vect{0} &
+     \cfrac{\partial \vect{r}_{\text{att}}}{\partial \tilde{\vect{\theta}}_I^{b} } &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \dots &
+     \vect{0}
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{\theta}}_I^{b} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{v}}_{b/I}^b } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{\beta}}_a } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{\beta}}_{\omega} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{p}}_{g/b}^{v} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{v}}_{g/I}^{g} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\psi}_{I}^{g} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\omega}_{g/I}^{g} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{r}}_{i/g}^{g} }
+   \end{bmatrix} \\
+                 &=
+  \begin{bmatrix}
+    \vect{0} & I_{3 \times 3} &  \vect{0} & \vect{0} & \vect{0} & \vect{0} &
+    \vect{0} & \vect{0} & \vect{0} & \vect{0} & \dots & \vect{0}
+  \end{bmatrix}.
+\end{align}
+% \begin{equation}
+  % H_{\text{att}} =
+  % \begin{bmatrix}
+    % \vect{0} & I_{3 \times 3} & \vect{0} & \vect{0} & \vect{0} & \vect{0} & \vect{0} & \vect{0} & \vect{0} & \vect{0}
+  % \end{bmatrix}.
+% \end{equation}
+
+\subsubsection{Fiducial Translation Measurement}
+We assume that a known fiducial marker serves as the desired landing position
+for the multirotor UAV on the target vehicle. The goal frame is, therefore,
+located at the center of the fiducial marker. In consequence, every detection of the fiducial
+marker yields a measurement of the relative translation and rotation from the
+camera frame to the goal frame.
+% as noted in~\eqref{eq:fiducial_meas}.
+% The measurement model and its estimate for this relative translation measurement
+The measurement and its model for this relative translation measurement
+are written as
+\begin{align}
+  \vect{z}_{\text{ft}} &=
+  h_{\text{ft}} \left( \x \right) + \vect{\eta}_{\text{ft}} \\
+  h_{\text{ft}} \left( \x \right) &=
+  \vect{p}_{g/c}^c \\
+  &= R_b^c \left( R_I^b \vect{p}_{g/b}^v -
+  \vect{p}_{c/b}^b \right),
+  % h_{\text{ft}} \left( \hat{\x} \right) &=
+    % \hat{\vect{p}}_{g/c}^c \\
+  % &= R_b^c \left( \hat{R}_I^b \hat{\vect{p}}_{g/b}^v -
+    % \vect{p}_{c/b}^b \right),
+  % \hat{\vect{q}}_{c}^a  &= R_g^a \hat{R}_I^g \hat{R}_b^I R_c^b
+\end{align}
+where $R_b^c$ and $\vect{p}_{c/b}^b$ are assumed to be known constants, and
+$\vect{\eta}_{\text{ft}}$ is a zero-mean Gaussian process describing the
+measurement noise.
+For a given measurement of the relative translation to the fiducial marker,
+$\bar{\vect{z}}_{\text{ft}}$, the residual is given by
+\begin{equation}
+  \vect{r}_{\text{ft}} = \bar{\vect{z}}_{\text{ft}} - h_{\text{ft}} \left( \hat{\x}
+  \right)
+\end{equation}
+and modeled as
+\begin{align}
+  \vect{r}_{\text{ft}} &=  \vect{z}_{\text{ft}} - h_{\text{ft}} \left( \hat{\x}
+  \right) \\
+                       &= R_b^c \left( R_I^b \vect{p}_{g/b}^v -
+                         \vect{p}_{c/b}^b \right)  +\eta_{\text{ft}} - R_b^c \left( \hat{R}_I^b \hat{\vect{p}}_{g/b}^v -
+    \vect{p}_{c/b}^b \right)  \\
+                       &= R_b^c R_I^b \vect{p}_{g/b}^v 
+                          - R_b^c \hat{R}_I^b \hat{\vect{p}}_{g/b}^v +
+                          \eta_{\text{ft}}.
+                          \label{eq:rft_1}
+\end{align}
+% We note that from~\eqref{eq:quat_true_state},
+% \begin{equation*}
+  % R_I^b = R \left( \exp_{\q} \left( \tilde{\vect{\theta}}_I^b \right) \right)
+  % \hat{R}_I^b,
+% \end{equation*}
+% which can be simplifed using~\eqref{eq:quaternion_exp_approx}
+% and~\eqref{eq:R_from_q} to show that
+% \begin{equation}
+  % R_I^b \approx \left( I - \skewmat{\tilde{\vect{\theta}}_I^b }\right) \hat{R}_I^b.
+  % \label{eq:expand_R}
+% \end{equation}
+% We can similarly show that 
+% \begin{equation}
+  % \left( R_I^b \right)^\transpose \approx \left( \hat{R}_I^b \right)^\transpose
+  % \left( I + \skewmat{\tilde{\vect{\theta}}_I^b }\right).
+% \end{equation}
+Using~\eqref{eq:est_paper_Rapprox}, we expand~\eqref{eq:rft_1} and ignore
+second-order terms to yield
+\begin{align}
+   \vect{r}_{\text{ft}} &\approx R_b^c \left( I - \skewmat{\tilde{\vect{\theta}}_I^b }\right) \hat{R}_I^b \left( \hat{\vect{p}}_{g/b}^v + \tilde{\vect{p}}_{g/b}^v \right) 
+                          - R_b^c \hat{R}_I^b \hat{\vect{p}}_{g/b}^v +
+                          \eta_{\text{ft}} \\
+  &\approx R_b^c \hat{R}_I^b \tilde{\vect{p}}_{g/b}^v -
+  R_b^c \skewmat{\tilde{\vect{\theta}}_I^b } \hat{R}_I^b \hat{\vect{p}}_{g/b}^v 
+      + \eta_{\text{ft}} \\
+&\approx R_b^c \hat{R}_I^b \tilde{\vect{p}}_{g/b}^v + R_b^c \skewmat{\hat{R}_I^b \hat{\vect{p}}_{g/b}^v} \tilde{\vect{\theta}}_I^b 
+      + \eta_{\text{ft}}.
+\end{align}
+This results in the residual Jacobian
+\begin{align}
+  H_{\text{ft}} &= \frac{\partial \vect{r}_{\text{ft}}}{\partial \tilde{\x}}\\
+                 &=
+   \begin{bmatrix}
+     \vect{0} &
+     \cfrac{\partial \vect{r}_{\text{ft}}}{\partial \tilde{\vect{\theta}}_I^{b} } &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \cfrac{\partial \vect{r}_{\text{ft}}}{\partial \tilde{\vect{p}}_{g/b}^{v} } &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \dots &
+     \vect{0}
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{\theta}}_I^{b} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{v}}_{b/I}^b } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{\beta}}_a } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{\beta}}_{\omega} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{p}}_{g/b}^{v} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{v}}_{g/I}^{g} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\psi}_{I}^{g} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\omega}_{g/I}^{g} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{r}}_{i/g}^{g} }
+   \end{bmatrix} \\
+                 &=
+  \begin{bmatrix}
+    \vect{0} & R_b^c \skewmat{ \hat{R}_I^b \hat{\vect{p}}_{g/b}^v } &  \vect{0}
+             & \vect{0} & \vect{0} & R_b^c \hat{R}_I^b &
+    \vect{0} & \vect{0} & \vect{0} & \vect{0} & \dots & \vect{0}
+  \end{bmatrix}.
+\end{align}
+% \begin{equation}
+  % H_{\text{ft}} =
+  % \begin{bmatrix}
+    % \vect{0} & R_b^c \skewmat{ \hat{R}_I^b \hat{\vect{p}}_{g/b}^v } & \vect{0} &
+    % \vect{0} & \vect{0} & R_b^c \hat{R}_I^b & \vect{0} & \vect{0} & \vect{0} & \vect{0}
+  % \end{bmatrix}.
+% \end{equation}
+
+
+% The non-zero components of the Jacobian of the measurement model used for the
+% Kalman filter update are
+
+% \begin{align}
+  % \frac{\partial \hat{\vect{p}}_{g/c}^c}{\partial \vect{q}_I^b} =& R_b^c 
+  % \hat{R}_I^b \skewmat{\hat{\vect{p}}_{g/b}^v} \\
+    % \frac{\partial \hat{\vect{p}}_{g/c}^c}{\partial \vect{p}_{g/b}^v} =& R_b^c
+    % \hat{R}_I^b.
+% \end{align}
+
+\subsubsection{Fiducial Rotation Measurement}
+We use the relative rotation measurement that results from a detection of the
+fiducial marker
+to create a pseudo measurement of the orientation of the goal frame. In theory,
+a measurement model could be developed to use the entire measurement,
+$\bar{R}_c^g$; however, in practice, this may cause complications if the
+fiducial landing marker is not perfectly aligned with the plane of the target
+vehicle's motion (i.e., the fiducial marker is slighly rolled or pitched with
+respect to the goal frame).
+The pseudo
+measurement is created with
+\begin{equation}
+  \bar{\psi}_I^g = \text{yaw} \left( \bar{R}_c^g R_b^c \hat{R}_I^b \right)
+\end{equation}
+where $\text{yaw}\left(\right)$ is a function that extracts the yaw angle
+from a rotation matrix
+given by
+\begin{equation}
+  \text{yaw} \left(
+    \begin{bmatrix}
+      r_{11} & r_{12} & r_{13} \\
+      r_{21} & r_{22} & r_{23} \\
+      r_{31} & r_{32} & r_{33} 
+    \end{bmatrix}
+  \right)
+  =
+  \mathrm{atan2}\left( r_{12}, r_{11} \right).
+\end{equation}
+% The measurement model and its estimate are
+The measurement and its model are
+written as
+\begin{align}
+  \vect{z}_{\text{fr}} &= h_{\text{fr}} \left( \x \right) + \eta_{\text{fr}} \\
+  h_{\text{fr}} \left( \x \right) &= \psi_I^g,
+  % h_{\text{fr}} \left( \hat{\x} \right) &= \hat{\psi}_I^g
+\end{align}
+where $\eta_{\text{fr}}$ is a zero-mean Gaussian process describing the
+measurement noise.
+For a given (pseudo) measurement of the rotation of the fiducial marker,
+$\bar{\psi}_I^g$,
+% $z_{\text{fr}}$,
+the residual is given by
+\begin{equation}
+  r_{\text{fr}} = \bar{\psi}_I^g - h_{\text{fr}} \left( \hat{\x} \right),
+  % r_{\text{fr}} = z_{\text{fr}} - h_{\text{fr}} \left( \hat{\x} \right),
+\end{equation}
+which is modeled as
+\begin{align}
+  % r_{\text{fr}} &= h_{\text{fr}} \left( \x \right) - h_{\text{fr}} \left( \hat{\x} \right) \\
+  r_{\text{fr}} &= \vect{z}_{\text{fr}} - h_{\text{fr}} \left( \hat{\x} \right) \\
+                &= \psi_I^g + \eta_{\text{fr}} - \hat{\psi}_I^g \\
+                &= \tilde{\psi}_I^g + \eta_{\text{fr}}.
+\end{align}
+This results in the residual Jacobian
+\begin{align}
+  H_{\text{fr}} &= \frac{\partial \vect{r}_{\text{fr}}}{\partial \tilde{\x}}\\
+                 &=
+   \begin{bmatrix}
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \vect{0} &
+     \cfrac{\partial \vect{r}_{\text{fr}}}{\partial \tilde{\psi}_I^g } &
+     0 &
+     \vect{0} &
+     \dots &
+     \vect{0}
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{\theta}}_I^{b} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{v}}_{b/I}^b } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{\beta}}_a } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{\beta}}_{\omega} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{p}}_{g/b}^{v} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{v}}_{g/I}^{g} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\psi}_{I}^{g} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\omega}_{g/I}^{g} } &
+     % \cfrac{\partial \vect{r}_{\text{pos}}}{\partial \tilde{\vect{r}}_{i/g}^{g} }
+   \end{bmatrix} \\
+                 &=
+  \begin{bmatrix}
+    \vect{0} & \vect{0} &  \vect{0}
+             & \vect{0} & \vect{0} & \vect{0} &
+    \vect{0} &  1 & 0 & \vect{0} & \dots & \vect{0}
+  \end{bmatrix}.
+\end{align}
+% resulting in the residual Jacobian
+% \begin{equation}
+  % H_{\text{fr}} =
+  % \begin{bmatrix}
+    % \vect{0} & \vect{0} & \vect{0} &
+    % \vect{0} & \vect{0} & \vect{0} & \vect{0} & 1 & \vect{0} & \vect{0}
+  % \end{bmatrix}.
+% \end{equation}
+
+% and the non-zero Jacobians of the measurement model as
+% \begin{equation}
+  % \frac{\partial \hat{\theta}_I^g}{\partial \theta_I^g} = 1.
+% \end{equation}
+
+\subsubsection{Visual Feature Pixel Measurement}
+The estimator receives measurements of
+the location of each tracked visual feature in the camera image. We assume that the
+pixel locations received have already been corrected for lens distortion.
+% and
+We also assume to know the camera intrinsic matrix,
+% that we know the camera intrinsic matrix,
+% We also assume to know the camera intrinsic matrix
+\begin{equation}
+  K =
+  \begin{bmatrix}
+    f_x & 0 & c_x \\
+    0 & f_y & c_y \\
+    0 & 0 & 1
+  \end{bmatrix},
+\end{equation}
+where $f_x$ and $f_y$ are the focal lengths of the camera and $c_x$ and $c_y$
+are the coordinates of the principal point in the camera image.
+Using the pinhole camera model, we express the pixel location of
+visual feature $i$ as
+\begin{align}
+  % \hat{h} &=
+  % \begin{bmatrix}
+    % \hat{p}_x & \hat{p}_y
+  % \end{bmatrix}^\transpose \\
+  \begin{bmatrix}
+    p_x \\ p_y \\ 1
+  \end{bmatrix} &= \frac{1}{\e_3^\transpose \vect{p}_{i/c}^c} K
+  \vect{p}_{i/c}^c
+  \label{eq:pinhole_camera}
+  % \vect{z} &=
+  % \begin{bmatrix}
+    % f_x \frac{\e_1 \vect{p}_{i/c}^c}{\e_3 \vect{p}_{i/c}^c} + c_x \\
+    % f_y \frac{\e_2 \vect{p}_{i/c}^c}{\e_3 \vect{p}_{i/c}^c} + c_y
+  % \end{bmatrix},
+\end{align}
+% where K is the camera intrisic matrix given by
+% \begin{equation}
+  % K =
+  % \begin{bmatrix}
+    % f_x & 0 & c_x \\
+    % 0 & f_y & c_y \\
+    % 0 & 0 & 1
+  % \end{bmatrix}
+% \end{equation}
+% with $f_x$ and $f_y$ 
+% and 
+where
+\begin{align}
+  \vect{p}_{i/c}^c = R_b^c \left( R_I^b \left( R_I^g \right)^\transpose
+  \vect{r}_{i/g}^g + R_I^b \vect{p}_{g/b}^v - \vect{p}_{c/b}^b \right).
+  \label{eq:p_i_c_c}
+\end{align}
+% The measurement model and its estimate are, therefore, written as
+The measurement and its model are, therefore, written as
+\begin{align}
+  \vect{z}_{\text{pix}} 
+  &= h_{\text{pix}} \left( \x \right) + \vect{\eta}_{\text{pix}} \\
+  h_{\text{pix}} \left( \x \right)
+  &= \begin{bmatrix} p_x & p_y \end{bmatrix}^\transpose \\
+  &= \frac{1}{\e_3^\transpose \vect{p}_{i/c}^c} I_{2 \times 3} K
+  \vect{p}_{i/c}^c,
+  % h_{\text{pix}} \left( \hat{\x} \right)
+  % &= \begin{bmatrix} \hat{p}_x & \hat{p}_y \end{bmatrix}^\transpose \\
+  % &= \frac{1}{\e_3^\transpose \hat{\vect{p}}_{i/c}^c} I_{2 \times 3} K
+  % \hat{\vect{p}}_{i/c}^c
+\end{align}
+where $\vect{\eta}_{\text{pix}}$ is a zero-mean Gaussian process describing the
+measurement noise.
+% and
+% \begin{align}
+  % \hat{\vect{p}}_{i/c}^c = R_b^c \left( \hat{R}_I^b \left( \hat{R}_I^g \right)^\transpose
+  % \hat{\vect{r}}_{i/g}^g + \hat{R}_I^b \hat{\vect{p}}_{g/b}^v - \vect{p}_{c/b}^b
+  % \label{eq:p_i_c_c_hat}
+% \right).
+% \end{align}
+For a given measurement of the pixel location of a feature,
+$\bar{\vect{z}}_{\text{pix}}$, the residual is given by
+\begin{equation}
+  \vect{r}_{\text{pix}} = \bar{\vect{z}}_{\text{pix}} - h_{\text{pix}} \left( \hat{\x}
+    \right),
+\end{equation}
+which is modeled as
+\begin{align}
+  \vect{r}_{\text{pix}} &= \vect{z}_{\text{pix}} - h_{\text{pix}} \left( \hat{\x}
+    \right) \\
+  &= \frac{1}{\e_3^\transpose \vect{p}_{i/c}^c} I_{2 \times 3} K
+  \vect{p}_{i/c}^c + \vect{\eta}_{\text{pix}} - \frac{1}{\e_3^\transpose \hat{\vect{p}}_{i/c}^c} I_{2 \times 3} K
+  \hat{\vect{p}}_{i/c}^c.
+  \label{eq:rpix}
+\end{align}
+This results in the residual Jacobian
+\begin{align}
+  H_{\text{pix}} &= \frac{ \partial \vect{r}_{\text{pix}} }{ \partial \tilde{\x}} \\
+  % H_{\text{pix}} 
+                   % &= \frac{ \partial} \\
+  &\approx
+  \frac{1}{\e_3^\transpose \hat{\vect{p}}_{i/c}^c} I_{2 \times 3} K
+ \frac{\partial}{\partial \tilde{\x}} \vect{p}_{i/c}^c 
+ - \frac{\e_3^\transpose \frac{\partial}{\partial \tilde{\x}} 
+ \vect{p}_{i/c}^c}{\left( \e_3^\transpose
+ \hat{\vect{p}}_{i/c}^c \right)^2 } I_{2 \times 3} K
+ \hat{\vect{p}}_{i/c}^c
+\end{align}
+where the non-zero components of $\frac{\partial}{\partial \tilde{\x}}
+\vect{p}_{i/c}^c$ are given by
+\begin{align}
+  \frac{\partial}{\partial \tilde{\vect{\theta}}_I^b } \vect{p}_{i/c}^c
+  &=
+  R_b^c \skewmat{ \hat{R}_I^b \left( \left( \hat{R}_I^g \right)^\transpose
+  \hat{\vect{r}}_{i/g}^g + \hat{\vect{p}}_{g/b}^v \right) } \\
+  \frac{\partial}{\partial \tilde{\vect{p}}_{g/b}^v} \vect{p}_{i/c}^c
+  &=
+  R_b^c \hat{R}_I^b \\
+  \frac{\partial}{\partial \tilde{\psi}_I^g} \vect{p}_{i/c}^c
+  &=
+  R_b^c \hat{R}_I^b \left( \hat{R}_I^g \right)^\transpose
+  \skewmat{\begin{matrix} 0 \\ 0 \\ 1 \end{matrix}} \hat{\vect{r}}_{i/g}^g \\
+  \frac{\partial}{\partial \tilde{\vect{r}}_{i/g}^g} \vect{p}_{i/c}^c
+  &=
+  R_b^c \hat{R}_I^b \left( \hat{R}_I^g \right)^\transpose .
+\end{align}
+The derivation of this residual Jacobian is found in
+Appendix~\ref{apdx:estimation_pixel_meas_model}.
+
+
+
+% where $f_x$, $f_y$, $c_x$, and $c_y$ are constant parameters of the camera. We
+% can then express the position of the landmark $i$ with respect to the camera in the
+% camera frame as
+% \begin{align}
+  % \vect{p}_{i/c}^c &= R_b^c R_v^b \left(\vect{p}_{i/v}^v -
+    % \vect{p}_{c/v}^v\right) \\
+    % \vect{p}_{i/c}^c &= R_b^c \left(R_v^b \vect{p}_{i/v}^v -
+    % \vect{p}_{c/b}^b\right)
+% \end{align}
+% This is actually a little bit weird because of the state parameters, but
+% \begin{equation}
+  % \vect{p}_{i/v}^v =
+  % \begin{bmatrix}
+    % \e_1^\transpose \left( R_g^v \vect{p}_{i/g}^g + \vect{p}_{g/v}^v \right) \\
+    % \e_2^\transpose \left( R_g^v \vect{p}_{i/g}^g + \vect{p}_{g/v}^v \right) \\
+    % \e_3^\transpose \left( \vect{p}_{i/g}^g - \vect{p}_{b/I}^I \right)
+  % \end{bmatrix}.
+% \end{equation}
+
+% Let us derive the measurement Jacobians.
+% \begin{align}
+  % \frac{\partial}{\partial \x} \hat{h} &= \frac{\e_3^\transpose \hat{\vect{p}}_{i/c}^c
+  % \frac{\partial}{\partial \x} K \hat{\vect{p}}_{i/c}^c - K \hat{\vect{p}}_{i/c}^c
+  % \frac{\partial}{\partial \x} \e_3^\transpose \hat{\vect{p}}_{i/c}^c}{\left(
+% \e_3^\transpose \hat{\vect{p}}_{i/c}^c \right)^2 } \\
+  % \frac{\partial}{\partial \x} \hat{h} &= \frac{\e_3^\transpose \hat{\vect{p}}_{i/c}^c
+  % K \frac{\partial}{\partial \x} \hat{\vect{p}}_{i/c}^c - K \hat{\vect{p}}_{i/c}^c
+  % \e_3^\transpose \frac{\partial}{\partial \x} \hat{\vect{p}}_{i/c}^c}{\left(
+% \e_3^\transpose \hat{\vect{p}}_{i/c}^c \right)^2 }
+% \end{align}
+% \begin{align}
+  % \frac{\partial}{\partial \vect{p}_{g/b}^v} \hat{\vect{p}}_{i/c}^c &=
+  % R_b^c \hat{R}_I^b \\
+  % \frac{\partial}{\partial \vect{q}_{I}^b} \hat{\vect{p}}_{i/c}^c &=
+  % -R_b^c \hat{R}_I^b \skewmat{ \left( R_I^g \right)^\transpose
+  % \hat{\vect{r}}_{i/g}^g + \hat{\vect{p}}_{g/b}^v } \\
+  % \frac{\partial}{\partial \theta_I^g} \hat{\vect{p}}_{i/c}^c &=
+  % R_b^c \hat{R}_I^b \\
+% \end{align}
+
+% % \subsubsection{Measurement Jacobian}
+% For the purpose of deriving the Jacobians, we will just look at the jacobians
+% with respect to $p_x$, the pixel location along the $x$ axis of the camera
+% frame. From above we have that
+% \begin{align}
+  % p_x &= f_x \frac{\e_1^\transpose \vect{p}_{i/c}^c}{\e_3^\transpose \vect{p}_{i/c}^c} + c_x \\ 
+  % p_x &= f_x \frac{\e_1^\transpose R_b^c \left(R_v^b \vect{p}_{i/v}^v -
+      % \vect{p}_{c/b}^b\right) }{\e_3^\transpose R_b^c \left(R_v^b \vect{p}_{i/v}^v -
+  % \vect{p}_{c/b}^b\right) } + c_x 
+% \end{align}
+% Note that all values are constants except for $\vect{p}_{i/v}^v$ and $R_v^b$.
+% The individual parts of the jacobian are given here:
+% \begin{equation}
+  % \frac{\partial p_x}{\partial \vect{p}_{g/v}^v} =
+  % \frac{f_x \e_1 R_b^c R_v^b}
+    % {\left(\e_3 R_b^c \left(R_v^b \vect{p}_{i/v}^v -
+    % \vect{p}_{c/b}^b\right)\right)}
+    % - \frac{\left(\e_3 R_b^c R_v^b \right) f_x \left(\e_1 R_b^c \left(R_v^b \vect{p}_{i/v}^v -
+        % \vect{p}_{c/b}^b\right)\right)} {\left(\e_3 R_b^c \left(R_v^b \vect{p}_{i/v}^v -
+  % \vect{p}_{c/b}^b\right)\right)^2}
+% \end{equation}
+% where only the first two (of three) entries of the vector are used. The third
+% entry is used for the jacobian w.r.t. $\vect{p}_{b/I}^I(2)$ as
+% \begin{equation}
+  % \frac{\partial p_x}{\partial \vect{p}_{b/I}^I(2)} = -\frac{\partial p_x}{\partial
+  % \vect{p}_{g/v}^v}\left(2\right).
+% \end{equation}
+% The derivatives for the attitude representation are less straight forward. From
+% "Micro Lie Theory" we use the fact that the jacobian of the rotation action can
+% be shown to be
+% \begin{equation}
+  % J_R^{R \cdot v} = -R \skewmat{v}.
+% \end{equation}
+% \begin{equation}
+  % \frac{\partial p_x}{\partial \q} =
+  % \frac{-f_x \e_1 R_b^c R_v^b \skewmat{\vect{p}_{i/v}^v}}
+    % {\left(\e_3 R_b^c \left(R_v^b \vect{p}_{i/v}^v -
+    % \vect{p}_{c/b}^b\right)\right)}
+    % - \frac{\left(-\e_3 R_b^c R_v^b \skewmat{\vect{p}_{i/v}^v} \right) f_x \left(\e_1 R_b^c \left(R_v^b \vect{p}_{i/v}^v -
+        % \vect{p}_{c/b}^b\right)\right)} {\left(\e_3 R_b^c \left(R_v^b \vect{p}_{i/v}^v -
+  % \vect{p}_{c/b}^b\right)\right)^2}
+% \end{equation}
+% where the jacobians for the other angles are similar, just substituting in.
+% The derivative for the goal angle, $\theta_g$ is given by using
+% \begin{equation}
+  % \frac{\partial \vect{p}_{i/v}^v}{\partial \theta_g} =
+  % \begin{bmatrix}
+    % \e_1^\transpose \frac{\partial R_g^v}{\partial \theta_g} \vect{p}_{i/g}^g \\
+    % \e_2^\transpose \frac{\partial R_g^v}{\partial \theta_g} \vect{p}_{i/g}^g \\
+    % 0
+  % \end{bmatrix}
+% \end{equation}
+% in the jacobian given by
+% \begin{equation}
+  % \frac{\partial p_x}{\partial \theta_g} =
+  % \frac{f_x \e_1 R_b^c R_v^b \frac{\partial \vect{p}_{i/v}^v}{\partial \theta_g}}
+    % {\left(\e_3 R_b^c \left(R_v^b \vect{p}_{i/v}^v -
+    % \vect{p}_{c/b}^b\right)\right)}
+    % - \frac{\left(\e_3 R_b^c R_v^b \frac{\partial \vect{p}_{i/v}^v}{\partial \theta_g} \right) f_x \left(\e_1 R_b^c \left(R_v^b \vect{p}_{i/v}^v -
+        % \vect{p}_{c/b}^b\right)\right)} {\left(\e_3 R_b^c \left(R_v^b \vect{p}_{i/v}^v -
+  % \vect{p}_{c/b}^b\right)\right)^2}
+% \end{equation}
+% Similarly, the derivative for the landmark offset, $\vect{r}_i$ or
+% $\vect{p}_{i/g}^g$ is given by using
+% \begin{equation}
+  % \frac{\partial \vect{p}_{i/v}^v}{\partial \vect{p}_{i/g}^g} =
+  % \begin{bmatrix}
+    % \e_1^\transpose R_g^v \\
+    % \e_2^\transpose R_g^v \\
+    % \e_3^\transpose
+  % \end{bmatrix}
+% \end{equation}
+% in the jacobian given by
+% \begin{equation}
+  % \frac{\partial p_x}{\partial \vect{p}_{i/g}^g} =
+  % \frac{f_x \e_1 R_b^c R_v^b \frac{\partial \vect{p}_{i/v}^v}{\partial \vect{p}_{i/g}^g}}
+    % {\left(\e_3 R_b^c \left(R_v^b \vect{p}_{i/v}^v -
+    % \vect{p}_{c/b}^b\right)\right)}
+    % - \frac{\left(\e_3 R_b^c R_v^b \frac{\partial \vect{p}_{i/v}^v}{\partial \vect{p}_{i/g}^g} \right) f_x \left(\e_1 R_b^c \left(R_v^b \vect{p}_{i/v}^v -
+        % \vect{p}_{c/b}^b\right)\right)} {\left(\e_3 R_b^c \left(R_v^b \vect{p}_{i/v}^v -
+  % \vect{p}_{c/b}^b\right)\right)^2}
+% \end{equation}
+% The jacobians for the y pixel measurement, $p_y$ are similar to the ones derived
+% above, just changing $f_y$ in place of $f_x$ and $\e_2$ instead of $\e_1$.
+

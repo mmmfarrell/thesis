@@ -1,0 +1,17 @@
+% !TEX root=../root.tex
+
+\subsection{Fiducial Landing Marker}
+The fiducial landing marker used in our flight experiments was a 6.1 cm $\times$ 6.1 cm ArUco
+marker~\cite{romero2018speeded}, as pictured in the top, right corner
+of~\figref{fig:features_with_aruco}.
+% We use an ArUco marker~\cite{romero2018speeded}, as pictured in the upper, right
+% of~\figref{fig:features_with_aruco}, for the fiducial landing marker
+When detected in a camera image, a relative translation and
+rotation from the camera frame to the marker was estimated using the detected positions of
+the corners of the marker in the camera image and the known size of the marker. 
+% The ArUco library used only detects the marker when it is entirely visible, and
+% unobstructed in the camera image.
+% Due to these
+% conditions, it is not uncommon that the marker may be undetected for significant
+% periods of time during a landing maneuver.
+

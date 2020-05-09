@@ -1,0 +1,153 @@
+% !TEX root=../root.tex
+
+\subsection{Quaternion Representation}
+% \MF{TODO what of this is necessary}
+% A quaternion $\q$ is a hyper-complex number of rank four.  It is well known that
+% a unit quaternion $\in S^3$ can be used to efficiently represent attitude, as
+% $S^3$ is a double cover of $\SO(3)$.  Quaternions have the advantage over
+% $\SO(3)$ of being more efficient to implement on modern hardware~\cite{casey2013AttitudeRepresentation}, therefore in the software implementation of the described algorithm, we use quaternions, rather than rotation matrices.
+
+% We use the Hamiltonian notation for unit quaternions $\in S^3$
+Unit quaternions $\in S^3$ throughout the paper follow the Hamiltonian notation
+\begin{equation}
+  % \q=\begin{pmatrix}q_{0} & q_{x}i & q_{y} j & q_{z} k \end{pmatrix}.%=\begin{pmatrix}q_{0} & \bar{\q} \end{pmatrix},
+  \q= q_{0} + q_{x}i + q_{y} j + q_{z} k .%=\begin{pmatrix}q_{0} & \bar{\q} \end{pmatrix},
+\end{equation}
+where $i$, $j$, and $k$ are the fundamental quaternion units.
+% We write the complex p
+% For convenience, we sometimes refer to the complex portion of the quaternion as
+% \begin{equation}
+	% \bar{\q} = \begin{bmatrix} q_x & q_y & q_z \end{bmatrix} ^\transpose
+% \end{equation}
+% and write quaternions as the tuple of the real and complex portions
+We write quaternions as the tuple
+\begin{equation}
+	\q = \begin{pmatrix} q_0 \\ \bar{\q} \end{pmatrix}
+\end{equation}
+where $q_0$ represents the real portion of the quaternion and
+% and the complex
+% portion of the quaternion is given by
+\begin{equation}
+	\bar{\q} = \begin{bmatrix} q_x & q_y & q_z \end{bmatrix} ^\transpose
+\end{equation}
+respresents the complex portion of the quaternion.
+
+% Given our use of the Hamiltonian notation, the quaternion group operator
+Given this representation of the quaternion, the quaternion group operator
+$\otimes$ can be written as the matrix-like products
+\begin{align}
+  \q^a \otimes \q^b &= \begin{pmatrix} q_0^a & \left(-\bar{\q}^{a}\right)^\transpose \\ \bar{\q}^a & q^a_0 I + \skewmat{\bar{\q}^a} \end{pmatrix}
+	\begin{pmatrix} q_0^b \\ \bar{\q}^b\end{pmatrix}
+  \label{eq:quat_otimes_product1} \\
+  &= \begin{pmatrix} q_0^b & \left(-\bar{\q}^{b}\right)^\transpose \\ \bar{\q}^b & q^b_0 I - \skewmat{\bar{\q}^b} \end{pmatrix}
+	\begin{pmatrix} q_0^a \\ \bar{\q}^a \end{pmatrix}.
+  \label{eq:quat_otimes_product2}
+\end{align}
+% It is often convenient to convert a quaternion $\q$ to its associated passive rotation matrix.  This is done with
+We frequently convert a quaternion $\q$ to its associated passive rotation
+matrix. This is done with
+\begin{equation}
+R\left(\q\right)=\left(2q_{0}^{2}-1\right)I-2q_{0}\skewmat{\bar{\q}}+2\bar{\q}\bar{\q}^{\top}\in SO\left(3\right).
+\label{eq:est_paper_R_from_q}
+\end{equation}
+We also note that rotations are written equivalently as
+$\q_a^b=R\left(\q_a^b\right)=R_a^b$ throughout the paper.
+% where the choice of these is dictated by convenience.
+% We use passive rotation matrices, meaning that the rotation matrix $R_a^b$ acts
+% on a vector $\vect{r}^a$, expressed in frame $a$, and results in the same
+% vector, now expressed in frame $b$ as
+% \begin{equation}
+% \vect{r}^b = R_a^b \vect{r}^a .
+% \end{equation}
+
+% We need to frequently convert between the Lie group, $S^3$, and the Lie
+% algebra, $\mathbb{R}^3$, which enables us to operate in a vector space.
+To operate in a vector space, we frequently convert between the Lie group,
+$S^3$,
+% and the Lie algebra, $\mathbb{R}^3$.
+and the vector space, $\mathbb{R}^3$, that is isomorphic to the Lie algebra.
+This is done with the
+exponential and logarithmic mappings. The exponential mapping for a unit quaternion is defined as
+\begin{align}
+\exp_{\q} & :\mathbb{R}^{3}\rightarrow S^3\nonumber \\
+\exp_{\q}\left(\vect{\delta}\right) & \triangleq\begin{bmatrix}\cos\left(\frac{\lVert\vect{\delta}\rVert}{2}\right)\\
+\sin\left(\frac{\lVert\vect{\delta}\rVert}{2}\right)\frac{\vect{\delta}}{\lVert\vect{\delta}\rVert}
+\end{bmatrix},\label{eqn:exponential_map}
+\end{align}
+with the corresponding logarithmic map defined as
+\begin{align}
+\log_{\q} & :S^3\rightarrow \mathbb{R}^{3}\nonumber \\
+\log_{\q}\left(\q\right) & \triangleq2\;\mathrm{atan2}\left(\left\Vert \bar{\q}\right\Vert ,q_{0}\right)\frac{\bar{\q}}{\left\Vert \bar{\q}\right\Vert }.\label{eqn:log_map}
+\end{align}
+% To avoid numerical issues when $\norm{\vect{\delta}}\approx0$, we also employ the small-angle approximations of the quaternion exponential and logarithm
+With this formulation, $\vect{\delta}$ also represents the axis-angle
+representation of a rotation where the unit vector
+$\frac{\vect{\delta}}{\norm{\vect{\delta}}}$ represents the axis of rotation,
+and $\norm{\vect{\delta}}$ represents the angular magnitude of rotation.
+When $\norm{\vect{\delta}}\approx0$,
+we employ the small-angle approximations of the quaternion exponential and
+logarithm given by
+\begin{align}
+\exp_{\q}\left(\vect{\delta}\right) & \approx\begin{bmatrix}1\\
+\frac{\vect{\delta}}{2}
+\end{bmatrix}\label{eq:est_paper_quaternion_exp_approx}\\
+\log_{\q}\left(\q\right) & \approx2\;\textrm{sign}\left(q_{0}\right)\bar{\q}.\label{eq:quaternion_log_approx}
+\end{align}
+
+
+% The $\boxplus$/$\boxminus$ notation for unit quaternions is now defined by
+% \begin{align*}
+% \boxplus: & S^3\times\mathbb{R}^{3}\rightarrow S^3\\
+%  & \q\boxplus\vect{\delta}\triangleq\q\otimes\exp_q\left(\vect{\delta}\right)\\
+% \boxminus: & S^3\times S^3\rightarrow\mathbb{R}^{3}\\
+%  & \q\boxminus\vect{p}\triangleq\log_q\left(\vect{p}^{-1}\otimes\q\right).
+% \end{align*}
+% Let's look at one application for clarification.
+% With body angular rate $\vect{\omega}_{b/i}^b$, inertial to body rotation $\q_i^b$, and $\vect{\theta}=\vect{\omega}_{b/i}^b \Delta t$, we have
+% \begin{align}
+% \q_i^b\left(t+\Delta t\right) & =\q_i^b\left(t\right)\boxplus\vect{\theta}\\
+% \vect{\theta} & =\q_i^b\left(t+\Delta t\right)\boxminus\q_i^b\left(t\right).
+% \end{align}
+
+%\subsection{Quadrotor Dynamics With Quaternion Attitude}
+%In the associated software library, we employ the following dynamics for the quadrotor:
+%\begin{align}
+    %\dot{\vect{p}}_{b/I}^{I} &= 	R\left(\q_{I}^{b}\right)^\transpose \vect{v}_{b/I}^{b} \nonumber \\
+	%\dot{\q}_{I}^{b} &= - \frac{1}{2} \begin{pmatrix} 0 \\ \omega_{b/I}^b\end{pmatrix} \otimes \q_I^b\nonumber\\
+	%\dot{\vect{v}}_{b/I}^{b} 
+	%&= 	g\frac{s}{s_e}\vect{e}_3 + gR\left(\q_I^b\right) \vect{e}_3- \drag\vect{v}_{b/I}^b - \skewmat{\vect{\omega}_{b/I}^b}\vect{v}_{b/I}^b.
+	%\label{eq:quat_dynamics}
+%\end{align}
+%and we solve this using a fourth-order Runge-Kutta extension of \eqref{eq:quaternion_integration}.
+
+% TODO maybe pull from here
+%\subsection{Quaternion Error State Dynamics}
+%As with the rotation matrix, we wish to find a minimal representation of the error about a quaternion attitude state.  Let us start with the differential equation for quaternion dynamics
+%\begin{equation}
+	%\dot{\q}_{I}^{b} = \frac{1}{2}\q_I^b \otimes \begin{pmatrix} 0 \\ \vect{\omega}_{b/I}^b\end{pmatrix}.
+%\end{equation}
+%This can be solved using the quaternion exponential with
+%\begin{equation}
+	%\q_I^b\left(t\right) = \q_I^b\left(0\right)\otimes\exp_{\q}\left(\int_0^t \vect{\omega}_{b/I}^b\left(\tau\right) d\tau \right).
+%\end{equation}
+%To reduce this to our minimal vector representation, as we did with rotation matrices in \eqref{eq:att_vector}, let us define the attitude vector $\vect{r}_I^b\left(t\right)=\vect{r}_I^b\left(t_0\right)+\int_{t_0}^t\boldsymbol{\omega}_{b/I}^b\left(\tau\right)d\tau$ with $\vect{r}_I^b\left(t_0\right)=0$ such that
+%\begin{equation}
+	%\q_I^b\left(t\right) = \q_I^b\left(0\right)\otimes\exp_{\q}\left(\vect{r}_I^b\left(t\right) \right).
+%\end{equation}
+%It then follows that the error state of our attitude vector is
+%\begin{align}
+	%\tilde{\vect{r}}_I^{b} 
+		%&= \vect{r}_I^b - \hat{\vect{r}}_I^{\hat{b}}  \nonumber \\
+		%&= \vect{r}_I^b - R\left(\q_I^b\right) R\left(\q_I^{\hat{b}}\right)^\transpose \hat{\vect{r}}_I^{\hat{b}}\nonumber \\
+		%&= \vect{r}_I^b - R\left(\tilde{\q}_{\hat{b}}^b\right)  \hat{\vect{r}}_I^{\hat{b}}
+%\end{align}
+%and its time derivative is
+%\begin{equation}
+	%\dot{\tilde{\vect{r}}}_I^{b} = \dot{\vect{r}}_I^b - R\left(\tilde{\q}_{\hat{b}}^b\right)  \dot{\hat{\vect{r}}}_I^{\hat{b}}.
+%\end{equation}
+%\subsection{Quaternion Trajectory Generation}
+%When creating trajectories using differential flatness for quaternion attitude states, the equivalent expression to \eqref{eq:des_attitude} is
+%\begin{equation}
+	%\des{q}_I^b = \exp_{\q}\left(\vect{e}_3\des{\psi}_{b/I}^I)\right) \otimes \exp_{\q}\left(\theta \vect{\delta}\right) \label{eq:des_attitude}
+%\end{equation}
+%where, as in \eqref{eq:des_attitude}, $\theta\vect{\delta}$ is the axis-angle error between the desired acceleration and the inertial z-axis.

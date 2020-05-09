@@ -1,0 +1,57 @@
+% TEX root=../root.tex
+
+\subsection{Planar Rotations}
+\label{sec:planar_rotations}
+% \subsection{2D Rotation Group}
+% We use rotation matrices, the Lie group $SO(2)$, to represent 2D rotations.
+% We parameterize the 2D rotation matrix by the angle, $\psi$, such that
+% \begin{align}
+  % \begin{array}{llll}
+    % R &= \exp_R \left( \psi \right) &=
+  % \begin{bmatrix}
+    % \cos \psi & - \sin \psi \\
+    % \sin \psi & \cos \psi
+  % \end{bmatrix} & \in \mathbb{R}^{2 \times 2} \\
+    % \psi &= \log_R \left( \psi \right) &= \mathrm{atan2} \left(r_{21},r_{11}
+      % \right) & \in \mathbb{R}.
+  % \end{array}
+% \end{align}
+% We also note that planar rotations are commutative, meaning
+% \begin{equation}
+  % R_b^c R_a^b = R_a^b R_b^c \qquad \forall R_a^b, R_b^c \in SO(2).
+% \end{equation}
+
+% We parameterize the 2D rotation group as an angle, $\psi$, which respresents
+We parameterize planar rotations as an angle, $\psi$, which respresents
+the angle of rotation about a given axis.
+% We treat $\psi$ as a vector space
+% that uses the common addition and subtraction operators such that
+We treat $\psi \in \mathbb{R}^1$ so that common addition and subtraction
+operators can be used such as
+\begin{align}
+  \psi_a^c &= \psi_a^b + \psi_b^c \\
+  \psi_a^b &= \psi_a^c - \psi_b^c.
+\end{align}
+We note, however, that with this formulation, all addition and subtraction
+operations must be wrapped such
+that the resultant angle $\psi \in \left[ \right. -\pi, \pi \left. \right)$. The
+passive 2D
+rotation matrix can be created from any $\psi$ as
+\begin{equation}
+  R \left( \psi \right) = \begin{bmatrix} \cos \psi & -\sin \psi \\ \sin \psi &
+  \cos \psi \end{bmatrix}.
+\end{equation}
+If $\psi$ represents the angle of rotation about the $z$ axis of a reference frame, then
+the corresponding passive 3D rotation matrix is given by
+\begin{equation}
+  R \left( \psi \right) = \begin{bmatrix}
+    \cos \psi & -\sin \psi & 0 \\
+    \sin \psi & \cos \psi & 0 \\
+    0 & 0 & 1
+  \end{bmatrix}.
+\end{equation}
+
+% We treat S1 as a vector space but make sure to wrap residuals between -pi and
+% pi. 
+% Also a 2D rotation matrix can be made like this...
+% And a 3D rotation matrix like this..
