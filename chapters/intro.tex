@@ -11,29 +11,11 @@ vehicles acting as moving, mobile base stations.
 Such applications include
 maritime surveillance, package delivery, and convoy
 support (see~\figref{fig:drone_convoy_support}).
-% State-of-the-art autonomous vehicle systems require robust solutions to three
-% main problems: state estimation, motion planning, and control. In this thesis,
-% we propose solutions to two of those three problems, state estimation and
-% control, for a multirotor UAV landing on a moving vehicle.
-% We leave the problem
-% of motion planning as future work, providing some suggested direction
-% in~\secref{sec:future_work}.
 While there are
 many facets to operating from moving vehicles, this thesis works toward creating
 a robust solution for autonomously landing multirotor UAVs onto moving vehicles
 in challenging conditions.
 
-% \begin{figure}[h]
-  % \centering
-  % \includegraphics[width=4.5in]{figures/drone_convoy_support.png}
-  % \caption[UAV Convoy Support]{Multirotor UAVs used to increase
-  % situational awareness for a convoy of
-% vehicles.
-
-% Source:~\cite{ground_vehicle_drone}}
-% %
-  % \label{fig:drone_convoy_support}
-% \end{figure}
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=4.5in]{figures/drone_convoy_support.png}
@@ -56,16 +38,12 @@ all autonomous UAVs: state estimation, motion planning, and control.
 \subsection{State Estimation}
 Most autonomous landing solutions require that the landing target vehicle is equipped
 with a visual fiducial marker (e.g.~see~\figref{fig:aruco_tag})
-% Most landing methods assume that the target landing vehicle is equipped with a
-% fiducial marker,
-% such as the one shown in~\figref{fig:aruco_tag},
 that serves as
 the designated landing platform for the UAV.
 In these methods, a camera mounted to the UAV detects the fiducial landing marker, providing
 information about the relative pose of the target
 vehicle~\cite{borowczyk2017autonomous}. These measurements are often used in a
 filtering framework, such as a Kalman filter~\cite{kalman}, to produce a
-% continuous
 high-rate estimate of the relative state between the UAV and the target
 vehicle. During landing, it is likely
 that the fiducial marker is not detected for periods of time due to occlusion,
@@ -91,9 +69,6 @@ for long periods of time.
 Therefore, to create a truly robust landing solution, an accurate estimate of
 the state of the target vehicle must be maintained when the fiducial marker is
 not detected for significant durations.
-% the state estimation solution must maintain an accurate estimate of the relative
-% state between the UAV and the target vehicle when the fiducial landing marker
-% is not detected for significant durations.
 Chapter~\ref{chp:estimation_paper}
 describes an estimation algorithm, based on the error-state Kalman
 filter~\cite{roumeliotis1999circumventing}, that tracks and estimates the locations of
@@ -122,36 +97,23 @@ for long periods of time.
 \subsection{Motion Planning}
 The motion planning problem associated with autonomous vehicles is especially
 important when 
-% the path of the vehicle's motion is critical.
-% This is commonly the case when
 navigating close to obstacles. In the case of landing on moving vehicles, it is
 often desired that the UAV descends vertically onto the landing pad to avoid
 potential obstacles such as buildings, terrain, or vehicle superstructure.
 When landing on certain vehicles, such as a boat at sea, the specific time of
 touchdown may also be important to minimize the risk of damage to the UAV.
 
-% Much work has been previously presented in the field of motion planning for
-% small multirotor UAVs~\cite{mellinger2011minimum}.
 Specific methods have been previously
 presented to generate dynamically feasible trajectories for UAVs landing on moving
 vehicles. One such method uses real-time model-predictive control techniques to
 generate trajectories for a UAV landing on a moving car~\cite{baca2019autonomous}.
-% It is likely that one or more of these solutions may be sufficient to create a
-% robust landing system.
 While improvements to these methods are not presented in this thesis, 
 directions for future work related to motion planning are described
 in~\secref{sec:future_motion_planning}.
 
 \subsection{Control}
-% A wide variety of control schemes for multirotor UAVs have been presented over
-% the past two decades.
-% A controller to robustly land a UAV onto a moving vehicle should be able to
-% accurately track a time-dependent trajectory as described in the previous section.
-% There are many control algorithms that sat
 Many control algorithms have previously been presented that satisfy the
 requirements for robust landing on moving vehicles.
-% While many previously presented control algorithms may satisfy the
-% requirements for robust landing on moving vehicles,
 However, a recent
 movement in the robotics community aims to appropriately deal with the evolution of a
 robot's state along a manifold using Lie theory~\cite{sola2018micro}. Though
@@ -173,39 +135,26 @@ The research described in this thesis makes two significant contributions:
 \item A method of state estimation is developed that allows a multirotor UAV to
   continue to operate reliably with respect to a landing target vehicle even when a
   fiducial landing marker is not detected for significant periods of time.
-% \item A method of state estimation is developed that maintains accurate and
-  % consistent estimates of the state of a landing vehicle even when a fiducial landing
-  % marker is not detected for significant periods of time by a multirotor UAV.
 \item An optimal control scheme for a multirotor UAV is derived using an error-state,
   LQR formulation that enables accurate tracking of any dynamically feasible,
   time-dependent trajectory.
-% \item An optimal control scheme for a multirotor UAV is derived in an error-state, linear
-  % quadratic regulator (LQR) formulation. This provides an optimal control scheme
-  % for a multirotor to follow any dynamically feasible, time-dependent
-  % trajectory.
 \end{itemize}
 
 These contributions are demonstrated in both simulation and hardware
 experiments found in Chapters~\ref{chp:estimation_paper}
 and~\ref{chp:control_paper}. These results 
 give us reason to believe that a
-% show that a
 complete and robust landing solution can be created by combining the proposed
 state estimation and control schemes with a competent motion planner.
 
 \section{Thesis Outline}
 
-% The remainder of this thesis is organized as follows.
 Chapter~\ref{chp:experimental_apparatus} details the hardware and software
 systems used
 in the experiments described in this thesis.
 Chapter~\ref{chp:estimation_paper}
 describes an improved method of state estimation for a multirotor UAV landing on
 a moving vehicle.
-% including results from simulation and hardware experiments.
-% describes a state
-% estimation algorithm that maintains accurate and consistent estimates even when
-% a fiducial landing marker is not detected for significant periods of time.
 Chapter~\ref{chp:control_paper} derives and demonstrates the performance of
 an error-state LQR controller for a
 multirotor UAV following a dynamically feasible, time-dependent trajectory.

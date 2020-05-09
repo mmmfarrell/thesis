@@ -10,27 +10,17 @@ are detailed in Chapters~\ref{chp:estimation_paper} and~\ref{chp:control_paper}.
 \subsection {Robot Operating System}
 The simulation and hardware experiments described in this thesis used the same
 C++ implementations of the proposed algorithms.
-% The same C++ algorithm implementations were used both in hardware and simulation
-% experiments.
 This was made possible, in part, due to the use of the Robot Operating System\footnote{Robot Operating System:
 \url{www.ros.org}}
-% \href{www.ros.org}{www.ros.org}}
 (ROS) as a middleware. ROS provides a way for separate
 programs, or nodes, to share information during runtime.
-% between one another.
 
 A network diagram of the software system can be seen in~\figref{fig:network_diagram}. The estimator and
 controller for the UAV were implemented as two separate nodes. 
 The estimator node computed the state estimate of the UAV and the controller
 node computed the desired control action based on the estimated state.
-% to the controller node.
-% The controller node computed the desired control action based on the error
-% between the estimated state and the desired state.
-% This desired control action
-% was sent to
 The ROSflight flight control stack~\cite{jackson2016rosflight}
 used this computed control action to actuate
-% which then actuated
 either a simulated UAV or the UAV hardware platform.
 
 \begin{figure}[htbp]
@@ -43,41 +33,25 @@ either a simulated UAV or the UAV hardware platform.
 \end{figure}
 
 \subsection {Gazebo}
-% For simulation experiments,
 The Gazebo\footnote{Gazebo:
 \url{www.gazebosim.org}}
-% \href{www.gazebosim.org}{www.gazebosim.org}}
 simulation environment was used
-% for simulation experiments in conjunction
 in conjunction
 with the ROSflight software-in-the-loop
 (SIL) simulation.
-% This SIL simulation meant that not only the same estimator and controller nodes
-% were running in simulation as in hardware, but also the same software from the
-% flight controller.
 This setup provided an easier transition from software
 experiments to
 hardware experiments as all of the necessary software was first proven in
 simulation.
 
-% This simulation setup allowed the
-% same estimator and controller implementations to
-% be used in the simulation experiments as are used in the hardware experiments,
-% making the transition from simulation to hardware less difficult.
-
 \subsection {ROScopter}
 The simulation and hardware experiments described in this thesis also used
 the estimator and controller nodes of the ROScopter\footnote{ROScopter:
 \url{www.github.com/byu-magicc/roscopter}}
-% \href{www.github.com/byu-magicc/roscopter}{www.github.com/byu-magicc/roscopter}}
 project.
-% were also used during certain points of the simulation and hardware
-% experiments described in this thesis.
-% In the experiments of the estimator proposed in
 During testing of the estimator proposed in
 Chapter~\ref{chp:estimation_paper}, the ROScopter controller node was used to
 close the loop around the produced estimates.
-% In the experiments of the 
 While experimenting with the
 controller proposed in Chapter~\ref{chp:control_paper}, the ROScopter estimator node
 was used to provide state estimates of the UAV to the controller.
@@ -101,15 +75,6 @@ flight controller as shown in~\figref{fig:f4}. The flight controller ran the
 ROSflight firmware that provided an easy interface
 for the controller node on the onboard computer to control the UAV.
 
-% \begin{figure}[htbp]
-  % \centering
-  % \includegraphics[width=2.5in]{figures/f4.jpg}
-  % \caption[OpenPilot CC3D Revolution 32-bit F4]{OpenPilot CC3D Revolution 32-bit
-    % F4 flight controller. \\ \hspace{\textwidth} Source:~\cite{openpilotrevo}
-% }
-% %
-  % \label{fig:f4}
-% \end{figure}
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=2.5in]{figures/f4.jpg}
@@ -125,14 +90,6 @@ The computer onboard the UAV was an NVIDIA Jetson TX2 equipped with an Orbitty
 carrier board. This configuration is shown in~\figref{fig:tx2_orbitty}. All
 computation was done on the onboard computer during the hardware experiments.
 
-% \begin{figure}[h]
-  % \centering
-  % \includegraphics[width=2.5in]{figures/tx2_orbitty.jpg}
-  % \caption[NVIDIA Jetson TX2 with Orbitty Carrier Board]{NVIDIA Jetson TX2
-  % with an Orbitty carrier board attached. \\\hspace{\textwidth} Source:~\cite{orbitty}
-  % }
-  % \label{fig:tx2_orbitty}
-% \end{figure}
 \begin{figure}[h]
   \centering
   \includegraphics[width=2.5in]{figures/tx2_orbitty.jpg}
@@ -146,7 +103,6 @@ computation was done on the onboard computer during the hardware experiments.
 Hardware flight experiments were performed in the motion capture room in the
 MAGICC Lab at Brigham Young University. This room is equipped with an OptiTrack\footnote{OptiTrack:
 \url{www.optitrack.com}}
-% \href{www.optitrack.com}{www.optitrack.com}}
 motion tracking system that
 provided high-rate measurements of the position and attitude of the multirotor
 UAV during the experiments.
@@ -158,19 +114,9 @@ shown in~\figref{fig:camera}. The intrinsic parameters of the sensor were
 accurately calibrated using a software package provided by ROS\footnote{ROS
 camera\_calibration:
 \url{wiki.ros.org/camera_calibration}}.
-% \href{wiki.ros.org/camera_calibration}{wiki.ros.org/camera\_calibration}}.
 However, the mounting position and attitude of the camera relative to the UAV were only roughly
 approximated.
 
-% \begin{figure}[h]
-  % \centering
-  % \includegraphics[width=2.5in]{figures/camera.jpg}
-  % \caption[ELP USB Camera with 2.1 mm Lens]{ELP USB Camera with a 2.1 mm
-    % lens. \\ \hspace{\textwidth} Source:~\cite{webcam}
-% }
-% %
-  % \label{fig:camera}
-% \end{figure}
 \begin{figure}[h]
   \centering
   \includegraphics[width=2.5in]{figures/camera.jpg}

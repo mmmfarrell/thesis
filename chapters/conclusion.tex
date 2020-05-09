@@ -7,14 +7,9 @@ The robust autonomous operation of multirotor UAVs from moving-vehicle base
 stations could benefit a
 variety of new industries.
 In an effort to make this a possibility,
-% The ability of multirotor UAVs to autonomously operate from a moving vehicle
-% provides the potential for UAVs to benefit a variety of new industries.
-% Working toward this goal,
 this
 thesis presents improvements to state estimation and control methods used by UAVs
 during landing on moving vehicles.
-% of a UAV
-% for use during landing on a moving vehicle.
 The estimation algorithm proposed in
 Chapter~\ref{chp:estimation_paper}
 allows a UAV to continue to operate reliably with respect to a target vehicle
@@ -23,18 +18,11 @@ periods of time.
 The control algorithm proposed in Chapter~\ref{chp:control_paper} provides a principled
 and computationally efficient method for a UAV to track a feasible, time-dependent
 trajectory.
-% to reach touchdown on the target vehicle.
 Simulation and hardware tests demonstrated the accurate and robust performance
 of these two algorithms.
 These results suggest that a reliable system for UAVs landing
 on moving vehicles could be developed by combining these proposed state
 estimation and control algorithms with an adequate motion planning algorithm.
-% The results of simulation and hardware
-% experiments show that the combination of these
-% % estimation and control
-% % algorithms, together with a motion planning algorithm, would result in a robust
-% algorithms with a motion planning algorithm would result in a robust
-% system for UAVs landing on moving vehicles.
 
 \section{Future Work}
 \label{sec:future_work}
@@ -44,8 +32,6 @@ improvements.
 The following subsections outline
 recommendations and directions for future work related to the autonomous
 landing of multirotor UAVs on moving vehicles.
-% specific to the fields of state
-% estimation, motion planning, and control.
 These recommendations are divided into the specific fields of state estimation,
 motion planning, and control.
 
@@ -70,35 +56,20 @@ solution to this problem.
 While the proposed estimation method is easily extensible to a variety of
 target vehicles, experiments to test this algorithm were only conducted
 with a simple ground vehicle.
-% testing the estimation
-% algorithm with a UAV attempting to land on a ground vehicle which moves on flat
-% ground.
 In practice, many use cases require UAVs to land on
 vehicles with much more complex motion models such as trucks driving on
 mountainous terrain or boats on rough seas.
 Further experiments should be conducted to test the performance of the presented
 estimation algorithm with target vehicles of complex motion models.
-% It would be interesting to see if the presented estimation algorithm achieves
-% similar levels of success with more complex motion models, or if more
-% information about the motion of the landing vehicle is necessary in these cases.
 To achieve better results in these scenarios, additional measurement updates
 from sensors mounted to the target vehicle, such as GPS or IMU,
 could be added  to the algorithm.
-% These sensors could include a GPS unit or an
-% IMU.
-% If more information were necessary, this could easily be done by implementing
-% additional measurement updates of
-% measurements originating from sensors mounted to the landing vehicle such as a
-% GPS unit or an IMU.
 
 \subsection{Motion Planning}
 \label{sec:future_motion_planning}
 While not discussed in great detail in this thesis, the motion planning problem
 associated with multirotor UAVs operating from moving vehicles is 
 challenging.
-% Motion planning for a UAV also presents a
-% problem when the UAV must navigate close to or around obstacles on
-% the moving vehicle.
 Dynamically feasible trajectories must be planned for UAVs to avoid
 obstacles during their approach to the landing target.
 This problem is especially important when a UAV must land on a large boat
@@ -110,65 +81,31 @@ own unique problem to be solved.
 
 When operating from vehicles with complex motion, 
 it can also be important to precisely time the touchdown of the UAV.
-% potential damage to the UAV.
 For instance, when landing on a boat in rough
 waters, it may be desireable that the UAV touches down when the heave motion of the
 boat reaches a peak to minimize potential damage to the UAV.
-% avoid rough contact between the UAV
-% and the boat.
 Further research should be conducted to plan feasible, time-dependent
 trajectories for these scenarios.
-
-% This type of motion planning presents many unsolved challenges.
-% While this type of motion planning also requires very detailed
-% estimation and prediction of the motion of the boat, the motion
-% planning problem itself presents many unsolved challenges.
 
 
 \subsection{Control}
 As discussed in Chapter~\ref{chp:control_paper}, the Lie-theory-based controller
 operates on the error state of the system.
-% to accurately track a time-dependent trajectory. While
-% The main advantage to operating on the error-state
 The main advantage to this approach is its mathematically principled nature.
-% While operating on the error state provides other
-% advantages, the main advantage to this approach is that it is more
-% mathematically principled than typical Euler angle formulations.
 This, in
 theory, allows for more accurate tracking during extreme maneuvers, where
 less principled methods, such as typical Euler-angle formulations, struggle.
-% extreme maneuvers.
-% tracking during extreme maneuvers than less principled methods struggle.
-% angle formulations struggle.
-% should
-% outperform typical Euler angle formulations during extreme maneuvers.
-% perform better during more extreme maneuvers than a typical ZYX Euler angle
-% formulation.
 This controller should be tested with feasible trajectories of acrobatic
 maneuvers to demonstrate this advantage.
-% Simulation and hardware experiments should be conducted to show the
-% advantage this error-state controller presents over existing control schemes.
 
 One key assumption made by the controller is that the
-% One potential down side to the proposed controller is that it assumes the
 error-state of the system is always small. This was
 especially not true in the flight experiments during takeoff, when the UAV was far from the
 desired sinusoidal trajectory.
-% always true as the UAV had to converge onto the sinusoidal trajectory from stationary
-% takeoff.
 This resulted in unsteady transient behavior when the error-state values were
 not saturated to be small.
-% To satisfy this assumption,
-% the true performance of the controller,
 Instead of a static trajectory,
 the controller should be tested with
 dynamically planned trajectories which begin at the current state of the
 UAV. With these trajectories, the error state of the system would be forced to
 be small, satisfying this important assumption.
-% small
-% always remain small, satisfying the key assumption of the controller.
-% The experiments described in~\ref{chp:control_paper} used a simple sinusoidal
-% trajectory to demonstrate the performance of the controller. However, the
-% transient behavior from take off to convergence onto the trajectory was at times
-% unstable. This is a result of the 
-
